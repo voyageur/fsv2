@@ -1,0 +1,319 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-01-10 23:06+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/about.c:156
+msgid "fsv2 - 3D File System Visualizer"
+msgstr ""
+
+#: src/about.c:165
+msgid "Copyright ©2009-2011 by Yury P. Fedorchenko"
+msgstr ""
+
+#. -80
+#: src/about.c:167
+msgid "Copyright (C)1999 by Daniel Richard G."
+msgstr ""
+
+#. "Metanode"
+#: src/common.c:87
+msgid "Directory"
+msgstr ""
+
+#: src/common.c:88
+msgid "Regular file"
+msgstr ""
+
+#: src/common.c:89
+msgid "Symbolic link"
+msgstr ""
+
+#: src/common.c:90
+msgid "Named pipe (FIFO)"
+msgstr ""
+
+#: src/common.c:91
+msgid "Network socket"
+msgstr ""
+
+#: src/common.c:92
+msgid "Character device"
+msgstr ""
+
+#: src/common.c:93
+msgid "Block device"
+msgstr ""
+
+#: src/common.c:94 src/common.c:107 src/common.c:736 src/common.c:743
+msgid "Unknown"
+msgstr ""
+
+#. "Metanodes"
+#: src/common.c:100
+msgid "Directories"
+msgstr ""
+
+#: src/common.c:101
+msgid "Regular files"
+msgstr ""
+
+#: src/common.c:102
+msgid "Symlinks"
+msgstr ""
+
+#: src/common.c:103
+msgid "Named pipes"
+msgstr ""
+
+#: src/common.c:104
+msgid "Sockets"
+msgstr ""
+
+#: src/common.c:105
+msgid "Char. devs."
+msgstr ""
+
+#: src/common.c:106
+msgid "Block devs."
+msgstr ""
+
+#: src/common.c:121 src/common.c:134 src/common.c:147 src/common.c:160
+msgid "Out of memory"
+msgstr ""
+
+#: src/common.c:316
+msgid "B"
+msgstr ""
+
+#. Bytes
+#: src/common.c:317
+msgid "kB"
+msgstr ""
+
+#. Kilobytes
+#: src/common.c:318
+msgid "MB"
+msgstr ""
+
+#. Megabytes
+#: src/common.c:319
+msgid "GB"
+msgstr ""
+
+#. Gigabytes
+#: src/common.c:320
+msgid "TB"
+msgstr ""
+
+#. Terabytes
+#: src/common.c:321
+msgid "PB"
+msgstr ""
+
+#. Petabytes
+#: src/common.c:322
+msgid "EB"
+msgstr ""
+
+#: src/common.c:493
+msgid "Could not execute 'file' command"
+msgstr ""
+
+#. Is this allowed?
+#: src/common.c:508
+msgid "('file' command timed out)"
+msgstr ""
+
+#: src/common.c:715 src/common.c:721 src/dirtree.cxx:157
+msgid "/. (root)"
+msgstr ""
+
+#: src/options_dlg.cxx:5
+msgid "Color Setup"
+msgstr ""
+
+#: src/options_dlg.cxx:6
+msgid "Color by:"
+msgstr ""
+
+#: src/options_dlg.cxx:6
+msgid "Older"
+msgstr ""
+
+#: src/options_dlg.cxx:6
+msgid "Newer"
+msgstr ""
+
+#: src/options_dlg.cxx:8 src/fsvwindow.cxx:259
+msgid "By nodetype"
+msgstr ""
+
+#: src/options_dlg.cxx:27 src/fsvwindow.cxx:261
+msgid "By timestamp"
+msgstr ""
+
+#: src/options_dlg.cxx:31
+msgid "time of last access"
+msgstr ""
+
+#: src/options_dlg.cxx:32
+msgid "time of last modification"
+msgstr ""
+
+#: src/options_dlg.cxx:33
+msgid "time of last attribute change"
+msgstr ""
+
+#: src/options_dlg.cxx:41
+msgid "Rainbow"
+msgstr ""
+
+#: src/options_dlg.cxx:42
+msgid "Heat"
+msgstr ""
+
+#: src/options_dlg.cxx:43
+msgid "Gradient"
+msgstr ""
+
+#: src/options_dlg.cxx:46 src/fsvwindow.cxx:263
+msgid "By wildcard"
+msgstr ""
+
+#: src/property_dlg.cxx:3 src/fsvwindow.cxx:288
+msgid "Properties"
+msgstr ""
+
+#: src/property_dlg.cxx:5
+msgid "General"
+msgstr ""
+
+#: src/filelist.cxx:72
+msgid "Type"
+msgstr ""
+
+#: src/filelist.cxx:72
+msgid "Found"
+msgstr ""
+
+#: src/filelist.cxx:72
+msgid "Bytes"
+msgstr ""
+
+#: src/filelist.cxx:86
+msgid "TOTAL"
+msgstr ""
+
+#: src/filelist.cxx:174
+msgid "1 node"
+msgstr ""
+
+#: src/filelist.cxx:178
+#, c-format
+msgid "%d nodes"
+msgstr ""
+
+#: src/filelist.cxx:342
+msgid "Node type"
+msgstr ""
+
+#: src/filelist.cxx:346
+msgid "Quantity"
+msgstr ""
+
+#. Usage summary
+#: src/fsv.cxx:65
+msgid ""
+"\n"
+"fsv - 3D File System Visualizer\n"
+"      Version "
+msgstr ""
+
+#. Excess arguments!
+#: src/fsv.cxx:282
+#, c-format
+msgid "Junk in command line:"
+msgstr ""
+
+#. Update display
+#: src/scanfs.c:142
+#, c-format
+msgid "Scanning: %s"
+msgstr ""
+
+#. Stats-per-second readout in left statusbar
+#: src/scanfs.c:210
+#, c-format
+msgid "%d stats/sec"
+msgstr ""
+
+#: src/fsvwindow.cxx:134
+msgid "Change Root Directory"
+msgstr ""
+
+#: src/fsvwindow.cxx:222
+msgid "File"
+msgstr ""
+
+#: src/fsvwindow.cxx:227
+msgid "Change Root"
+msgstr ""
+
+#: src/fsvwindow.cxx:229
+msgid "Exit"
+msgstr ""
+
+#: src/fsvwindow.cxx:235
+msgid "View"
+msgstr ""
+
+#: src/fsvwindow.cxx:241
+msgid "MapV"
+msgstr ""
+
+#: src/fsvwindow.cxx:242
+msgid "TreeV"
+msgstr ""
+
+#: src/fsvwindow.cxx:244
+msgid "Top View"
+msgstr ""
+
+#: src/fsvwindow.cxx:271
+msgid "Help"
+msgstr ""
+
+#: src/fsvwindow.cxx:277
+msgid "About"
+msgstr ""
+
+#: src/fsvwindow.cxx:284
+msgid "Collapse"
+msgstr ""
+
+#: src/fsvwindow.cxx:285
+msgid "Expand"
+msgstr ""
+
+#: src/fsvwindow.cxx:286
+msgid "Expand all"
+msgstr ""
+
+#: src/fsvwindow.cxx:287
+msgid "Look at"
+msgstr ""

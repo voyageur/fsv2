@@ -1,0 +1,17 @@
+10.01.2011
+  - partialy rewrite to gtkmm
+05.07.2010
+  - begin deprecation removal
+26.01.2009
+  - finished GLC porting (!!!we have utf-8 now in OpenGL view!!!)
+  - fix TODO from my point of view.
+
+24.01.2009
+  v1.0
+  -fix color chooser crash
+
+fsv2-0.9.99 (9 January 2009)
+  -begin rewriten by Yury P. Fedorchenko
+  port to gtk+-2 
+  (there is some bugs now)
+

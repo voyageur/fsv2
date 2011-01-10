@@ -1,0 +1,7 @@
+for build fsv-0.9.99
+you need >=gtk+-2.6
+         >=gtkglarea-1.99
+	 and libgnomeui - for date time picker
+
+optionaly you need quesoglc (http://quesoglc.sourceforge.net/) or other implementation of the OpenGL Character Renderer (GLC) 
+for utf-8 support in open GL window.

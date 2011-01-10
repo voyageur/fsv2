@@ -1,0 +1,11 @@
+# List of source files containing translatable strings
+
+src/about.c
+src/common.c
+src/options_dlg.cxx
+src/property_dlg.cxx
+src/dirtree.cxx
+src/filelist.cxx
+src/fsv.cxx
+src/scanfs.c
+src/fsvwindow.cxx
