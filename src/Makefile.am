@@ -29,6 +29,7 @@ noinst_HEADERS = \
 	dirtree.h \
 	filelist.h \
 	fsv.h \
+	fsvwindow.h \
 	fsv3d.h \
 	geometry.h \
 	ogl.h \
@@ -37,9 +38,6 @@ noinst_HEADERS = \
 	viewport.h \
 	property_dlg.h \
 	options_dlg.h
-#	callbacks.h 
-#	dialog.h 
-#	gui.h
 
 fsv2_SOURCES = \
 	fsv.cxx \
@@ -59,9 +57,6 @@ fsv2_SOURCES = \
 	scanfs.c \
 	tmaptext.c \
 	viewport.c
-#	gui.c
-#	dialog.c 
-#	callbacks.c 
 
 fsv2_LDADD = \
 	$(DEBUG_LIBS) \
