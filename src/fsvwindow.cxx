@@ -154,13 +154,9 @@ void FsvWindow::on_exit(){
 void FsvWindow::on_about(){
   about( ABOUT_BEGIN );
 }
-void FsvWindow::on_map_view(){
-	if (globals.fsv_mode != FSV_MAPV)
-		fsv_set_mode( FSV_MAPV );
-}
-void FsvWindow::on_tree_view(){
-	if (globals.fsv_mode != FSV_TREEV)
-		fsv_set_mode( FSV_TREEV );
+void FsvWindow::on_fsv_mode(FsvMode mode){
+	if (globals.fsv_mode != mode)
+		fsv_set_mode( mode );
 }
 void FsvWindow::on_birdseye_view(int tb){
 	if(tb==0){
@@ -238,8 +234,12 @@ FsvWindow::FsvWindow() : Gtk::Window(),tb_root(Gtk::Stock::GOTO_FIRST),tb_back(G
     { 
       Gtk::RadioMenuItem::Group radiogroup;
       MenuList items = pMenu->items();
-      items.push_back(RadioMenuElem(radiogroup,_("MapV"),sigc::mem_fun(*this,&FsvWindow::on_map_view) ) );
-      items.push_back(RadioMenuElem(radiogroup,_("TreeV"),sigc::mem_fun(*this,&FsvWindow::on_tree_view) ) );
+      items.push_back(RadioMenuElem(radiogroup,_("MapV"),
+                      sigc::bind(sigc::mem_fun(*this,&FsvWindow::on_fsv_mode),FSV_MAPV) ) );
+      items.push_back(RadioMenuElem(radiogroup,_("TreeV"),
+                      sigc::bind(sigc::mem_fun(*this,&FsvWindow::on_fsv_mode),FSV_TREEV) ) );
+      items.push_back(RadioMenuElem(radiogroup,_("DiscV"),
+                      sigc::bind(sigc::mem_fun(*this,&FsvWindow::on_fsv_mode),FSV_DISCV) ) );
       items.push_back(SeparatorElem());
       items.push_back(CheckMenuElem(_("Top View")));
       Gtk::MenuItem* pMenuItem = &items.back();

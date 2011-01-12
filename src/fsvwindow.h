@@ -113,8 +113,7 @@ protected:
   void on_change_root();
   void on_exit();
   void on_about();
-  void on_map_view();
-  void on_tree_view();
+  void on_fsv_mode(FsvMode mode);
   void on_birdseye_view(int);
 public:
   Gtk::CheckMenuItem* birdeye;
