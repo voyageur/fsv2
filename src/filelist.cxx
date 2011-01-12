@@ -184,7 +184,6 @@ filelist_populate( GNode *dnode )
 	filelist_reset_access( );
 }
 
-
 /* This updates the file list to show (and select) a particular node
  * entry. The directory tree is also updated appropriately */
 void filelist_show_entry( GNode *node )
@@ -202,11 +201,10 @@ void filelist_show_entry( GNode *node )
 	}
 
 	/* Scroll file list to proper entry */
-	//row = gtk_clist_find_row_from_data( GTK_CLIST(file_clist_w), node );
   Glib::RefPtr<Gtk::TreeSelection> sel = FsvFileList::file_tree->get_selection();
 	Gtk::TreeModel::Children children = FsvFileList::file_tree->model->children();
 	Gtk::TreeIter it = children.begin();
-	for(;it<children.end();++it){
+	for(;it!=children.end();++it){
 	  if((*it)[FsvFileList::file_tree->records.node]==node){
 	    sel->select(it);
 	    FsvFileList::file_tree->scroll_to_row(FsvFileList::file_tree->model->get_path(it));
@@ -214,11 +212,6 @@ void filelist_show_entry( GNode *node )
 	  }
 	}
   sel->unselect_all();
-	/*if (row >= 0)
-		gtk_clist_select_row( GTK_CLIST(file_clist_w), row, 0 );
-	else
-		gtk_clist_unselect_all( GTK_CLIST(file_clist_w) );*/
-//	gui_clist_moveto_row( file_clist_w, MAX(0, row), FILELIST_SCROLL_TIME );
 }
 
 

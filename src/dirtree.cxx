@@ -230,9 +230,9 @@ dirtree_entry_expanded( GNode *dnode )
 	g_assert( NODE_IS_DIR(dnode) );
 	//return GTK_CTREE_ROW(DIR_NODE_DESC(dnode)->ctnode)->expanded;
 	Gtk::TreeRow row =*FsvDirTree::dir_tree->model->get_iter(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode));
-	g_print("%e - %d - %d\n",DIR_NODE_DESC(dnode)->deployment,
+	/*g_print("%e - %d - %d\n",DIR_NODE_DESC(dnode)->deployment,
 	DIR_NODE_DESC(dnode)->geom_expanded,
-	FsvDirTree::dir_tree->row_expanded(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode)));
+	FsvDirTree::dir_tree->row_expanded(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode)));*/
 	if(DIR_NODE_DESC(dnode)->geom_expanded){
 	  row[FsvDirTree::dir_tree->records.icon]=FsvDirTree::dir_tree->folder_opened;
 	}else{
