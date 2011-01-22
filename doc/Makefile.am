@@ -8,14 +8,11 @@ HTML_DOCS = \
 	t1.html
 
 PNG_IMAGES = \
-	back.png \
-	beyeview.png \
-	cd-root.png \
-	cd-up.png \
 	dirtree.png \
 	filelist.png \
 	mapv.png \
 	treev.png \
+	tb.png \
 	viewport.png \
 	window.png
 

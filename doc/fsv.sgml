@@ -62,19 +62,15 @@ When <emphasis>fsv</emphasis> is invoked with the <option>--help</option> option
 </para>
 
 <para><screen>
-<prompt>bash$</prompt> <userinput>fsv --help</userinput>
-
-fsv - 3D File System Visualizer
-      Version 0.9
-Copyright (C)1999 Daniel Richard G. &lt;skunk@mit.edu&gt;
-
-Usage: fsv [rootdir] [options]
+<prompt>bash$</prompt> <userinput>fsv2 --help</userinput>
+Usage: fsv2 [rootdir] [options]
   rootdir      Root directory for visualization
-               - (defaults to current directory)
+               (defaults to current directory)
   --mapv       Start in MapV mode (default)
   --treev      Start in TreeV mode
   --help       Print this help and exit
 
+fsv2 - 3D File System Visualizer v.1.1.0
 </screen></para>
 
 <variablelist><title>Options and arguments</title>
@@ -135,36 +131,24 @@ To give the TreeV view of everything under <filename class=directory>/usr</filen
 <sect2><title>Toolbar</title>
 
 <mediaobject>
-<imageobject><imagedata fileref="back.png" format="png"></imageobject>
-<textobject><phrase>First button</phrase></textobject>
+<imageobject><imagedata fileref="tb.png" format="png"></imageobject>
+<textobject><phrase>Toolbar</phrase></textobject>
 </mediaobject>
-<para>
-Sends the camera back to the node it was viewing previously.
-</para>
 
-<mediaobject>
-<imageobject><imagedata fileref="cd-root.png" format="png"></imageobject>
-<textobject><phrase>Second button</phrase></textobject>
-</mediaobject>
-<para>
+<itemizedlist>
+<listitem><para>
 Repositions the camera to view the root directory.
-</para>
-
-<mediaobject>
-<imageobject><imagedata fileref="cd-up.png" format="png"></imageobject>
-<textobject><phrase>Third button</phrase></textobject>
-</mediaobject>
-<para>
+</para></listitem>
+<listitem><para>
+Sends the camera back to the node it was viewing previously.
+</para></listitem>
+<listitem><para>
 Points the camera at a node one level closer to the root directory.
-</para>
-
-<mediaobject>
-<imageobject><imagedata fileref="beyeview.png" format="png"></imageobject>
-<textobject><phrase>Fourth button</phrase></textobject>
-</mediaobject>
-<para>
+</para></listitem>
+<listitem><para>
 Sends the camera soaring up for a bird's-eye view.
-</para>
+</para></listitem>
+</itemizedlist>
 
 </sect2>
 
