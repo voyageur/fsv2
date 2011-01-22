@@ -147,6 +147,15 @@ if test "$enable_glc" == "yes" ; then
 else
     PKG_CHECK_MODULES(FTGL, ftgl)
     AC_DEFINE([HAVE_FTGL],1,[ using ftgl ])
+    AC_PATH_PROG(FC_CACHE,fc-match)
+    if test -n "$FC_CACHE" ; then
+	FONT_FILE="`$FC_CACHE -sv sans |grep ttf | sed -e 's/.*\"\\//\\//' | sed -e 's/\".*//' | sed q`"
+	if test -n "$FONT_FILE"; then 
+	  AC_DEFINE_UNQUOTED([DEFAULT_FONT_FILE], ["$FONT_FILE"]," default font file ")
+	else
+	  AC_MSG_ERROR([Default font cannot be found])
+	fi
+    fi
     #"$FTGL_LIBS"
 fi
 

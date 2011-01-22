@@ -1,9 +1,15 @@
+22.01.2011
+  - fix FTGL rendering 
+  - fullscreen mode
+  - rewrite basic properties
 21.01.2011
   - begin remove GLC `cause it seams incompatible with gtk
 10.01.2011
   - partialy rewrite to gtkmm
 05.07.2010
   - begin deprecation removal
+10.02.2009
+  v1.0.1
 26.01.2009
   - finished GLC porting (!!!we have utf-8 now in OpenGL view!!!)
   - fix TODO from my point of view.

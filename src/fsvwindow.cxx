@@ -170,6 +170,18 @@ void FsvWindow::on_birdseye_view(){
   camera_birdseye_view(birdeye->get_active() );
 }
 //
+void FsvWindow::on_fullscreen(){
+  if(fullscr->get_active()){
+    sbar.hide();
+    rsbar.hide();
+    fullscreen();
+  }else{
+    sbar.show();
+    rsbar.show();
+    unfullscreen();
+  }
+}
+
 void FsvWindow::on_collapse(){
 	colexp( popa_node, COLEXP_COLLAPSE_RECURSIVE );
 }
@@ -285,7 +297,8 @@ FsvWindow::FsvWindow() : Gtk::Window(){
   ag_allways = Gtk::ActionGroup::create("main");
   ag_allways->add(Gtk::Action::create("File",_("_File")));
   ag_allways->add(Gtk::Action::create("View",_("_View")));
-  ag_allways->add(Gtk::ToggleAction::create("FullScreen",_("_Full Screen")),Gtk::AccelKey("F11"),
+  fullscr = Gtk::ToggleAction::create("FullScreen",_("_Full Screen"));
+  ag_allways->add(fullscr,Gtk::AccelKey("F11"),
                   sigc::mem_fun(*this,&FsvWindow::on_fullscreen));
   ag_allways->add(Gtk::Action::create("Quit",Gtk::Stock::QUIT),
                   sigc::mem_fun(*this,&FsvWindow::on_exit));
@@ -371,7 +384,7 @@ FsvWindow::FsvWindow() : Gtk::Window(){
   
   popa = dynamic_cast<Gtk::Menu*>(ui_man->get_widget("/Popa"));
   
-  bx_left.pack_end(pn_left);
+  bx_left.pack_start(pn_left);
   pn_left.set_size_request(150);
   pn_main.add1(bx_left);
   
@@ -408,14 +421,14 @@ FsvWindow::FsvWindow() : Gtk::Window(){
 	
   }
 	camera_pass_scrollbar_widgets( GTK_WIDGET(x_scroll.gobj()), GTK_WIDGET(y_scroll.gobj()) );
-
-  bx_main.pack_end(sbar,Gtk::PACK_SHRINK);
-  rsbar.set_size_request(150);
-  rsbar.set_has_resize_grip(false);
-  sbar.add(rsbar);
+	
+	tbl_right.attach(rsbar,0,2,2,3,Gtk::FILL|Gtk::EXPAND,Gtk::SHRINK);
+  bx_left.pack_end(sbar,Gtk::PACK_SHRINK);
+  sbar.set_has_resize_grip(false);
+//  rsbar.set_size_request(150);
   
 #if defined HAVE_FTGL
-  font = new FTTextureFont("./DejaVuSans.ttf");
+  font = new FTTextureFont(DEFAULT_FONT_FILE);
   font->CharMap(ft_encoding_unicode);
   font->FaceSize(24.);
   font->Outset(10.);
@@ -424,46 +437,12 @@ FsvWindow::FsvWindow() : Gtk::Window(){
   glcContext(ctx);
   //glcAppendCatalog("/usr/lib/X11/fonts/Type1");
 
-  /* Create a font "Sans Bold" */
-  textFont = glcGenFontID();
-  g_print("GLC_MASTER_COUNT %d\n",glcGeti(GLC_MASTER_COUNT));
-  //
-//  glcNewFontFromFamily(textFont, "Sans");
-      static const char* master_name="Sans";
-      static const char* face_name="Normal";
-      int master_count = glcGeti(GLC_MASTER_COUNT);
-      int master = 0;
-      int i; 
-      for (i = 0; i < master_count; i++) {
-         if (!strcmp((const char*)glcGetMasterc(i, GLC_FAMILY), master_name)) {
-            int face_count = glcGetMasteri(i, GLC_FACE_COUNT);
-            for (int j = 0; j < face_count; j++) {
-               if (!strcmp((const char*)glcGetMasterListc(i, GLC_FACE_LIST, j), face_name)) {
-                  master = i;
-               }
-            }
-         }
-      }
-
-
-      if (i < master_count) {
-        /* Access the font family. */
-        GLint result = glcNewFontFromFamily(textFont,glcGetMasterc(master, GLC_FAMILY));
-        if (result == textFont) {
-          /* Use the font. */
-          glcFont(textFont);
-
-          /* Use the face. */
-          glcFontFace(textFont, face_name);
-        }
-      }
-/*  glcNewFontFromFamily(textFont, "Monospace");
+  glcNewFontFromFamily(textFont, "Monospace");
   glcFontFace(textFont, "Normal");
-  glcFont(textFont);*/
+  glcFont(textFont);
   glcStringType(GLC_UTF8_QSO);
-  glcRenderStyle(GLC_LINE);
-  ////glcRenderStyle(GLC_TRIANGLE);
-  //glcRenderStyle(GLC_TEXTURE);
+  //glcRenderStyle(GLC_LINE);
+  glcRenderStyle(GLC_TEXTURE);
 #endif  
   show_all_children();
 };
@@ -488,22 +467,20 @@ void text_post( void ){
 
 static int
 get_char_dims(const char *text, const XYvec *max_dims, XYvec *cdims ,double *scale, int reallen){
-    int len;
-    if(g_utf8_validate(text,-1,NULL)){
-	    len = g_utf8_strlen(text,-1);
-	    FTBBox box =  FsvWindow::current->font->BBox(text);
-	    cdims->x=box.Upper().X()-box.Lower().X();
-	    cdims->y=box.Upper().Y()-box.Lower().Y();
-	    //g_print("%s %e %e -  %e %e\n",text,cdims->x,cdims->y,max_dims->x,max_dims->y);
-	    if(cdims->x*max_dims->y/24. > max_dims->x){
-	      *scale= max_dims->x *24./ cdims->x;
-	      cdims->x=max_dims->x/ *scale *24.;
-	    }else
-    	  *scale=max_dims->y;
-    }else{
-	    g_print("vot :%s invalid\n",text);
-    }
-    *scale;
+  int len=0;
+  if(g_utf8_validate(text,-1,NULL)){
+	  len = g_utf8_strlen(text,-1);
+	  FTBBox box =  FsvWindow::current->font->BBox(text);
+	  cdims->x=box.Upper().X()-box.Lower().X();
+	  cdims->y=box.Upper().Y()-box.Lower().Y();
+    if(cdims->x*max_dims->y/24. > max_dims->x){
+	    *scale= max_dims->x *24./ cdims->x;
+	    cdims->x=max_dims->x/ *scale *24.;
+	  }else
+      *scale=max_dims->y;
+  }else{
+	  g_print("Filename :%s invalid\n",text);
+  }
   return (reallen==0)?1:len;
 }
 
@@ -515,9 +492,8 @@ text_draw_straight( const char *text, const XYZvec *text_pos, const XYvec *text_
 {
 	XYvec cdims;
 	XYvec c0;
-	int len, i;
 	double scale=1.;
-	len = get_char_dims( text, text_max_dims, &cdims ,&scale,0);
+	int len = get_char_dims( text, text_max_dims, &cdims ,&scale,0);
 	/* Corners of first character */
 	c0.x = text_pos->x - 0.5 * cdims.x *scale/24.;
 	c0.y = text_pos->y - 0.5 * cdims.y *scale/24.;
@@ -539,28 +515,25 @@ void
 text_draw_straight_rotated( const char *text, const RTZvec *text_pos, const XYvec *text_max_dims )
 {
 	XYvec cdims;
-	XYvec t_c0, t_c1, c0, c1;
+	XYvec c0;
 	XYvec hdelta, vdelta;
 	double sin_theta, cos_theta,scale;
-	int len, i;
 
-	len = get_char_dims( text, text_max_dims, &cdims ,&scale,0);
+	int len = get_char_dims( text, text_max_dims, &cdims ,&scale,0);
 
 	sin_theta = sin( RAD(text_pos->theta) );
 	cos_theta = cos( RAD(text_pos->theta) );
 
 	/* Vector to move from one character to the next */
-	hdelta.x = sin_theta * cdims.x/24.;
-	hdelta.y = - cos_theta * cdims.x/24.;
+	hdelta.x = sin_theta * cdims.x*scale/24.;
+	hdelta.y = - cos_theta * cdims.x*scale/24.;
 	/* Vector to move from bottom of character to top */
-	vdelta.x = cos_theta * cdims.y/24.;
-	vdelta.y = sin_theta * cdims.y/24.;
+	vdelta.x = cos_theta * cdims.y*scale/24.;
+	vdelta.y = sin_theta * cdims.y*scale/24.;
 
 	/* Corners of first character */
 	c0.x = cos_theta * text_pos->r - 0.5 * ((double)len * hdelta.x + vdelta.x);
 	c0.y = sin_theta * text_pos->r - 0.5 * ((double)len * hdelta.y + vdelta.y);
-	c1.x = c0.x + hdelta.x + vdelta.x;
-	c1.y = c0.y + hdelta.y + vdelta.y;
 
    glPushMatrix();
     glTranslated(c0.x,c0.y,text_pos->z);
@@ -575,38 +548,36 @@ void
 text_draw_curved( const char *text, const RTZvec *text_pos, const RTvec *text_max_dims )
 {
 	XYvec straight_dims, cdims;
-	XYvec char_pos, fwsl, bwsl;
-	XYvec t_c0, t_c1;
+	XYvec char_pos;
 	double char_arc_width, theta;
 	double sin_theta, cos_theta;
 	double text_r,scale;
-	int len, i;
 
 	/* Convert curved dimensions to straight equivalent */
 	straight_dims.x = (PI / 180.0) * text_pos->r * text_max_dims->theta;
 	straight_dims.y = text_max_dims->r;
 
-	len = get_char_dims( text, &straight_dims, &cdims ,&scale,1);
+	int len = get_char_dims( text, &straight_dims, &cdims ,&scale,1);
 
 	/* Radius of center of text line */
-	text_r = text_pos->r - 0.5 * cdims.y/24.;
+	text_r = text_pos->r - 0.5 * cdims.y*scale/24.;
 
 	/* Arc width occupied by each character */
-	char_arc_width = (180.0 / PI) * cdims.x/24. / text_r;
+	char_arc_width = (180.0 / PI) * cdims.x*scale/24. / text_r;
 
-    theta = text_pos->theta + 0.5 * char_arc_width;
-    sin_theta = sin( RAD(theta) );
-    cos_theta = cos( RAD(theta) );
+  theta = text_pos->theta * 0.5 * char_arc_width;
+  sin_theta = sin( RAD(theta) );
+  cos_theta = cos( RAD(theta) );
 
-    char_pos.x = cos_theta * text_r;
-    char_pos.y = sin_theta * text_r;
-    glPushMatrix();
-    glTranslated(char_pos.x,char_pos.y,text_pos->z);
-    glRotated(-90.,0,0,1);
-    glTranslated(0,-straight_dims.y/3.,0);
-    glScaled(scale/24.,straight_dims.y/24.,straight_dims.y/24.);
-    FsvWindow::current->font->Render(text);
-    glPopMatrix();
+  char_pos.x = cos_theta * text_r - 0.5 * cdims.y*scale/24.;
+  char_pos.y = sin_theta * text_r + 0.5 * cdims.x*scale/24.;
+  glPushMatrix();
+  glTranslated(char_pos.x,char_pos.y,text_pos->z);
+  glRotated(-90.,0,0,1);
+  glTranslated(0,-straight_dims.y/3.,0);
+  glScaled(scale/24.,straight_dims.y/24.,straight_dims.y/24.);
+  FsvWindow::current->font->Render(text);
+  glPopMatrix();
 }
 
 

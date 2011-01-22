@@ -135,7 +135,8 @@ public:
   Glib::RefPtr<Gtk::UIManager > ui_man;	
   Gtk::Menu *popa;
 protected:
-  void on_fullscreen(){fullscreen();}
+  Glib::RefPtr<Gtk::ToggleAction> fullscr;
+  void on_fullscreen();
   void on_collapse();
   void on_expand();
   void on_expand_all();
