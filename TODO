@@ -1,6 +1,8 @@
-2009 Jan 26
+2011 Jan
   - code cleanup.
-  - GTK+ code recheck.
+  - rewrite rest of GTK+ code to gtkmm.
+  - remove last glib deprecated functions.
+  - remove all non FTGL text rendering (maybe add pango renderer) to GL widget.
   - maybe move to gtkglext from gtkglarea.
   - rewrite filesystem scan code. 
   - add xml Configuration file support.
@@ -14,19 +16,11 @@
 generate very optimal layouts-- some nodes are too wide, some too tall,
 and the ones in the frontmost row/rows invariably turn out paper-thin.
 
-I've discussed an alternate approach with a friend of mine (hi Louis!),
-one heuristically based that would run slightly slower but give much
-better (even if not provably optimal) solutions. I'm definitely open to
-ideas here. It's a rather tricky CS problem.
-
 * Implement a somewhat smarter node pointing/selection handler for faraway
 nodes (e.g. when in bird's-eye view mode). Right now, it gives you exactly
 the node that is under the cursor's hotspot-- even if it's so small you
 can barely see it. fsv should instead return an ancestor node, that is
 larger than a set pixel-based minimum.
 
-* Implement a better way of bringing up the online help. I'm almost
-embarrassed by the cheap /bin/sh hack currently employed :] (Not to
-mention it leaves zombie processes hanging around until the main program
-terminates-- bad bad bad!)
+* Implement a better way of bringing up the online help.
 
