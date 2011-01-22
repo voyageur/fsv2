@@ -35,7 +35,18 @@
 #include "geometry.h"
 #include "scanfs.h"
 
-
+namespace {
+  struct locinit{
+    locinit(){
+#ifdef ENABLE_NLS
+    const char* btd=bindtextdomain(GETTEXT_PACKAGE,LOCALE_DIR);
+    const char* tdc=bind_textdomain_codeset(GETTEXT_PACKAGE,"UTF-8");
+    setlocale(LC_ALL,"");
+    //textdomain(PACKAGE);
+#endif
+    }
+  }dummystruct;
+};
 /* Identifiers for command-line options */
 enum {
 	OPT_DISCV,
@@ -62,19 +73,15 @@ static struct option cli_opts[] = {
 };
 
 /* Usage summary */
-static const char usage_summary[] = __("\n"
-    "fsv - 3D File System Visualizer\n"
-    "      Version " VERSION "\n"
-    "Copyright (C)1999 Daniel Richard G. <skunk@mit.edu>\n"
-    "\n"
+static const char* usage_summary = _("\n"
     "Usage: %s [rootdir] [options]\n"
     "  rootdir      Root directory for visualization\n"
     "               (defaults to current directory)\n"
     "  --mapv       Start in MapV mode (default)\n"
     "  --treev      Start in TreeV mode\n"
     "  --help       Print this help and exit\n"
-    "\n");
-
+    "\n"
+    "fsv2 - 3D File System Visualizer v.%s");
 
 /* Helper function for fsv_set_mode( ) */
 static void
@@ -222,12 +229,6 @@ main( int argc, char **argv )
 #ifdef DEBUG
 	debug_init( );
 #endif
-#ifdef ENABLE_NLS
-	/* Initialize internationalization (i8e i18n :-) */
-	setlocale( LC_ALL, "" );
-	bindtextdomain( PACKAGE, LOCALEDIR );
-	textdomain( PACKAGE );
-#endif
 
 	/* Parse command-line options */
 	for (;;) {
@@ -266,7 +267,7 @@ main( int argc, char **argv )
 			/* --help */
 			default:
 			/* unrecognized option */
-			printf( _(usage_summary), argv[0] );
+			printf( usage_summary, argv[0], VERSION );
 			fflush( stdout );
 			exit( EXIT_SUCCESS );
 			break;
@@ -299,7 +300,6 @@ main( int argc, char **argv )
 	if (!gdk_gl_query( ))
 		;//quit( _("fsv requires OpenGL support.") );
 
-	//window_init( initial_fsv_mode );
   win.set_visible(true);
 	color_init( );
         globals.fsv_mode = FSV_SPLASH;

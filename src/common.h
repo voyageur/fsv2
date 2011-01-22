@@ -1,4 +1,5 @@
 /* fsv - 3D File System Visualizer
+ * Copyright (C)2009-1010 Yury P. Fedorchenko <yuryfdr@users.sf.net>
  * Copyright (C)1999 Daniel Richard G. <skunk@mit.edu>
  *
  * This program is free software; you can redistribute it and/or
@@ -16,15 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #ifndef FSV_COMMON_H
 #define FSV_COMMON_H
 
-
-//#define G_LOG_DOMAIN PACKAGE
-
-
-/**** Headers ****************/
+#define GETTEXT_PACKAGE PACKAGE
 
 /* Autoconf */
 #include "config.h"
@@ -41,18 +37,25 @@
 
 /* Internationalization */
 #ifdef ENABLE_NLS
-	#include <locale.h>
-	#include <libintl.h>
-	#define _(msgid) gettext(msgid)
-	#ifdef gettext_noop
-		#define __(msgid) gettext_noop(msgid)
-	#else
-		#define __(msgid) msgid
-	#endif
-#else /* not ENABLE_NLS */
-	#define _(string) string
-	#define __(string) string
-#endif /* not ENABLE_NLS */
+#  include <libintl.h>
+#  undef _
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
+#  ifdef gettext_noop
+#    define N_(String) gettext_noop (String)
+#    define __(String) gettext_noop (String)
+#  else
+#    define N_(String) (String)
+#    define __(String) (String)
+#  endif
+#else
+#  define textdomain(String) (String)
+#  define gettext(String) (String)
+#  define dgettext(Domain,Message) (Message)
+#  define dcgettext(Domain,Message,Type) (Message)
+#  define bindtextdomain(Domain,Directory) (Domain)
+#  define _(String) (String)
+#  define N_(String) (String)
+#endif
 
 /* Debugging */
 #ifdef DEBUG

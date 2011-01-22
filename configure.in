@@ -61,8 +61,9 @@ else
 fi
 
 # Internationalization
-ALL_LINGUAS=""
-AM_GLIB_GNU_GETTEXT
+#ALL_LINGUAS=""
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.17])
 
 # Locale directory
 AC_ARG_WITH(locale-dir, [  --with-locale-dir=DIR   install locale files in DIR [DATADIR/locale]])
@@ -180,7 +181,6 @@ AC_OUTPUT(fsv.spec
 	Makefile
 	debugloc/Makefile
 	doc/Makefile
-	intl/Makefile
 	po/Makefile.in
 	src/Makefile)
 

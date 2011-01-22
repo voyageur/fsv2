@@ -7,16 +7,12 @@ DEBUG_LIBS =
 endif
 
 INCLUDES = \
-	-DLOCALEDIR=\"$(localedir)\" \
 	-DDOCDIR=\"$(docdir)\" \
 	$(DEBUG_CFLAGS) \
 	@GTK_CFLAGS@ \
 	@GTKGL_CFLAGS@ \
-	@GL_CFLAGS@ 
-#	@GNOMEUI_CFLAGS@
-
-#	-I$(top_srcdir)/lib \
-#
+	@GL_CFLAGS@ \
+	-DLOCALE_DIR=\"@localedir@\"
 
 bin_PROGRAMS = fsv2
 noinst_HEADERS = \
@@ -65,11 +61,6 @@ fsv2_LDADD = \
 	@GTK_LIBS@ \
 	@FTGL_LIBS@
 
-#	$(top_builddir)/lib/libmisc.a \
-#
-
-#	$(top_builddir)/lib/libgnomeui.a \
-#
 EXTRA_DIST = \
 	xmaps/back.xpm \
 	xmaps/birdseye_view.xpm \

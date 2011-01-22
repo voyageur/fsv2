@@ -1,5 +1,5 @@
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
-<!ENTITY docbook.dsl SYSTEM "/usr/lib/sgml/stylesheets/nwalsh-modular/html/docbook.dsl" CDATA dsssl>
+<!ENTITY docbook.dsl SYSTEM "/usr/share/sgml/stylesheets/dsssl/docbook/html/docbook.dsl" CDATA dsssl>
 ]>
 
 <!-- Hacked from cygnus-both.dsl by DrG

@@ -1,23 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML
 ><HEAD
 ><TITLE
 >Menus</TITLE
 ><META
 NAME="GENERATOR"
-CONTENT="Modular DocBook HTML Stylesheet Version 1.44"><LINK
+CONTENT="Modular DocBook HTML Stylesheet Version 1.79"><LINK
 REL="HOME"
-TITLE="fsv - 3D File System Visualizer"
+TITLE="fsv2 - 3D File System Visualizer"
 HREF="t1.html"><LINK
 REL="PREVIOUS"
 TITLE="Using the mouse"
 HREF="mouse.html"><LINK
 REL="NEXT"
-TITLE="About fsv"
+TITLE="About fsv2"
 HREF="about.html"></HEAD
 ><BODY
+CLASS="SECT1"
 ><DIV
 CLASS="NAVHEADER"
 ><TABLE
+SUMMARY="Header navigation table"
 WIDTH="100%"
 BORDER="0"
 CELLPADDING="0"
@@ -26,7 +29,7 @@ CELLSPACING="0"
 ><TH
 COLSPAN="3"
 ALIGN="center"
->fsv - 3D File System Visualizer</TH
+>fsv2 - 3D File System Visualizer</TH
 ></TR
 ><TR
 ><TD
@@ -35,6 +38,7 @@ ALIGN="left"
 VALIGN="bottom"
 ><A
 HREF="mouse.html"
+ACCESSKEY="P"
 >Prev</A
 ></TD
 ><TD
@@ -48,6 +52,7 @@ ALIGN="right"
 VALIGN="bottom"
 ><A
 HREF="about.html"
+ACCESSKEY="N"
 >Next</A
 ></TD
 ></TR
@@ -64,16 +69,19 @@ NAME="MENUS"
 >Menus</A
 ></H1
 ><P
->This section documents the various items accessible from <I
+>This section documents the various items accessible from <SPAN
+CLASS="emphasis"
+><I
 CLASS="EMPHASIS"
 >fsv</I
+></SPAN
 >'s top menu bar.</P
 ><DIV
 CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="AEN162"
+NAME="AEN169"
 ><SPAN
 CLASS="GUIMENU"
 >File</SPAN
@@ -81,6 +89,8 @@ CLASS="GUIMENU"
 ></H2
 ><P
 ></P
+><DIV
+CLASS="VARIABLELIST"
 ><DL
 ><DT
 ><SPAN
@@ -89,12 +99,18 @@ CLASS="GUIMENUITEM"
 ></DT
 ><DD
 ><P
->Restarts <I
+>Restarts <SPAN
+CLASS="emphasis"
+><I
 CLASS="EMPHASIS"
 >fsv</I
-> in a different root directory. This brings up a directory selection dialog, and once a directory is specified, <I
+></SPAN
+> in a different root directory. This brings up a directory selection dialog, and once a directory is specified, <SPAN
+CLASS="emphasis"
+><I
 CLASS="EMPHASIS"
 >fsv</I
+></SPAN
 > will perform another scan and generate new file system geometry accordingly.</P
 ></DD
 ><DT
@@ -108,24 +124,30 @@ CLASS="GUIMENUITEM"
 ></DD
 ></DL
 ></DIV
+></DIV
 ><DIV
 CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="AEN178"
+NAME="AEN185"
 ><SPAN
 CLASS="GUIMENU"
 >Vis</SPAN
 ></A
 ></H2
 ><P
->This menu allows you to choose between <I
+>This menu allows you to choose between <SPAN
+CLASS="emphasis"
+><I
 CLASS="EMPHASIS"
 >fsv</I
+></SPAN
 >'s various visualization modes. Each of these is a different approach to representing a file system. When you switch from one mode to another, the camera will automatically home in on the same node it was looking at before.</P
 ><P
 ></P
+><DIV
+CLASS="VARIABLELIST"
 ><DL
 ><DT
 ><SPAN
@@ -137,9 +159,7 @@ CLASS="GUIMENUITEM"
 CLASS="MEDIAOBJECT"
 ><P
 ><IMG
-SRC="mapv.png"
-></IMG
-></P
+SRC="mapv.png"></P
 ></DIV
 ><P
 >Each node is a block which sits on top of its parent directory. (Viewed from above, it is basically a Venn diagram). The area covered by each block is proportional to the size of the corresponding file system node.</P
@@ -154,21 +174,20 @@ CLASS="GUIMENUITEM"
 CLASS="MEDIAOBJECT"
 ><P
 ><IMG
-SRC="treev.png"
-></IMG
-></P
+SRC="treev.png"></P
 ></DIV
 ><P
 >Nodes are separated into two categories: platforms and leaves. Platforms are directories which have been expanded for viewing; everything else is a leaf, which sits on some platform. The platforms are connected by branches, reflecting the file system's directory structure. The height of a leaf node indicates its size.</P
 ></DD
 ></DL
 ></DIV
+></DIV
 ><DIV
 CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="AEN200"
+NAME="AEN207"
 ><SPAN
 CLASS="GUIMENU"
 >Colors</SPAN
@@ -178,6 +197,8 @@ CLASS="GUIMENU"
 >This menu controls how colors are assigned to nodes.</P
 ><P
 ></P
+><DIV
+CLASS="VARIABLELIST"
 ><DL
 ><DT
 ><SPAN
@@ -351,12 +372,13 @@ CLASS="GUIMENUITEM"
 ></DD
 ></DL
 ></DIV
+></DIV
 ><DIV
 CLASS="SECT2"
 ><H2
 CLASS="SECT2"
 ><A
-NAME="AEN274"
+NAME="AEN281"
 ><SPAN
 CLASS="GUIMENU"
 >Help</SPAN
@@ -364,6 +386,8 @@ CLASS="GUIMENU"
 ></H2
 ><P
 ></P
+><DIV
+CLASS="VARIABLELIST"
 ><DL
 ><DT
 ><SPAN
@@ -386,11 +410,13 @@ CLASS="GUIMENUITEM"
 ></DL
 ></DIV
 ></DIV
+></DIV
 ><DIV
 CLASS="NAVFOOTER"
 ><HR
 ALIGN="LEFT"
 WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
 WIDTH="100%"
 BORDER="0"
 CELLPADDING="0"
@@ -402,6 +428,7 @@ ALIGN="left"
 VALIGN="top"
 ><A
 HREF="mouse.html"
+ACCESSKEY="P"
 >Prev</A
 ></TD
 ><TD
@@ -410,6 +437,7 @@ ALIGN="center"
 VALIGN="top"
 ><A
 HREF="t1.html"
+ACCESSKEY="H"
 >Home</A
 ></TD
 ><TD
@@ -418,6 +446,7 @@ ALIGN="right"
 VALIGN="top"
 ><A
 HREF="about.html"
+ACCESSKEY="N"
 >Next</A
 ></TD
 ></TR
@@ -436,7 +465,7 @@ VALIGN="top"
 WIDTH="33%"
 ALIGN="right"
 VALIGN="top"
->About fsv</TD
+>About fsv2</TD
 ></TR
 ></TABLE
 ></DIV

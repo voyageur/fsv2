@@ -303,7 +303,7 @@ FsvWindow::FsvWindow() : Gtk::Window(){
   ag_allways->add(Gtk::Action::create("Quit",Gtk::Stock::QUIT),
                   sigc::mem_fun(*this,&FsvWindow::on_exit));
   ag_allways->add(Gtk::Action::create("Help",_("_Help")));
-  ag_allways->add(Gtk::Action::create("About",_("_About")),
+  ag_allways->add(Gtk::Action::create("About",Gtk::Stock::ABOUT),
                   sigc::mem_fun(*this,&FsvWindow::on_about));
   ag_allways->add(Gtk::Action::create("Pref",Gtk::Stock::PREFERENCES),
                   sigc::mem_fun(*this,&FsvWindow::on_color_setup) );

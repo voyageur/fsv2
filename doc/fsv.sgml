@@ -3,8 +3,13 @@
 <article>
 
 <artheader>
-<date>20 November 1999</date>
-<title>fsv - 3D File System Visualizer</title>
+<date>21 January 2011</date>
+<title>fsv2 - 3D File System Visualizer</title>
+<author>
+<firstname>Yury</firstname>
+<othername>P.</othername>
+<surname>Fedorchenko</surname>
+</author>
 <author>
 <firstname>Daniel</firstname>
 <othername>Richard</othername>
@@ -13,6 +18,10 @@
 <copyright>
 <year>1999</year>
 <holder>Daniel Richard G.</holder>
+</copyright>
+<copyright>
+<year>2009-2011</year>
+<holder>Yury P. Fedorchenko</holder>
 </copyright>
 </artheader>
 
@@ -422,18 +431,21 @@ Gives authorship and version information for the program.
 </sect1>
 
 
-<sect1 id="about"><title>About fsv</title>
+<sect1 id="about"><title>About fsv2</title>
 
 <para>
-<emphasis>fsv</emphasis> - 3D File System Visualizer
+<emphasis>fsv2</emphasis> - 3D File System Visualizer
 </para>
 
 <para>
-<ulink url="http://fox.mit.edu/skunk/soft/fsv/">http://fox.mit.edu/skunk/soft/fsv/</ulink>
+<ulink url="http://www.fedorchenko.net/fsv2.php">http://www.fedorchenko.net/fsv2.php</ulink>
 </para>
 
 <para>
 Copyright &copy;1999 Daniel Richard G. <email>skunk@mit.edu</email>
+</para>
+<para>
+Copyright &copy;2009-2011 Yury P. Fedorchenko <email>yurufdr@users.sf.net</email>
 </para>
 
 <para>
