@@ -21,6 +21,14 @@
 #include "common.h"
 #include <color.h>
 
+#if defined HAVE_FTGL
+#include <FTGL/ftgl.h>
+//extern FTGLfont *font;
+#elif defined HAVE_GL_GLC_H
+#include <GL/glc.h>
+extern GLint textFont;
+#endif
+
 #ifdef __cplusplus
 #include <gtkmm.h>
 
@@ -85,8 +93,6 @@ protected:
 public:
   Glib::RefPtr<Gtk::ListStore> model;
   Glib::RefPtr<Gtk::ListStore> scan_model;
-  /*Glib::RefPtr<Gdk::Pixbuf> folder_closed;
-  Glib::RefPtr<Gdk::Pixbuf> folder_opened;*/
   FsvFileList();
   static FsvFileList* file_tree;
   void switch_scan(); 
@@ -94,6 +100,15 @@ public:
 };
 
 class FsvWindow : public Gtk::Window {
+#if defined HAVE_FTGL
+public:
+  FTFont *font;
+private:
+#elif defined HAVE_GL_GLC_H
+  GLint ctx;
+#endif
+  static Gtk::StockID BIRDEYE;
+  static Gtk::StockItem BirdEye;
   Gtk::VBox bx_main;
   Gtk::VBox bx_left;
   Gtk::VPaned pn_left;
@@ -101,24 +116,26 @@ class FsvWindow : public Gtk::Window {
   Gtk::Table  tbl_right;
   Gtk::HScrollbar x_scroll;
   Gtk::VScrollbar y_scroll;
-  Gtk::MenuBar menu_bar;
   Gtk::ScrolledWindow scr_tree;
   Gtk::ScrolledWindow scr_list;
   FsvDirTree tr_dirs;
   FsvFileList tr_files;
 public:
-  Gtk::Menu popa;
   Gtk::Statusbar sbar,rsbar;//??
 protected:
   void on_change_root();
   void on_exit();
   void on_about();
   void on_fsv_mode(FsvMode mode);
-  void on_birdseye_view(int);
+  void on_birdseye_view();
 public:
-  Gtk::CheckMenuItem* birdeye;
-
+  Glib::RefPtr<Gtk::ToggleAction> birdeye;
+  Glib::RefPtr<Gtk::ActionGroup> ag_unsetsitive;
+  Glib::RefPtr<Gtk::ActionGroup> ag_allways;
+  Glib::RefPtr<Gtk::UIManager > ui_man;	
+  Gtk::Menu *popa;
 protected:
+  void on_fullscreen(){fullscreen();}
   void on_collapse();
   void on_expand();
   void on_expand_all();
@@ -127,16 +144,13 @@ protected:
   
   void on_color_type(ColorMode);
   void on_color_setup();
-  Gtk::Toolbar tool_bar;
-  Gtk::ToolButton tb_root,tb_back,tb_up;
   void on_cd_root();
   void on_cd_back();
   void on_cd_up();
-  Gtk::Image birdeye_image;
 public:
-  Gtk::ToggleToolButton tb_birdeye;
   GNode* popa_node;
   FsvWindow();
+  ~FsvWindow();
   static FsvWindow* current;
 };
 
@@ -158,6 +172,14 @@ void window_set_access( boolean enabled );
 void window_set_color_mode( ColorMode mode );
 boolean gui_adjustment_widget_busy( GtkAdjustment *adj );
 void context_menu( GNode *node, GdkEventButton *ev_button );
+
+void text_init( void );
+void text_pre( void );
+void text_post( void );
+void text_draw_straight( const char *text, const XYZvec *text_pos, const XYvec *text_max_dims );
+void text_draw_straight_rotated( const char *text, const RTZvec *text_pos, const XYvec *text_max_dims );
+void text_draw_curved( const char *text, const RTZvec *text_pos, const RTvec *text_max_dims );
+
 #ifdef __cplusplus
 };
 #endif

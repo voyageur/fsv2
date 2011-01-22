@@ -24,33 +24,30 @@
 
 #include "common.h"
 #include "tmaptext.h"
+#include "fsvwindow.h"
 
 #include <GL/gl.h>
 #include <GL/glu.h> /* gluBuild2DMipmaps( ) */
 
+#ifndef HAVE_FTGL
+
 #ifdef HAVE_GL_GLC_H
 #include <GL/glc.h>
-static GLint textFont=-1;
-//static GLint ctx;
-#endif
 /* Bitmap font definition */
+#else
 #define char_width 16
 #define char_height 32
 #include "xmaps/charset.xbm"
 
-
+/* Normal character aspect ratio */
+static const double char_aspect_ratio = (double)char_width / (double)char_height;
 /* Text can be squeezed to at most half its normal width */
 #define TEXT_MAX_SQUEEZE 2.0
 /* Mipmaps make faraway text look nice */
 #define TEXT_USE_MIPMAPS
 
-
-/* Normal character aspect ratio */
-static const double char_aspect_ratio = (double)char_width / (double)char_height;
-
 /* Font texture object */
 static GLuint text_tobj;
-
 
 /* Simple XBM parser - bits to bytes. Caller assumes responsibility for
  * freeing the returned pixel buffer */
@@ -81,12 +78,14 @@ xbm_pixels( const byte *xbm_bits, int pixel_count )
 
 	return pixels;
 }
+#endif
 
 
 /* Initializes texture-mapping state for drawing text */
 void
 text_init( void )
 {
+#ifndef HAVE_GL_GLC_H
 	float border_color[] = { 0.0, 0.0, 0.0, 1.0 };
 	byte *charset_pixels;
 
@@ -114,17 +113,17 @@ text_init( void )
 	glTexImage2D( GL_TEXTURE_2D, 0, GL_INTENSITY4, charset_width, charset_height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, charset_pixels );*/
 #endif
 	xfree( charset_pixels );
-#ifdef HAVE_GL_GLC_H
-    GLint ctx = glcGenContext();
+#else //HAVE_GL_GLC_H
+/*    GLint ctx = glcGenContext();
     glcContext(ctx);
     //glcStringType(GLC_UTF8_QSO);
 //    glcAppendCatalog("/usr/lib/X11/fonts/Type1");
 
-  /* Create a font "Sans Bold" */
+  // Create a font "Sans Bold" 
   textFont = glcGenFontID();
   glcNewFontFromFamily(textFont, "Sans");
   glcFontFace(textFont, "Bold");
-  glcFont(textFont);
+  glcFont(textFont);*/
 #endif
 }
 
@@ -138,7 +137,9 @@ text_pre( void )
 	glEnable( GL_ALPHA_TEST );
 	glEnable( GL_BLEND );
 	glEnable( GL_TEXTURE_2D );
+#ifndef HAVE_GL_GLC_H	
 	glBindTexture( GL_TEXTURE_2D, text_tobj );
+#endif	
 }
 
 
@@ -151,6 +152,8 @@ text_post( void )
 	glDisable( GL_ALPHA_TEST );
 	glEnable( GL_POLYGON_OFFSET_FILL );
 	glEnable( GL_LIGHTING );
+#ifndef HAVE_GL_GLC_H	
+#endif	
 }
 
 #ifndef HAVE_GL_GLC_H
@@ -224,19 +227,18 @@ get_char_tex_coords( int c, XYvec *t_c0, XYvec *t_c1 )
 static int
 get_char_dims(const char *text, const XYvec *max_dims, XYvec *cdims ,double *scale, int reallen){
     int len;
-    GLint ctx = glcGenContext();
-    glcContext(ctx);
-    glcFont(textFont);
-    glcStringType(GLC_UTF8_QSO);
-    glcPushMatrixQSO();
-    glcScale(max_dims->y,max_dims->y);
+    /*GLint ctx = glcGenContext();
+    glcContext(ctx);*/
+    //glcFont(textFont);
+    //glcPushMatrixQSO();
+    //glcScale(max_dims->y,max_dims->y);
     if(g_utf8_validate(text,-1,NULL)){
-	len = g_utf8_strlen(text,-1);
-	GLfloat outvec[8];
-	glcMeasureString(GL_FALSE,text);
-	glcGetStringMetric(GLC_BOUNDS,outvec);
-	cdims->x=outvec[2]-outvec[0];
-	cdims->y=outvec[5]-outvec[1];
+	    len = g_utf8_strlen(text,-1);
+	    GLfloat outvec[8];
+	    glcMeasureString(GL_FALSE,text);
+	    glcGetStringMetric(GLC_BOUNDS,outvec);
+	    cdims->x=outvec[2]-outvec[0];
+	    cdims->y=outvec[5]-outvec[1];
 /*	if(strncmp(text,"dialog",6)==0){
 	g_print("meas %d:%e %e %e %e \t%e %e %e %e \n%e %e - %e %e\n%s\n",len,outvec[0],outvec[1],outvec[2],outvec[3]
 							  ,outvec[4],outvec[5],outvec[6],outvec[7],
@@ -244,18 +246,15 @@ get_char_dims(const char *text, const XYvec *max_dims, XYvec *cdims ,double *sca
 							  cdims->x,cdims->y,
 							  text);
 							  }*/
-	if(cdims->x>max_dims->x){
-	    *scale=max_dims->y/(cdims->x/max_dims->x);
-	    cdims->x=max_dims->x;
-	}else
-    	    *scale=max_dims->y;
-/*	if(strncmp(text,"dialog",6)==0){
-	    g_printf("res: %e %e scl %e\n",cdims->x,cdims->y,*scale);
-	}*/
+	    if(cdims->x*max_dims->y > max_dims->x){
+	      *scale= max_dims->x / cdims->x;
+	      cdims->x=max_dims->x/ *scale;
+	    }else
+    	  *scale=max_dims->y;
     }else{
-	g_print("vot :%s invalid\n",text);
+	    g_print("vot :%s invalid\n",text);
     }
-    glcPopMatrixQSO();
+    //glcPopMatrixQSO();
   return (reallen==0)?1:len;
 }
 
@@ -272,8 +271,8 @@ text_draw_straight( const char *text, const XYZvec *text_pos, const XYvec *text_
 	double scale=1.;
 	len = get_char_dims( text, text_max_dims, &cdims ,&scale,0);
 	/* Corners of first character */
-	c0.x = text_pos->x - 0.5 * (double)len * cdims.x;
-	c0.y = text_pos->y - 0.5 * cdims.y;
+	c0.x = text_pos->x - 0.5 * (double)len * cdims.x *scale;
+	c0.y = text_pos->y - 0.5 * cdims.y *scale;
 	c1.x = c0.x + cdims.x;
 	c1.y = c0.y + cdims.y;
 
@@ -301,17 +300,14 @@ text_draw_straight( const char *text, const XYZvec *text_pos, const XYvec *text_
 	}
 	glEnd( );
 #else
-    //glcScale(text_max_dims->y,text_max_dims->y);
     //glDisable(GL_TEXTURE_2D);
     glPushMatrix();
-    glcPushMatrixQSO();
+    //glcPushMatrixQSO();
     //glcScale(text_max_dims->y,text_max_dims->y);
     glTranslated(c0.x,c0.y,text_pos->z);
-    glScalef(scale,text_max_dims->y,text_max_dims->y);
-    //glcRenderStyle(GLC_TRIANGLE);
-    glcRenderStyle(GLC_TEXTURE);
+    glScaled(scale,text_max_dims->y,text_max_dims->y);
     glcRenderString(text);
-    glcPopMatrixQSO();
+    //glcPopMatrixQSO();
     glPopMatrix();
     //glEnable(GL_TEXTURE_2D);
 #endif
@@ -375,15 +371,15 @@ text_draw_straight_rotated( const char *text, const RTZvec *text_pos, const XYve
 #else
     //glDisable(GL_TEXTURE_2D);
     glPushMatrix();
-    glcPushMatrixQSO();
+    //glcPushMatrixQSO();
     //glcScale(text_max_dims->y,text_max_dims->y);
     glTranslated(c0.x,c0.y,text_pos->z);
     glRotated(-90.+text_pos->theta,0.,0.,1.);
     glScalef(scale,text_max_dims->y,text_max_dims->y);
     //glcRenderStyle(GLC_TRIANGLE);
-    glcRenderStyle(GLC_TEXTURE);
+    //glcRenderStyle(GLC_TEXTURE);
     glcRenderString(text);
-    glcPopMatrixQSO();
+    //glcPopMatrixQSO();
     glPopMatrix();
     //glEnable(GL_TEXTURE_2D);
 #endif
@@ -454,7 +450,7 @@ text_draw_curved( const char *text, const RTZvec *text_pos, const RTvec *text_ma
     sin_theta = sin( RAD(theta) );
     cos_theta = cos( RAD(theta) );
 
-    glcPushMatrixQSO();
+    //glcPushMatrixQSO();
     //glcScale(straight_dims.y,straight_dims.y);
     char_pos.x = cos_theta * text_r;
     char_pos.y = sin_theta * text_r;
@@ -462,13 +458,15 @@ text_draw_curved( const char *text, const RTZvec *text_pos, const RTvec *text_ma
     glTranslated(char_pos.x,char_pos.y,text_pos->z);
     glRotated(-90.,0,0,1);
     glTranslated(0,-straight_dims.y/3.,0);
-    glScalef(scale,straight_dims.y,straight_dims.y);
-    glcRenderStyle(GLC_TEXTURE);
+    glScaled(scale,straight_dims.y,straight_dims.y);
+    //glcRenderStyle(GLC_TEXTURE);
     glcRenderString(text);
-    glcPopMatrixQSO();
+    //glcPopMatrixQSO();
     glPopMatrix();
 #endif	
 }
 
+#endif //HAVE_FTGL
 
 /* end tmaptext.c */
+

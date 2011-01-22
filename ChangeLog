@@ -1,3 +1,5 @@
+21.01.2011
+  - begin remove GLC `cause it seams incompatible with gtk
 10.01.2011
   - partialy rewrite to gtkmm
 05.07.2010

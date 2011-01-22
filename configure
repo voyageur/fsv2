@@ -593,6 +593,8 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 FILE_CMD
+FTGL_LIBS
+FTGL_CFLAGS
 GTKGL_LIBS
 GTKGL_CFLAGS
 GL_LIBS
@@ -740,7 +742,9 @@ PKG_CONFIG_LIBDIR
 GTK_CFLAGS
 GTK_LIBS
 GTKGL_CFLAGS
-GTKGL_LIBS'
+GTKGL_LIBS
+FTGL_CFLAGS
+FTGL_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1389,6 +1393,8 @@ Some influential environment variables:
   GTKGL_CFLAGS
               C compiler flags for GTKGL, overriding pkg-config
   GTKGL_LIBS  linker flags for GTKGL, overriding pkg-config
+  FTGL_CFLAGS C compiler flags for FTGL, overriding pkg-config
+  FTGL_LIBS   linker flags for FTGL, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -6603,7 +6609,7 @@ if test "${enable_glc+set}" = set; then :
   enableval=$enable_glc;
 fi
 
-if test "$enable_glc" != "no" ; then
+if test "$enable_glc" == "yes" ; then
     for ac_header in GL/glc.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "GL/glc.h" "ac_cv_header_GL_glc_h" "$ac_includes_default"
@@ -6658,6 +6664,100 @@ _ACEOF
 
 fi
 
+else
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for FTGL" >&5
+$as_echo_n "checking for FTGL... " >&6; }
+
+if test -n "$FTGL_CFLAGS"; then
+    pkg_cv_FTGL_CFLAGS="$FTGL_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ftgl\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ftgl") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_FTGL_CFLAGS=`$PKG_CONFIG --cflags "ftgl" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$FTGL_LIBS"; then
+    pkg_cv_FTGL_LIBS="$FTGL_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"ftgl\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "ftgl") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_FTGL_LIBS=`$PKG_CONFIG --libs "ftgl" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        FTGL_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "ftgl" 2>&1`
+        else
+	        FTGL_PKG_ERRORS=`$PKG_CONFIG --print-errors "ftgl" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$FTGL_PKG_ERRORS" >&5
+
+	as_fn_error "Package requirements (ftgl) were not met:
+
+$FTGL_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables FTGL_CFLAGS
+and FTGL_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables FTGL_CFLAGS
+and FTGL_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details." "$LINENO" 5; }
+else
+	FTGL_CFLAGS=$pkg_cv_FTGL_CFLAGS
+	FTGL_LIBS=$pkg_cv_FTGL_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+
+$as_echo "#define HAVE_FTGL 1" >>confdefs.h
+
+    #"$FTGL_LIBS"
 fi
 
 #### end of GtkGLArea configuration ####

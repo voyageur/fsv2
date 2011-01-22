@@ -62,8 +62,8 @@ fsv2_LDADD = \
 	$(DEBUG_LIBS) \
 	@GTKGL_LIBS@ \
 	@GL_LIBS@ \
-	@GTK_LIBS@
-#	@GNOMEUI_LIBS@
+	@GTK_LIBS@ \
+	@FTGL_LIBS@
 
 #	$(top_builddir)/lib/libmisc.a \
 #

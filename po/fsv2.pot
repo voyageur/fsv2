@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-10 23:06+0300\n"
+"POT-Creation-Date: 2011-01-22 00:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,59 +143,59 @@ msgstr ""
 msgid "/. (root)"
 msgstr ""
 
-#: src/options_dlg.cxx:5
+#: src/options_dlg.cxx:3
 msgid "Color Setup"
 msgstr ""
 
-#: src/options_dlg.cxx:6
+#: src/options_dlg.cxx:4
 msgid "Color by:"
 msgstr ""
 
-#: src/options_dlg.cxx:6
+#: src/options_dlg.cxx:4
 msgid "Older"
 msgstr ""
 
-#: src/options_dlg.cxx:6
+#: src/options_dlg.cxx:4
 msgid "Newer"
 msgstr ""
 
-#: src/options_dlg.cxx:8 src/fsvwindow.cxx:259
+#: src/options_dlg.cxx:6
 msgid "By nodetype"
 msgstr ""
 
-#: src/options_dlg.cxx:27 src/fsvwindow.cxx:261
+#: src/options_dlg.cxx:25
 msgid "By timestamp"
 msgstr ""
 
-#: src/options_dlg.cxx:31
+#: src/options_dlg.cxx:29
 msgid "time of last access"
 msgstr ""
 
-#: src/options_dlg.cxx:32
+#: src/options_dlg.cxx:30
 msgid "time of last modification"
 msgstr ""
 
-#: src/options_dlg.cxx:33
+#: src/options_dlg.cxx:31
 msgid "time of last attribute change"
 msgstr ""
 
-#: src/options_dlg.cxx:41
+#: src/options_dlg.cxx:40
 msgid "Rainbow"
 msgstr ""
 
-#: src/options_dlg.cxx:42
+#: src/options_dlg.cxx:41
 msgid "Heat"
 msgstr ""
 
-#: src/options_dlg.cxx:43
+#: src/options_dlg.cxx:42
 msgid "Gradient"
 msgstr ""
 
-#: src/options_dlg.cxx:46 src/fsvwindow.cxx:263
+#: src/options_dlg.cxx:54
 msgid "By wildcard"
 msgstr ""
 
-#: src/property_dlg.cxx:3 src/fsvwindow.cxx:288
+#: src/property_dlg.cxx:3 src/fsvwindow.cxx:282
 msgid "Properties"
 msgstr ""
 
@@ -228,11 +228,11 @@ msgstr ""
 msgid "%d nodes"
 msgstr ""
 
-#: src/filelist.cxx:342
+#: src/filelist.cxx:335
 msgid "Node type"
 msgstr ""
 
-#: src/filelist.cxx:346
+#: src/filelist.cxx:339
 msgid "Quantity"
 msgstr ""
 
@@ -262,58 +262,74 @@ msgstr ""
 msgid "%d stats/sec"
 msgstr ""
 
-#: src/fsvwindow.cxx:134
+#: src/fsvwindow.cxx:135
 msgid "Change Root Directory"
 msgstr ""
 
-#: src/fsvwindow.cxx:222
-msgid "File"
-msgstr ""
-
-#: src/fsvwindow.cxx:227
-msgid "Change Root"
-msgstr ""
-
-#: src/fsvwindow.cxx:229
-msgid "Exit"
-msgstr ""
-
-#: src/fsvwindow.cxx:235
-msgid "View"
-msgstr ""
-
-#: src/fsvwindow.cxx:241
-msgid "MapV"
-msgstr ""
-
-#: src/fsvwindow.cxx:242
-msgid "TreeV"
-msgstr ""
-
-#: src/fsvwindow.cxx:244
+#: src/fsvwindow.cxx:211
 msgid "Top View"
 msgstr ""
 
-#: src/fsvwindow.cxx:271
-msgid "Help"
+#: src/fsvwindow.cxx:246
+msgid "_Change Root"
 msgstr ""
 
-#: src/fsvwindow.cxx:277
-msgid "About"
+#: src/fsvwindow.cxx:250
+msgid "_Map View"
 msgstr ""
 
-#: src/fsvwindow.cxx:284
+#: src/fsvwindow.cxx:252
+msgid "_Tree View"
+msgstr ""
+
+#: src/fsvwindow.cxx:254
+msgid "_Disc View"
+msgstr ""
+
+#: src/fsvwindow.cxx:258
+msgid "By n_odetype"
+msgstr ""
+
+#: src/fsvwindow.cxx:260
+msgid "By t_imestamp"
+msgstr ""
+
+#: src/fsvwindow.cxx:262
+msgid "By _wildcard"
+msgstr ""
+
+#: src/fsvwindow.cxx:274
 msgid "Collapse"
 msgstr ""
 
-#: src/fsvwindow.cxx:285
+#: src/fsvwindow.cxx:276
 msgid "Expand"
 msgstr ""
 
-#: src/fsvwindow.cxx:286
+#: src/fsvwindow.cxx:278
 msgid "Expand all"
 msgstr ""
 
-#: src/fsvwindow.cxx:287
+#: src/fsvwindow.cxx:280
 msgid "Look at"
+msgstr ""
+
+#: src/fsvwindow.cxx:286
+msgid "_File"
+msgstr ""
+
+#: src/fsvwindow.cxx:287
+msgid "_View"
+msgstr ""
+
+#: src/fsvwindow.cxx:288
+msgid "_Full Screen"
+msgstr ""
+
+#: src/fsvwindow.cxx:292
+msgid "_Help"
+msgstr ""
+
+#: src/fsvwindow.cxx:293
+msgid "_About"
 msgstr ""
