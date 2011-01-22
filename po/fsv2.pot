@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR Yury P. Fedorchenko
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-22 14:31+0300\n"
+"Project-Id-Version: fsv2 1.1.0\n"
+"Report-Msgid-Bugs-To: yuryfdr@users.sf.net\n"
+"POT-Creation-Date: 2011-01-23 01:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,12 +25,10 @@ msgstr ""
 msgid "Copyright ©2009-2011 by Yury P. Fedorchenko"
 msgstr ""
 
-#. -80
 #: src/about.c:167
 msgid "Copyright (C)1999 by Daniel Richard G."
 msgstr ""
 
-#. "Metanode"
 #: src/common.c:87
 msgid "Directory"
 msgstr ""
@@ -63,7 +61,6 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#. "Metanodes"
 #: src/common.c:100
 msgid "Directories"
 msgstr ""
@@ -100,32 +97,26 @@ msgstr ""
 msgid "B"
 msgstr ""
 
-#. Bytes
 #: src/common.c:317
 msgid "kB"
 msgstr ""
 
-#. Kilobytes
 #: src/common.c:318
 msgid "MB"
 msgstr ""
 
-#. Megabytes
 #: src/common.c:319
 msgid "GB"
 msgstr ""
 
-#. Gigabytes
 #: src/common.c:320
 msgid "TB"
 msgstr ""
 
-#. Terabytes
 #: src/common.c:321
 msgid "PB"
 msgstr ""
 
-#. Petabytes
 #: src/common.c:322
 msgid "EB"
 msgstr ""
@@ -134,7 +125,6 @@ msgstr ""
 msgid "Could not execute 'file' command"
 msgstr ""
 
-#. Is this allowed?
 #: src/common.c:508
 msgid "('file' command timed out)"
 msgstr ""
@@ -195,12 +185,52 @@ msgstr ""
 msgid "By wildcard"
 msgstr ""
 
-#: src/property_dlg.cxx:3 src/fsvwindow.cxx:282
+#: src/property_dlg.cxx:3 src/fsvwindow.cxx:294
 msgid "Properties"
 msgstr ""
 
 #: src/property_dlg.cxx:5
+msgid "Type:"
+msgstr ""
+
+#: src/property_dlg.cxx:6
+msgid "Location:"
+msgstr ""
+
+#: src/property_dlg.cxx:7
+msgid "Allocation:"
+msgstr ""
+
+#: src/property_dlg.cxx:8
+msgid "Owner:"
+msgstr ""
+
+#: src/property_dlg.cxx:9
+msgid "Group:"
+msgstr ""
+
+#: src/property_dlg.cxx:10
+msgid "Modified:"
+msgstr ""
+
+#: src/property_dlg.cxx:11
+msgid "AttribCh:"
+msgstr ""
+
+#: src/property_dlg.cxx:12
+msgid "Accessed:"
+msgstr ""
+
+#: src/property_dlg.cxx:15
 msgid "General"
+msgstr ""
+
+#: src/property_dlg.cxx:40
+msgid "Total size:"
+msgstr ""
+
+#: src/property_dlg.cxx:50
+msgid "Size:"
 msgstr ""
 
 #: src/filelist.cxx:72
@@ -236,27 +266,30 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#. Usage summary
-#: src/fsv.cxx:65
+#: src/fsv.cxx:76
+#, c-format
 msgid ""
 "\n"
-"fsv - 3D File System Visualizer\n"
-"      Version "
+"Usage: %s [rootdir] [options]\n"
+"  rootdir      Root directory for visualization\n"
+"               (defaults to current directory)\n"
+"  --mapv       Start in MapV mode (default)\n"
+"  --treev      Start in TreeV mode\n"
+"  --help       Print this help and exit\n"
+"\n"
+"fsv2 - 3D File System Visualizer v.%s"
 msgstr ""
 
-#. Excess arguments!
-#: src/fsv.cxx:282
+#: src/fsv.cxx:283
 #, c-format
 msgid "Junk in command line:"
 msgstr ""
 
-#. Update display
 #: src/scanfs.c:142
 #, c-format
 msgid "Scanning: %s"
 msgstr ""
 
-#. Stats-per-second readout in left statusbar
 #: src/scanfs.c:210
 #, c-format
 msgid "%d stats/sec"
@@ -266,70 +299,66 @@ msgstr ""
 msgid "Change Root Directory"
 msgstr ""
 
-#: src/fsvwindow.cxx:211
+#: src/fsvwindow.cxx:223
 msgid "Top View"
 msgstr ""
 
-#: src/fsvwindow.cxx:246
+#: src/fsvwindow.cxx:258
 msgid "_Change Root"
 msgstr ""
 
-#: src/fsvwindow.cxx:250
+#: src/fsvwindow.cxx:262
 msgid "_Map View"
 msgstr ""
 
-#: src/fsvwindow.cxx:252
+#: src/fsvwindow.cxx:264
 msgid "_Tree View"
 msgstr ""
 
-#: src/fsvwindow.cxx:254
+#: src/fsvwindow.cxx:266
 msgid "_Disc View"
 msgstr ""
 
-#: src/fsvwindow.cxx:258
+#: src/fsvwindow.cxx:270
 msgid "By n_odetype"
 msgstr ""
 
-#: src/fsvwindow.cxx:260
+#: src/fsvwindow.cxx:272
 msgid "By t_imestamp"
 msgstr ""
 
-#: src/fsvwindow.cxx:262
+#: src/fsvwindow.cxx:274
 msgid "By _wildcard"
 msgstr ""
 
-#: src/fsvwindow.cxx:274
+#: src/fsvwindow.cxx:286
 msgid "Collapse"
 msgstr ""
 
-#: src/fsvwindow.cxx:276
+#: src/fsvwindow.cxx:288
 msgid "Expand"
 msgstr ""
 
-#: src/fsvwindow.cxx:278
+#: src/fsvwindow.cxx:290
 msgid "Expand all"
 msgstr ""
 
-#: src/fsvwindow.cxx:280
+#: src/fsvwindow.cxx:292
 msgid "Look at"
 msgstr ""
 
-#: src/fsvwindow.cxx:286
+#: src/fsvwindow.cxx:298
 msgid "_File"
 msgstr ""
 
-#: src/fsvwindow.cxx:287
+#: src/fsvwindow.cxx:299
 msgid "_View"
 msgstr ""
 
-#: src/fsvwindow.cxx:288
+#: src/fsvwindow.cxx:300
 msgid "_Full Screen"
 msgstr ""
 
-#: src/fsvwindow.cxx:292
+#: src/fsvwindow.cxx:305
 msgid "_Help"
-msgstr ""
-
-#: src/fsvwindow.cxx:293
-msgid "_About"
 msgstr ""
