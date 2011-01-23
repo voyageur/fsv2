@@ -62,28 +62,18 @@ fsv2_LDADD = \
 	@FTGL_LIBS@
 
 EXTRA_DIST = \
-	xmaps/back.xpm \
 	xmaps/birdseye_view.xpm \
 	xmaps/blockdev.xpm \
-	xmaps/button_cancel.xpm \
-	xmaps/button_ok.xpm \
-	xmaps/cd-root.xpm \
-	xmaps/cd-up.xpm \
 	xmaps/chardev.xpm \
 	xmaps/charset.xbm \
 	xmaps/fifo.xpm \
-	xmaps/folder.xpm \
 	xmaps/fsv-icon.xpm \
 	xmaps/mini-blockdev.xpm \
 	xmaps/mini-chardev.xpm \
 	xmaps/mini-fifo.xpm \
-	xmaps/mini-folder-open.xpm \
-	xmaps/mini-folder.xpm \
-	xmaps/mini-regfile.xpm \
 	xmaps/mini-socket.xpm \
 	xmaps/mini-symlink.xpm \
 	xmaps/mini-unknown.xpm \
-	xmaps/regfile.xpm \
 	xmaps/socket.xpm \
 	xmaps/symlink.xpm \
 	xmaps/unknown.xpm

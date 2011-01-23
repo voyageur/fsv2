@@ -32,8 +32,6 @@
 #include "fsvwindow.h" /* gui_update( ) */
 
 /* Node type icon XPM files */
-#include "xmaps/folder.xpm"
-#include "xmaps/regfile.xpm"
 #include "xmaps/symlink.xpm"
 #include "xmaps/fifo.xpm"
 #include "xmaps/socket.xpm"
@@ -42,8 +40,6 @@
 #include "xmaps/unknown.xpm"
 
 /* Mini node type icon XPM files */
-#include "xmaps/mini-folder.xpm"
-#include "xmaps/mini-regfile.xpm"
 #include "xmaps/mini-symlink.xpm"
 #include "xmaps/mini-fifo.xpm"
 #include "xmaps/mini-socket.xpm"
@@ -58,8 +54,8 @@ struct Globals globals;
 /* Node type icon XPM table */
 char **node_type_xpms[NUM_NODE_TYPES] = {
 	NULL,
-	folder_xpm,
-	regfile_xpm,
+	NULL,
+	NULL,
 	symlink_xpm,
 	fifo_xpm,
 	socket_xpm,
@@ -71,8 +67,8 @@ char **node_type_xpms[NUM_NODE_TYPES] = {
 /* Mini node type icon XPM table */
 char **node_type_mini_xpms[NUM_NODE_TYPES] = {
 	NULL,
-	mini_folder_xpm,
-	mini_regfile_xpm,
+	NULL,
+	NULL,
 	mini_symlink_xpm,
 	mini_fifo_xpm,
 	mini_socket_xpm,

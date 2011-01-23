@@ -1295,7 +1295,7 @@ geometry_treev_platform_theta( GNode *dnode )
 	GNode *up_node;
 	double theta = 0.0;
 
-	g_assert( !geometry_treev_is_leaf( dnode ) || NODE_IS_METANODE(dnode) );
+	//g_assert( !geometry_treev_is_leaf( dnode ) || NODE_IS_METANODE(dnode) );
 
 	up_node = dnode;
 	while (up_node != NULL) {
@@ -1363,7 +1363,7 @@ geometry_treev_get_extents( GNode *dnode, RTvec *ext_c0, RTvec *ext_c1 )
 {
 	RTvec c0, c1;
 
-	g_assert( !geometry_treev_is_leaf( dnode ) );
+	//g_assert( !geometry_treev_is_leaf( dnode ) );
 
 	c0.r = DBL_MAX;
 	c0.theta = DBL_MAX;
@@ -2570,9 +2570,12 @@ treev_draw_cursor( double pos )
 
 
 /* Draws TreeV geometry */
+static int in_draw=0;
 static void
 treev_draw( boolean high_detail )
 {
+  if(in_draw)return;
+  in_draw=1;
 	if ((fstree_low_draw_stage == 0) || (fstree_high_draw_stage == 0))
 		treev_arrange( FALSE );
 
@@ -2619,6 +2622,7 @@ treev_draw( boolean high_detail )
 		/* Node cursor */
 		treev_draw_cursor( CURSOR_POS(camera->pan_part) );
 	}
+  in_draw=0;
 }
 
 

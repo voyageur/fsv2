@@ -1,9 +1,7 @@
 /* fsv - 3D File System Visualizer
- *
  * Copyright (C)2009-2011 Yury P. Fedorchenko <yuryfdr@users.sf.net>
- */
-
-/* This program is free software; you can redistribute it and/or
+ *
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
@@ -23,7 +21,6 @@
 
 #if defined HAVE_FTGL
 #include <FTGL/ftgl.h>
-//extern FTGLfont *font;
 #elif defined HAVE_GL_GLC_H
 #include <GL/glc.h>
 extern GLint textFont;
@@ -31,7 +28,6 @@ extern GLint textFont;
 
 #ifdef __cplusplus
 #include <gtkmm.h>
-
 
 class FsvDirTree : public Gtk::TreeView{
 public:
@@ -47,7 +43,7 @@ public:
   } records;
 protected:
   virtual bool on_button_press_event(GdkEventButton* event); 
-//  virtual void on_row_activated	(const Gtk::TreeModel::Path&	path,Gtk::TreeViewColumn* column);
+//virtual void on_row_activated	(const Gtk::TreeModel::Path&	path,Gtk::TreeViewColumn* column);
   virtual void on_row_collapsed	(const Gtk::TreeModel::iterator& iter,const Gtk::TreeModel::Path&	path);
 	virtual void on_row_expanded 	(const Gtk::TreeModel::iterator& iter,const Gtk::TreeModel::Path&	path);
 public:
@@ -121,7 +117,7 @@ private:
   FsvDirTree tr_dirs;
   FsvFileList tr_files;
 public:
-  Gtk::Statusbar sbar,rsbar;//??
+  Gtk::Statusbar sbar,rsbar;
 protected:
   void on_change_root();
   void on_exit();
@@ -149,6 +145,7 @@ protected:
   void on_cd_back();
   void on_cd_up();
 public:
+  Glib::RefPtr<Gdk::Pixbuf> fsvicon;
   GNode* popa_node;
   FsvWindow();
   ~FsvWindow();

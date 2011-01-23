@@ -66,7 +66,7 @@ When <emphasis>fsv</emphasis> is invoked with the <option>--help</option> option
 Usage: fsv2 [rootdir] [options]
   rootdir      Root directory for visualization
                (defaults to current directory)
-  --mapv       Start in MapV mode (default)
+  --mapv       Start in Map View mode (default)
   --treev      Start in TreeV mode
   --help       Print this help and exit
 
@@ -88,13 +88,13 @@ If no value is given, <emphasis>fsv</emphasis> works in the directory it is invo
 
 <varlistentry><term><option>--mapv</option></term>
 <listitem><para>
-Starts the program in MapV visualization mode. (This is the default)
+Starts the program in Map View visualization mode. (This is the default)
 </para></listitem>
 </varlistentry>
 
 <varlistentry><term><option>--treev</option></term>
 <listitem><para>
-Starts the program in TreeV visualization mode.
+Starts the program in Tree View visualization mode.
 </para></listitem>
 </varlistentry>
 
@@ -254,13 +254,13 @@ This section documents the various items accessible from <emphasis>fsv</emphasis
 
 <variablelist>
 
-<varlistentry><term><guimenuitem>Change root...</guimenuitem></term>
+<varlistentry><term><guimenuitem>Change root</guimenuitem></term>
 <listitem><para>
 Restarts <emphasis>fsv</emphasis> in a different root directory. This brings up a directory selection dialog, and once a directory is specified, <emphasis>fsv</emphasis> will perform another scan and generate new file system geometry accordingly.
 </para></listitem>
 </varlistentry>
 
-<varlistentry><term><guimenuitem>Exit</guimenuitem></term>
+<varlistentry><term><guimenuitem>Quit</guimenuitem></term>
 <listitem><para>
 Quits the program.
 </para></listitem>
@@ -270,7 +270,7 @@ Quits the program.
 
 </sect2>
 
-<sect2><title><guimenu>Vis</guimenu></title>
+<sect2><title><guimenu>View</guimenu></title>
 
 <para>
 This menu allows you to choose between <emphasis>fsv</emphasis>'s various visualization modes. Each of these is a different approach to representing a file system. When you switch from one mode to another, the camera will automatically home in on the same node it was looking at before.
@@ -278,7 +278,7 @@ This menu allows you to choose between <emphasis>fsv</emphasis>'s various visual
 
 <variablelist>
 
-<varlistentry><term><guimenuitem>MapV</guimenuitem></term>
+<varlistentry><term><guimenuitem>Map View</guimenuitem></term>
 <listitem>
 <mediaobject>
 <imageobject><imagedata fileref="mapv.png" format="png"></imageobject>
@@ -289,7 +289,7 @@ Each node is a block which sits on top of its parent directory. (Viewed from abo
 </listitem>
 </varlistentry>
 
-<varlistentry><term><guimenuitem>TreeV</guimenuitem></term>
+<varlistentry><term><guimenuitem>Tree View</guimenuitem></term>
 <listitem>
 <mediaobject>
 <imageobject><imagedata fileref="treev.png" format="png"></imageobject>
@@ -361,7 +361,7 @@ Assigns colors according to each node's file system entity type, which can be on
 Assigns colors from a continuous spectrum representing time. The default setup employs a rainbow spectrum, coloring new files red, somewhat older files green, much older files indigo/violet, and so forth. Nodes which are too old (or too new) to occur within the spectrum's time range are shown darkened.
 </para></listitem>
 </varlistentry>
-
+<!--
 <varlistentry><term><guimenuitem>By wildcards</guimenuitem></term>
 <listitem>
 <para>
@@ -381,10 +381,10 @@ Matching is performed on a case-sensitive basis. Thus, the pattern <literal>*.jp
 </para></note>
 </listitem>
 </varlistentry>
-
-<varlistentry><term><guimenuitem>Setup...</guimenuitem></term>
+-->
+<varlistentry><term><guimenuitem>Preferences</guimenuitem></term>
 <listitem><para>
-Brings up a setup dialog for the various color modes. [The dialog has yet to be documented]
+Brings up a setup dialog for the various color modes.
 </para></listitem>
 </varlistentry>
 

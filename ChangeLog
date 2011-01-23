@@ -1,7 +1,8 @@
-22.01.2011
+23.01.2011
   - fix FTGL rendering 
   - fullscreen mode
   - rewrite basic properties
+  - color setup
 21.01.2011
   - begin remove GLC `cause it seams incompatible with gtk
 10.01.2011

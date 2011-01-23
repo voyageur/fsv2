@@ -35,6 +35,7 @@
 #include <iostream>
 
 #include "xmaps/birdseye_view.xpm"
+#include "xmaps/fsv-icon.xpm"
 // will_be_removed;
 void gui_update(){
 	while (gtk_events_pending( ) > 0)
@@ -103,29 +104,26 @@ void window_statusbar( StatusBarID sb_id, const char *message ){
 // old C functions
 void context_menu( GNode *node, GdkEventButton *ev_button ){
   FsvWindow::current->popa_node = node;
-	/* Check for the special case in which the menu has only one item */
   Gtk::Menu::MenuList& items = FsvWindow::current->popa->items();
   for(Gtk::Menu::MenuList::iterator it = items.begin();it!=items.end();++it){
     it->hide();
   }
+	/* Check for the special case in which the menu has only one item */
 	/*if (!NODE_IS_DIR(node) && (node == globals.current_node)) {
 		items[4].show();//dialog_node_properties( node );
 		//return;
 	}*/
 	if (NODE_IS_DIR(node)) {
 		if (dirtree_entry_expanded( node ))
-			items[0].show();//gui_menu_item_add( popup_menu_w, _("Collapse"), collapse_cb, node );
+			items[0].show();
 		else {
-			items[1].show();//gui_menu_item_add( popup_menu_w, _("Expand"), expand_cb, node );
+			items[1].show();
 			if (DIR_NODE_DESC(node)->subtree.counts[NODE_DIRECTORY] > 0)
-				items[2].show();//gui_menu_item_add( popup_menu_w, _("Expand all"), expand_recursive_cb, node );
-		}
+				items[2].show();
+			}
 	}
-	if (node != globals.current_node)
-		items[3].show();//gui_menu_item_add( popup_menu_w, _("Look at"), look_at_cb, node );
-	//gui_menu_item_add( popup_menu_w, _("Properties"), properties_cb, node );
-	  items[4].show();
-	//gtk_menu_popup( GTK_MENU(popup_menu_w), NULL, NULL, NULL, NULL, ev_button->button, ev_button->time );
+	if (node != globals.current_node)	items[3].show();
+	items[4].show();
   FsvWindow::current->popa->popup(ev_button->button,ev_button->time);
 }
 
@@ -138,9 +136,7 @@ void FsvWindow::on_change_root(){
   dialog.set_create_folders(false);
   dialog.add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   dialog.add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
-  int result = dialog.run();
-
-  if (result == Gtk::RESPONSE_OK){
+  if (dialog.run() == Gtk::RESPONSE_OK){
     std::string filename = dialog.get_filename();
     dialog.hide();
     get_window()->set_cursor(Gdk::Cursor(Gdk::WATCH));
@@ -153,9 +149,8 @@ void FsvWindow::on_exit(){
   hide();
 #ifdef HAVE_GL_GLC_H
   glcDeleteGLObjects();
-  //glcDeleteFont(textFont);
-  //glcDeleteContext(glcGetCurrentContext());
-  //glcContext(0);
+  glcDeleteFont(textFont);
+  glcContext(ctx);
   exit(0);
 #endif
 }
@@ -228,30 +223,20 @@ GLint textFont=-1;
 
 FsvWindow::~FsvWindow(){
 #ifdef HAVE_GL_GLC_H
-  g_print("begin %s\n",__FUNCTION__);
   glcDeleteGLObjects();
-  ////glcDeleteFont(textFont);
-  //glcDeleteContext(glcGetCurrentContext());
-  //glcContext(0);
+  glcDeleteFont(textFont);
   glcDeleteContext(ctx);
-  g_print("end   %s\n",__FUNCTION__);
 #endif
 }
 
 
 FsvWindow::FsvWindow() : Gtk::Window(){
-/*  int wd,hg;
-  Gtk::IconSize::lookup(Gtk::ICON_SIZE_LARGE_TOOLBAR,wd,hg);
-  g_print("is:%d %d\n",wd,hg);*/
   Glib::RefPtr<Gtk::IconFactory> icfa=Gtk::IconFactory::create();
   icfa->add(BIRDEYE,Gtk::IconSet(Gdk::Pixbuf::create_from_xpm_data(birdseye_view_xpm)));
-  /*icfa->add(BIRDEYE,Gtk::IconSet(Gdk::Pixbuf::create_from_xpm_data(birdseye_view_xpm)
-  ->scale_simple(18,18,Gdk::INTERP_NEAREST )));
-  icfa->add(BIRDEYE,Gtk::IconSet(Gdk::Pixbuf::create_from_xpm_data(birdseye_view_xpm)
-  ->scale_simple(32,32,Gdk::INTERP_NEAREST )));*/
   Gtk::Stock::add(BirdEye);
   icfa->add_default();
-  
+  fsvicon = Gdk::Pixbuf::create_from_xpm_data(fsv_icon_xpm);
+  set_icon(fsvicon);
   add(bx_main);
   bx_main.set_homogeneous(false);
   ag_unsetsitive = Gtk::ActionGroup::create("unsens");

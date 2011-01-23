@@ -1,9 +1,15 @@
 #include "options_dlg.h"
+#include <iostream>
+#include <sstream>
 
 OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_type(4,4),
-  tbl_timestamp(5,4),lbl_colorby(_("Color by:")),lbl_older(_("Older")),lbl_newer(_("Newer")){
+  tbl_timestamp(5,4),
+  lbl_oldest(_("Oldest:")),lbl_newest(_("Newest:")),
+  lbl_colorby(_("Color by:")),lbl_older(_("Older")),lbl_newer(_("Newer")){
   get_vbox()->add(ntb);
   ntb.append_page(tbl_file_type,_("By nodetype"));
+  tbl_file_type.set_spacings(5);
+  tbl_file_type.set_border_width(10);
   for(int i=0;i<4;++i){
     tbl_file_type.attach(btn[i],  0,1,i,i+1);
     tbl_file_type.attach(bxs[i],  1,2,i,i+1);
@@ -23,8 +29,34 @@ OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_typ
     bxs[i].pack_end(lbls[i]);
   }
   ntb.append_page(tbl_timestamp,_("By timestamp"));
-  tbl_timestamp.attach(lbl_colorby,0,1,      0,1);
-  tbl_timestamp.attach(cbx_timestamp_type,1,5,0,1);
+  tbl_timestamp.set_spacings(5);
+  tbl_timestamp.set_border_width(10);
+  
+  tbl_timestamp.attach(lbl_oldest  ,0,1,0,1);
+  tbl_timestamp.attach(ent_old_date,2,3,0,1);
+  ent_old_date.set_max_length(10);
+  ent_old_date.set_width_chars(10);
+  ent_old_date.signal_changed().connect(sigc::mem_fun(*this,&OptionsDialog::on_old_editing_done));
+  tbl_timestamp.attach(ent_old_time,4,5,0,1);
+  ent_old_time.set_max_length(8);
+  ent_old_time.set_width_chars(8);
+  ent_old_time.signal_changed().connect(sigc::mem_fun(*this,&OptionsDialog::on_old_editing_done));
+  set_old_time(ccfg.by_timestamp.old_time);
+  
+
+  tbl_timestamp.attach(lbl_newest  ,0,1,1,2);
+  tbl_timestamp.attach(ent_new_date,2,3,1,2);
+  ent_new_date.set_max_length(10);
+  ent_new_date.set_width_chars(10);
+  ent_new_date.signal_changed().connect(sigc::mem_fun(*this,&OptionsDialog::on_new_editing_done));
+  tbl_timestamp.attach(ent_new_time,4,5,1,2);
+  ent_new_time.set_max_length(8);
+  ent_new_time.set_width_chars(8);
+  ent_new_time.signal_changed().connect(sigc::mem_fun(*this,&OptionsDialog::on_new_editing_done));
+  set_new_time(ccfg.by_timestamp.new_time);
+  
+  tbl_timestamp.attach(lbl_colorby,0,1,      2,3);
+  tbl_timestamp.attach(cbx_timestamp_type,1,5,2,3);
   
   cbx_timestamp_type.append_text(_("time of last access"));
   cbx_timestamp_type.append_text(_("time of last modification"));
@@ -32,11 +64,11 @@ OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_typ
   cbx_timestamp_type.set_active((int)ccfg.by_timestamp.timestamp_type);
   cbx_timestamp_type.signal_changed().connect(sigc::mem_fun(*this,&OptionsDialog::on_timestamp_type_changed));
   
-  tbl_timestamp.attach(btn_older,0,1,        1,2);
-  tbl_timestamp.attach(lbl_older,1,2,        1,2);
-  tbl_timestamp.attach(cbx_spectrum_type,2,3,1,2);
-  tbl_timestamp.attach(lbl_newer,3,4,        1,2);
-  tbl_timestamp.attach(btn_newer,4,5,        1,2);
+  tbl_timestamp.attach(btn_older,0,1,        3,4);
+  tbl_timestamp.attach(lbl_older,1,2,        3,4);
+  tbl_timestamp.attach(cbx_spectrum_type,2,3,3,4);
+  tbl_timestamp.attach(lbl_newer,3,4,        3,4);
+  tbl_timestamp.attach(btn_newer,4,5,        3,4);
   cbx_spectrum_type.append_text(_("Rainbow"));
   cbx_spectrum_type.append_text(_("Heat"));
   cbx_spectrum_type.append_text(_("Gradient"));
@@ -51,11 +83,44 @@ OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_typ
     btn_older.set_sensitive(false);
     btn_newer.set_sensitive(false);
   }
-  ntb.append_page(tbl_wildcard,_("By wildcard"));
+  //ntb.append_page(tbl_wildcard,_("By wildcard"));
 
-  add_button(Gtk::Stock::CLOSE, Gtk::RESPONSE_CANCEL);
-  add_button(Gtk::Stock::APPLY, Gtk::RESPONSE_APPLY);
+  add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+  add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
+  //add_button(Gtk::Stock::APPLY,Gtk::RESPONSE_NONE);
   show_all_children();
+}
+
+void OptionsDialog::set_old_time(time_t tmv){
+  Glib::TimeVal tv(tmv,0);
+  Glib::ustring utime(tv.as_iso8601());
+  ent_old_date.set_text(utime.substr(0,10));
+  ent_old_time.set_text(utime.substr(11,19));
+}
+void OptionsDialog::set_new_time(time_t tmv){
+  Glib::TimeVal tv(tmv,0);
+  Glib::ustring utime(tv.as_iso8601());
+  ent_new_date.set_text(utime.substr(0,10));
+  ent_new_time.set_text(utime.substr(11,19));
+}
+
+void OptionsDialog::on_old_editing_done(){
+  std::stringstream str;
+  str<<ent_old_date.get_text()<<"T"<<ent_old_time.get_text()<<"Z";
+  Glib::TimeVal tv;
+  if(tv.assign_from_iso8601(str.str())){
+    ccfg.by_timestamp.old_time = (time_t)tv.as_double();
+  }else
+    set_old_time(ccfg.by_timestamp.old_time);
+}
+void OptionsDialog::on_new_editing_done(){
+  std::stringstream str;
+  str<<ent_new_date.get_text()<<"T"<<ent_new_time.get_text()<<"Z";
+  Glib::TimeVal tv;
+  if(tv.assign_from_iso8601(str.str())){
+    ccfg.by_timestamp.new_time = (time_t)tv.as_double();
+  }else
+    set_new_time(ccfg.by_timestamp.new_time);
 }
 
 void OptionsDialog::on_file_type_color(int i){
@@ -99,8 +164,12 @@ void OptionsDialog::on_timestamp_color(int i){
   }
 }
 
+void OptionsDialog::on_apply(){
+  color_set_config(&ccfg,(ColorMode)ntb.get_current_page());
+}
+
 void OptionsDialog::on_response(int response_id){
-  if(response_id == Gtk::RESPONSE_APPLY){
+  if(response_id == Gtk::RESPONSE_OK){
     color_set_config(&ccfg,(ColorMode)ntb.get_current_page());
     return;
   }

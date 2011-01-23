@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsv2 1.1.0\n"
 "Report-Msgid-Bugs-To: yuryfdr@users.sf.net\n"
-"POT-Creation-Date: 2011-01-23 01:16+0300\n"
+"POT-Creation-Date: 2011-01-23 20:37+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,107 +29,107 @@ msgstr ""
 msgid "Copyright (C)1999 by Daniel Richard G."
 msgstr ""
 
-#: src/common.c:87
+#: src/common.c:83
 msgid "Directory"
 msgstr ""
 
-#: src/common.c:88
+#: src/common.c:84
 msgid "Regular file"
 msgstr ""
 
-#: src/common.c:89
+#: src/common.c:85
 msgid "Symbolic link"
 msgstr ""
 
-#: src/common.c:90
+#: src/common.c:86
 msgid "Named pipe (FIFO)"
 msgstr ""
 
-#: src/common.c:91
+#: src/common.c:87
 msgid "Network socket"
 msgstr ""
 
-#: src/common.c:92
+#: src/common.c:88
 msgid "Character device"
 msgstr ""
 
-#: src/common.c:93
+#: src/common.c:89
 msgid "Block device"
 msgstr ""
 
-#: src/common.c:94 src/common.c:107 src/common.c:736 src/common.c:743
+#: src/common.c:90 src/common.c:103 src/common.c:732 src/common.c:739
 msgid "Unknown"
 msgstr ""
 
-#: src/common.c:100
+#: src/common.c:96
 msgid "Directories"
 msgstr ""
 
-#: src/common.c:101
+#: src/common.c:97
 msgid "Regular files"
 msgstr ""
 
-#: src/common.c:102
+#: src/common.c:98
 msgid "Symlinks"
 msgstr ""
 
-#: src/common.c:103
+#: src/common.c:99
 msgid "Named pipes"
 msgstr ""
 
-#: src/common.c:104
+#: src/common.c:100
 msgid "Sockets"
 msgstr ""
 
-#: src/common.c:105
+#: src/common.c:101
 msgid "Char. devs."
 msgstr ""
 
-#: src/common.c:106
+#: src/common.c:102
 msgid "Block devs."
 msgstr ""
 
-#: src/common.c:121 src/common.c:134 src/common.c:147 src/common.c:160
+#: src/common.c:117 src/common.c:130 src/common.c:143 src/common.c:156
 msgid "Out of memory"
 msgstr ""
 
-#: src/common.c:316
+#: src/common.c:312
 msgid "B"
 msgstr ""
 
-#: src/common.c:317
+#: src/common.c:313
 msgid "kB"
 msgstr ""
 
-#: src/common.c:318
+#: src/common.c:314
 msgid "MB"
 msgstr ""
 
-#: src/common.c:319
+#: src/common.c:315
 msgid "GB"
 msgstr ""
 
-#: src/common.c:320
+#: src/common.c:316
 msgid "TB"
 msgstr ""
 
-#: src/common.c:321
+#: src/common.c:317
 msgid "PB"
 msgstr ""
 
-#: src/common.c:322
+#: src/common.c:318
 msgid "EB"
 msgstr ""
 
-#: src/common.c:493
+#: src/common.c:489
 msgid "Could not execute 'file' command"
 msgstr ""
 
-#: src/common.c:508
+#: src/common.c:504
 msgid "('file' command timed out)"
 msgstr ""
 
-#: src/common.c:715 src/common.c:721 src/dirtree.cxx:157
+#: src/common.c:711 src/common.c:717 src/dirtree.cxx:157
 msgid "/. (root)"
 msgstr ""
 
@@ -137,55 +137,59 @@ msgstr ""
 msgid "Color Setup"
 msgstr ""
 
-#: src/options_dlg.cxx:4
-msgid "Color by:"
+#: src/options_dlg.cxx:5
+msgid "Oldest:"
 msgstr ""
 
-#: src/options_dlg.cxx:4
-msgid "Older"
-msgstr ""
-
-#: src/options_dlg.cxx:4
-msgid "Newer"
+#: src/options_dlg.cxx:5
+msgid "Newest:"
 msgstr ""
 
 #: src/options_dlg.cxx:6
+msgid "Color by:"
+msgstr ""
+
+#: src/options_dlg.cxx:6
+msgid "Older"
+msgstr ""
+
+#: src/options_dlg.cxx:6
+msgid "Newer"
+msgstr ""
+
+#: src/options_dlg.cxx:8
 msgid "By nodetype"
 msgstr ""
 
-#: src/options_dlg.cxx:25
+#: src/options_dlg.cxx:29
 msgid "By timestamp"
 msgstr ""
 
-#: src/options_dlg.cxx:29
+#: src/options_dlg.cxx:57
 msgid "time of last access"
 msgstr ""
 
-#: src/options_dlg.cxx:30
+#: src/options_dlg.cxx:58
 msgid "time of last modification"
 msgstr ""
 
-#: src/options_dlg.cxx:31
+#: src/options_dlg.cxx:59
 msgid "time of last attribute change"
 msgstr ""
 
-#: src/options_dlg.cxx:40
+#: src/options_dlg.cxx:68
 msgid "Rainbow"
 msgstr ""
 
-#: src/options_dlg.cxx:41
+#: src/options_dlg.cxx:69
 msgid "Heat"
 msgstr ""
 
-#: src/options_dlg.cxx:42
+#: src/options_dlg.cxx:70
 msgid "Gradient"
 msgstr ""
 
-#: src/options_dlg.cxx:54
-msgid "By wildcard"
-msgstr ""
-
-#: src/property_dlg.cxx:3 src/fsvwindow.cxx:294
+#: src/property_dlg.cxx:3 src/fsvwindow.cxx:279
 msgid "Properties"
 msgstr ""
 
@@ -295,70 +299,70 @@ msgstr ""
 msgid "%d stats/sec"
 msgstr ""
 
-#: src/fsvwindow.cxx:135
+#: src/fsvwindow.cxx:133
 msgid "Change Root Directory"
 msgstr ""
 
-#: src/fsvwindow.cxx:223
+#: src/fsvwindow.cxx:218
 msgid "Top View"
 msgstr ""
 
-#: src/fsvwindow.cxx:258
+#: src/fsvwindow.cxx:243
 msgid "_Change Root"
 msgstr ""
 
-#: src/fsvwindow.cxx:262
+#: src/fsvwindow.cxx:247
 msgid "_Map View"
 msgstr ""
 
-#: src/fsvwindow.cxx:264
+#: src/fsvwindow.cxx:249
 msgid "_Tree View"
 msgstr ""
 
-#: src/fsvwindow.cxx:266
+#: src/fsvwindow.cxx:251
 msgid "_Disc View"
 msgstr ""
 
-#: src/fsvwindow.cxx:270
+#: src/fsvwindow.cxx:255
 msgid "By n_odetype"
 msgstr ""
 
-#: src/fsvwindow.cxx:272
+#: src/fsvwindow.cxx:257
 msgid "By t_imestamp"
 msgstr ""
 
-#: src/fsvwindow.cxx:274
+#: src/fsvwindow.cxx:259
 msgid "By _wildcard"
 msgstr ""
 
-#: src/fsvwindow.cxx:286
+#: src/fsvwindow.cxx:271
 msgid "Collapse"
 msgstr ""
 
-#: src/fsvwindow.cxx:288
+#: src/fsvwindow.cxx:273
 msgid "Expand"
 msgstr ""
 
-#: src/fsvwindow.cxx:290
+#: src/fsvwindow.cxx:275
 msgid "Expand all"
 msgstr ""
 
-#: src/fsvwindow.cxx:292
+#: src/fsvwindow.cxx:277
 msgid "Look at"
 msgstr ""
 
-#: src/fsvwindow.cxx:298
+#: src/fsvwindow.cxx:283
 msgid "_File"
 msgstr ""
 
-#: src/fsvwindow.cxx:299
+#: src/fsvwindow.cxx:284
 msgid "_View"
 msgstr ""
 
-#: src/fsvwindow.cxx:300
+#: src/fsvwindow.cxx:285
 msgid "_Full Screen"
 msgstr ""
 
-#: src/fsvwindow.cxx:305
+#: src/fsvwindow.cxx:290
 msgid "_Help"
 msgstr ""
