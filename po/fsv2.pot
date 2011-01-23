@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: fsv2 1.1.0\n"
+"Project-Id-Version: fsv2 1.0.99\n"
 "Report-Msgid-Bugs-To: yuryfdr@users.sf.net\n"
-"POT-Creation-Date: 2011-01-23 20:37+0300\n"
+"POT-Creation-Date: 2011-01-23 23:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,59 +133,59 @@ msgstr ""
 msgid "/. (root)"
 msgstr ""
 
-#: src/options_dlg.cxx:3
+#: src/options_dlg.cxx:5
 msgid "Color Setup"
 msgstr ""
 
-#: src/options_dlg.cxx:5
+#: src/options_dlg.cxx:7
 msgid "Oldest:"
 msgstr ""
 
-#: src/options_dlg.cxx:5
+#: src/options_dlg.cxx:7
 msgid "Newest:"
 msgstr ""
 
-#: src/options_dlg.cxx:6
+#: src/options_dlg.cxx:8
 msgid "Color by:"
 msgstr ""
 
-#: src/options_dlg.cxx:6
+#: src/options_dlg.cxx:8
 msgid "Older"
 msgstr ""
 
-#: src/options_dlg.cxx:6
+#: src/options_dlg.cxx:8
 msgid "Newer"
 msgstr ""
 
-#: src/options_dlg.cxx:8
+#: src/options_dlg.cxx:10
 msgid "By nodetype"
 msgstr ""
 
-#: src/options_dlg.cxx:29
+#: src/options_dlg.cxx:31
 msgid "By timestamp"
 msgstr ""
 
-#: src/options_dlg.cxx:57
+#: src/options_dlg.cxx:61
 msgid "time of last access"
 msgstr ""
 
-#: src/options_dlg.cxx:58
+#: src/options_dlg.cxx:62
 msgid "time of last modification"
 msgstr ""
 
-#: src/options_dlg.cxx:59
+#: src/options_dlg.cxx:63
 msgid "time of last attribute change"
 msgstr ""
 
-#: src/options_dlg.cxx:68
+#: src/options_dlg.cxx:72
 msgid "Rainbow"
 msgstr ""
 
-#: src/options_dlg.cxx:69
+#: src/options_dlg.cxx:73
 msgid "Heat"
 msgstr ""
 
-#: src/options_dlg.cxx:70
+#: src/options_dlg.cxx:74
 msgid "Gradient"
 msgstr ""
 

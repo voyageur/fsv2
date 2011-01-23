@@ -1,4 +1,8 @@
-2011 Jan
+to 1.1.0
+  - rewrite rest of GTK+ code to gtkmm.
+  - remove last glib deprecated functions.
+
+future:
   - code cleanup.
   - rewrite rest of GTK+ code to gtkmm.
   - remove last glib deprecated functions.

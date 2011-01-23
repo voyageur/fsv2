@@ -3,7 +3,7 @@
 %define prefix /usr
 
 Name: fsv2
-Version: 1.1.0
+Version: 1.0.99
 Release: 1
 Group: X11/Utilities
 Copyright: LGPL
@@ -11,8 +11,8 @@ URL: http://fox.mit.edu/skunk/soft/fsv/
 Summary: fsv2 - 3D File System Visualizer
 
 Requires: gtk+ >= 2.6.0
-Source: http://fox.mit.edu/skunk/soft/src/fsv-1.1.0.tar.gz
-BuildRoot: /tmp/fsv-1.1.0-root
+Source: http://fox.mit.edu/skunk/soft/src/fsv-1.0.99.tar.gz
+BuildRoot: /tmp/fsv-1.0.99-root
 
 %description
 fsv (pronounced effessvee) is a file system visualizer in cyberspace. It
@@ -27,7 +27,7 @@ host computer's memory and hardware constraints.
 %setup
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{prefix} --with-doc-dir=$RPM_DOC_DIR/fsv-1.1.0
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{prefix} --with-doc-dir=$RPM_DOC_DIR/fsv-1.0.99
 make
 
 %install

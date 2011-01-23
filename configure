@@ -2298,7 +2298,7 @@ ac_config_headers="$ac_config_headers config.h"
 
 
 PACKAGE=fsv2
-VERSION=1.1.0
+VERSION=1.0.99
 RELEASE=1
 
 am__api_version='1.10'
