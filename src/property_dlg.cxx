@@ -1,4 +1,45 @@
 #include "property_dlg.h"
+#include "fsvwindow.h"
+
+/* Creates the clist widget used in the "Contents" page of the Properties
+ * dialog for a directory */
+struct PropColumns : public Gtk::TreeModelColumnRecord{
+  Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > icon;
+  Gtk::TreeModelColumn<Glib::ustring> name;
+  Gtk::TreeModelColumn<unsigned int> count;
+  Gtk::TreeModelColumn<unsigned int> size;
+  PropColumns(){
+    add(icon);
+    add(name);
+    add(count);
+    add(size);
+  }
+};
+
+void PropertyDialog::make_dircontent(GNode *dnode)
+{
+	PropColumns prop_cols;
+  Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(prop_cols);
+	dircontent = Gtk::manage( new Gtk::TreeView(model));
+
+	g_assert( NODE_IS_DIR(dnode) );
+
+	Gtk::TreeView::Column* pcol = Gtk::manage( new Gtk::TreeView::Column(_("Node type") ) );
+	pcol->pack_start(prop_cols.icon,false);
+	pcol->pack_start(prop_cols.name);
+	dircontent->append_column(*pcol);
+	pcol = Gtk::manage( new Gtk::TreeView::Column(_("Quantity"),prop_cols.count ) );
+  dircontent->append_column(*pcol);
+
+	for (int i = 1; i < NUM_NODE_TYPES; i++) {
+	  Gtk::TreeRow row = *(model->append());
+	  row[prop_cols.icon] = FsvWindow::node_type_mini_icons[i];
+	  row[prop_cols.name] = _(node_type_plural_names[i]);
+	  row[prop_cols.count] = DIR_NODE_DESC(dnode)->subtree.counts[i];
+	}
+}
+
+
 
 PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),node(nd)
   ,tbl_gen(6,2)
@@ -84,6 +125,47 @@ PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),no
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   add_button(Gtk::Stock::CLOSE, Gtk::RESPONSE_CANCEL);
+  
+	switch (NODE_DESC(node)->type) {
+		case NODE_DIRECTORY:{
+      nbk.append_page(tbl_additional,_("Contents"));
+      tbl_additional.set_spacings(5);
+      tbl_additional.set_border_width(10);
+		  Gtk::Label *lb = Gtk::manage(new Gtk::Label(_("This directory contains:")));
+		  
+	    tbl_additional.attach(*lb,0,1,0,1);
+      make_dircontent(node);
+	    tbl_additional.attach(*dircontent,0,1,1,2);
+		}
+    break;
+    case NODE_REGFILE:{
+      nbk.append_page(tbl_additional,_("File type"));
+      tbl_additional.set_spacings(5);
+      tbl_additional.set_border_width(10);
+#ifdef HAVE_FILE_COMMAND
+		  Gtk::Label *lb = Gtk::manage(new Gtk::Label(_("This file is recognized as:")));
+	    tbl_additional.attach(*lb,0,1,0,1);
+      Gtk::ScrolledWindow *scr = Gtk::manage(new Gtk::ScrolledWindow());
+      Gtk::TextView * ent = Gtk::manage(new Gtk::TextView());
+      ent->get_buffer()->set_text(node_info->file_type_desc);
+      ent->set_size_request(200,-1);
+      ent->set_wrap_mode(Gtk::WRAP_WORD);
+      scr->add(*ent);
+	    tbl_additional.attach(*scr,0,1,1,2);
+#endif //HAVE_FILE_COMMAND
+    }
+    break;
+    case NODE_SYMLINK:{
+      nbk.append_page(tbl_additional,_("Target"));
+      tbl_additional.set_spacings(5);
+      tbl_additional.set_border_width(10);
+		  Gtk::Label *lb = Gtk::manage(new Gtk::Label(_("This symlink points to:")));
+	    tbl_additional.attach(*lb,0,1,0,1);
+      lb = Gtk::manage(new Gtk::Label(node_info->target));
+	    tbl_additional.attach(*lb,0,1,1,2);
+    }
+    break;
+  }
   show_all_children();
 }
 
