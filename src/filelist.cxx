@@ -1,8 +1,5 @@
-/* filelist.c */
-
-/* File list control */
-
-/* fsv - 3D File System Visualizer
+/* filelist.c
+ * fsv - 3D File System Visualizer
  * Copyright (C)1999 Daniel Richard G. <skunk@mit.edu>
  * Copyright (C)2009-2011 Yury P. Fedorchenko <yuryfdr@users.sf.net>
  *
@@ -39,34 +36,6 @@
 
 static GNode *filelist_current_dnode;
 
-/* Mini node type icons */
-static Glib::RefPtr<Gdk::Pixbuf> node_type_mini_icons[NUM_NODE_TYPES];
-
-
-/* Loads the mini node type icons (from XPM data) */
-static void
-filelist_icons_init( void )
-{
-/*	GtkStyle *style;
-	GdkColor *trans_color;
-	GdkWindow *window;
-	GdkPixmap *pixmap;
-	GdkBitmap *mask;
-	int i;
-
-	style = gtk_widget_get_style( file_clist_w );
-	trans_color = &style->bg[GTK_STATE_NORMAL];
-	gtk_widget_realize( file_clist_w );
-	window = file_clist_w->window;
-
-	// Make mini node type icons 
-	for (i = 1; i < NUM_NODE_TYPES; i++) {
-		pixmap = gdk_pixmap_create_from_xpm_d( window, &mask, trans_color, node_type_mini_xpms[i] );
-		node_type_mini_icons[i].pixmap = pixmap;
-		node_type_mini_icons[i].mask = mask;
-	}*/
-}
-
 FsvFileList* FsvFileList::file_tree;
 
 FsvFileList::FsvFileList():nm_s(_("Type")),count_s(_("Found"),prop_cols.count),size_s(_("Bytes"),prop_cols.size){
@@ -79,16 +48,12 @@ FsvFileList::FsvFileList():nm_s(_("Type")),count_s(_("Found"),prop_cols.count),s
 	for (int i = 1; i <= NUM_NODE_TYPES; i++) {
 	  Gtk::TreeRow row = *(scan_model->append());
 		if (i < NUM_NODE_TYPES) {
-			row[prop_cols.icon] = node_type_mini_icons[i];
+			row[prop_cols.icon] = FsvWindow::node_type_mini_icons[i];
 			row[prop_cols.name] = _(node_type_plural_names[i]);
 		}
 		else
 		  row[prop_cols.name] = _("TOTAL");
-		//gtk_clist_set_selectable( GTK_CLIST(file_clist_w), i - 1, FALSE );
 	}
-	node_type_mini_icons[NODE_DIRECTORY] = render_icon(Gtk::Stock::DIRECTORY,Gtk::IconSize(Gtk::ICON_SIZE_MENU));
-	node_type_mini_icons[NODE_REGFILE] = render_icon(Gtk::Stock::FILE,Gtk::IconSize(Gtk::ICON_SIZE_MENU));
-
   FsvFileList::file_tree = this;
 }
 
@@ -157,7 +122,7 @@ filelist_populate( GNode *dnode )
 	while (node_llink != NULL) {
 		node = (GNode *)node_llink->data;
     Gtk::TreeRow row = *(FsvFileList::file_tree->model->append());
-		row[FsvFileList::file_tree->records.icon] = node_type_mini_icons[NODE_DESC(node)->type];
+		row[FsvFileList::file_tree->records.icon] = FsvWindow::node_type_mini_icons[NODE_DESC(node)->type];
 		row[FsvFileList::file_tree->records.name] = NODE_DESC(node)->name;
 		row[FsvFileList::file_tree->records.node] = node;
 		++count;
@@ -307,48 +272,5 @@ void filelist_scan_monitor( int *node_counts, int64 *size_counts )
 	}
 	//gtk_clist_thaw( GTK_CLIST(file_clist_w) );
 }
-
-/* Creates the clist widget used in the "Contents" page of the Properties
- * dialog for a directory */
-struct PropColumns : public Gtk::TreeModelColumnRecord{
-  Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > icon;
-  Gtk::TreeModelColumn<Glib::ustring> name;
-  Gtk::TreeModelColumn<unsigned int> count;
-  Gtk::TreeModelColumn<unsigned int> size;
-  PropColumns(){
-    add(icon);
-    add(name);
-    add(count);
-    add(size);
-  }
-};
-
-GtkWidget *
-dir_contents_list( GNode *dnode )
-{
-	PropColumns prop_cols;
-  Glib::RefPtr<Gtk::ListStore> model = Gtk::ListStore::create(prop_cols);
-	Gtk::TreeView *clist_w = Gtk::manage( new Gtk::TreeView(model));
-
-	g_assert( NODE_IS_DIR(dnode) );
-
-	Gtk::TreeView::Column* pcol = Gtk::manage( new Gtk::TreeView::Column(_("Node type") ) );
-	pcol->pack_start(prop_cols.icon,false);
-	pcol->pack_start(prop_cols.name);
-	clist_w->append_column(*pcol);
-	pcol = Gtk::manage( new Gtk::TreeView::Column(_("Quantity"),prop_cols.count ) );
-  clist_w->append_column(*pcol);
-
-	for (int i = 1; i < NUM_NODE_TYPES; i++) {
-	  Gtk::TreeRow row = *(model->append());
-	  row[prop_cols.icon] = node_type_mini_icons[i];
-	  row[prop_cols.name] = _(node_type_plural_names[i]);
-	  row[prop_cols.count] = DIR_NODE_DESC(dnode)->subtree.counts[i];
-	}
-
-	return GTK_WIDGET(clist_w->gobj());
-}
-
-
 /* end filelist.c */
 

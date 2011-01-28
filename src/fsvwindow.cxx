@@ -229,6 +229,9 @@ FsvWindow::~FsvWindow(){
 #endif
 }
 
+Glib::RefPtr<Gdk::Pixbuf> FsvWindow::fsvicon;
+Glib::RefPtr<Gdk::Pixbuf> FsvWindow::node_type_mini_icons[NUM_NODE_TYPES];
+
 
 FsvWindow::FsvWindow() : Gtk::Window(){
   Glib::RefPtr<Gtk::IconFactory> icfa=Gtk::IconFactory::create();
@@ -237,6 +240,16 @@ FsvWindow::FsvWindow() : Gtk::Window(){
   icfa->add_default();
   fsvicon = Gdk::Pixbuf::create_from_xpm_data(fsv_icon_xpm);
   set_icon(fsvicon);
+  
+	for(int i = 1; i < NUM_NODE_TYPES; i++){
+	  if(NODE_DIRECTORY == i){
+	    node_type_mini_icons[NODE_DIRECTORY] = render_icon(Gtk::Stock::DIRECTORY,Gtk::IconSize(Gtk::ICON_SIZE_MENU));
+	  }else if(NODE_REGFILE == i){
+	    node_type_mini_icons[NODE_REGFILE] = render_icon(Gtk::Stock::FILE,Gtk::IconSize(Gtk::ICON_SIZE_MENU));
+	  }else{
+		  node_type_mini_icons[i] = Gdk::Pixbuf::create_from_xpm_data(node_type_mini_xpms[i]);
+		}
+	}
   add(bx_main);
   bx_main.set_homogeneous(false);
   ag_unsetsitive = Gtk::ActionGroup::create("unsens");

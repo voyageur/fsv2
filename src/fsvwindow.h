@@ -145,7 +145,8 @@ protected:
   void on_cd_back();
   void on_cd_up();
 public:
-  Glib::RefPtr<Gdk::Pixbuf> fsvicon;
+  static Glib::RefPtr<Gdk::Pixbuf> fsvicon;
+  static Glib::RefPtr<Gdk::Pixbuf> node_type_mini_icons[NUM_NODE_TYPES];
   GNode* popa_node;
   FsvWindow();
   ~FsvWindow();

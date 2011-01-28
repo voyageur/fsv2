@@ -12,6 +12,9 @@ class PropertyDialog : public Gtk::Dialog{
   lbl_owner,lbl_group,
   lbl_modif,lbl_attrib,lbl_access;
   Gtk::Image ico;
+  Gtk::TreeView* dircontent;
+  Gtk::Table tbl_additional;
+  void make_dircontent(GNode *node);
 public:
   PropertyDialog(GNode *nd );
 };
