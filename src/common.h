@@ -317,7 +317,7 @@ const char *xgetcwd( void);
 double xgettime( void);
 const char *i64toa( int64 number );
 const char *abbrev_size( int64 size );
-const char *node_absname( GNode *node );
+const char *node_absname( const GNode *node );
 GNode *node_named( const char *absname );
 const struct NodeInfo *get_node_info( GNode *node );
 const char *rgb2hex( RGBcolor *color );

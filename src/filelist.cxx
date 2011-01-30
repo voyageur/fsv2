@@ -23,7 +23,8 @@
 #include "filelist.h"
 #include "fsvwindow.h"
 
-#include <gtk/gtk.h>
+#include <gtkmm.h>
+#include <iostream>
 
 #include "about.h"
 #include "camera.h"
@@ -122,7 +123,8 @@ filelist_populate( GNode *dnode )
 	while (node_llink != NULL) {
 		node = (GNode *)node_llink->data;
     Gtk::TreeRow row = *(FsvFileList::file_tree->model->append());
-		row[FsvFileList::file_tree->records.icon] = FsvWindow::node_type_mini_icons[NODE_DESC(node)->type];
+    row[FsvFileList::file_tree->records.icon] = 
+      FsvWindow::get_file_icon(node,Gtk::IconSize(Gtk::ICON_SIZE_MENU));
 		row[FsvFileList::file_tree->records.name] = NODE_DESC(node)->name;
 		row[FsvFileList::file_tree->records.node] = node;
 		++count;

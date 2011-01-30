@@ -338,7 +338,7 @@ abbrev_size( int64 size )
 /* Returns the absolute name of a node
  * (i.e. with all leading directory components) */
 const char *
-node_absname( GNode *node )
+node_absname( const GNode *node )
 {
 	static char *absname = NULL;
 	GNode *up_node;

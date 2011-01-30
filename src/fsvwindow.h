@@ -130,6 +130,8 @@ public:
   Glib::RefPtr<Gtk::ActionGroup> ag_allways;
   Glib::RefPtr<Gtk::UIManager > ui_man;	
   Gtk::Menu *popa;
+  GNode* popa_node;
+  Glib::RefPtr<Gio::File> file;
 protected:
   Glib::RefPtr<Gtk::ToggleAction> fullscr;
   void on_fullscreen();
@@ -138,6 +140,7 @@ protected:
   void on_expand_all();
   void on_look_at();
   void on_properties();
+  void on_open();
   
   void on_color_type(ColorMode);
   void on_color_setup();
@@ -147,7 +150,7 @@ protected:
 public:
   static Glib::RefPtr<Gdk::Pixbuf> fsvicon;
   static Glib::RefPtr<Gdk::Pixbuf> node_type_mini_icons[NUM_NODE_TYPES];
-  GNode* popa_node;
+  static Glib::RefPtr<Gdk::Pixbuf> get_file_icon(const GNode* node,int size);
   FsvWindow();
   ~FsvWindow();
   static FsvWindow* current;

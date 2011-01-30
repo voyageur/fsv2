@@ -115,15 +115,16 @@ void context_menu( GNode *node, GdkEventButton *ev_button ){
 	}*/
 	if (NODE_IS_DIR(node)) {
 		if (dirtree_entry_expanded( node ))
-			items[0].show();
-		else {
 			items[1].show();
+		else {
+			items[2].show();
 			if (DIR_NODE_DESC(node)->subtree.counts[NODE_DIRECTORY] > 0)
-				items[2].show();
+				items[3].show();
 			}
 	}
-	if (node != globals.current_node)	items[3].show();
-	items[4].show();
+	if (node != globals.current_node)	items[4].show();
+	items[0].show();
+	items[5].show();
   FsvWindow::current->popa->popup(ev_button->button,ev_button->time);
 }
 
@@ -192,6 +193,17 @@ void FsvWindow::on_look_at(){
 void FsvWindow::on_properties(){
   PropertyDialog dlg(popa_node);
   dlg.run();
+}
+
+void FsvWindow::on_open(){
+  file = Gio::File::create_for_path(node_absname(popa_node));
+  Glib::RefPtr< Gio::AppInfo > app = file->query_default_handler();
+  std::vector< Glib::RefPtr< Gio::AppInfo > > vat = Gio::AppInfo::get_all_for_type(file->query_info()->get_content_type());
+  /*if(gtk_show_uri(NULL,path.c_str(),GDK_CURRENT_TIME,&error) != TRUE){
+    std::cerr<<path<<std::endl;
+  }*/
+  // Glib::RefPtr< AppLaunchContext>	Gio::AppLaunchContext::create();
+  Gio::AppInfo::launch_default_for_uri(file->get_uri());
 }
 
 void FsvWindow::on_color_type(ColorMode col){
@@ -281,6 +293,8 @@ FsvWindow::FsvWindow() : Gtk::Window(){
   ag_unsetsitive->add(Gtk::Action::create("CDUp",Gtk::Stock::GO_UP),
                       sigc::mem_fun(*this,&FsvWindow::on_cd_up));
   
+  ag_unsetsitive->add(Gtk::Action::create("Opennode",_("Open")),
+                      sigc::mem_fun(*this,&FsvWindow::on_open));
   ag_unsetsitive->add(Gtk::Action::create("Collapse",_("Collapse")),
                       sigc::mem_fun(*this,&FsvWindow::on_collapse));
   ag_unsetsitive->add(Gtk::Action::create("Expand",_("Expand")),
@@ -345,10 +359,13 @@ FsvWindow::FsvWindow() : Gtk::Window(){
         "    <toolitem action='Beye'/>"
         "  </toolbar>"
         "  <popup name='Popa'>"
+        "      <menuitem action='Opennode'/>"
+//        "       <separator action='Sep1'/>"
         "      <menuitem action='Collapse'/>"
         "      <menuitem action='Expand'/>"
         "      <menuitem action='Expandall'/>"
         "      <menuitem action='Lookat'/>"
+//        "       <separator action='Sep1'/>"
         "      <menuitem action='Properties'/>"
         "  </popup>"
         "</ui>";
@@ -444,6 +461,38 @@ FsvWindow::FsvWindow() : Gtk::Window(){
 #endif  
   show_all_children();
 };
+
+Glib::RefPtr<Gdk::Pixbuf> FsvWindow::get_file_icon(const GNode* node,int size){
+  Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(node_absname(node));
+  Glib::RefPtr<Gio::FileInfo> fi = file->query_info();
+  Gtk::IconInfo ico = Gtk::IconTheme::get_default()->lookup_icon(
+                      fi->get_icon(),
+                      size,Gtk::ICON_LOOKUP_USE_BUILTIN);
+  Glib::RefPtr<Gdk::Pixbuf> pix_em;
+  if(fi->is_symlink()){
+    Gtk::IconInfo ico = Gtk::IconTheme::get_default()->lookup_icon(
+                      "emblem-symbolic-link",
+                      size/4.,Gtk::ICON_LOOKUP_USE_BUILTIN);
+    if(ico){
+      pix_em = ico.load_icon();
+      //return pix_em;
+    }
+  }
+  if(ico){
+    Glib::RefPtr<Gdk::Pixbuf> pix = ico.load_icon()->copy();
+    if(pix){
+      if(pix_em){
+        int w_d = pix->get_width ();
+        int w_s = pix_em->get_width ();
+        Gdk::Rectangle rect(3*w_d/4,0,w_s,w_s);
+        rect.intersect(Gdk::Rectangle(0,0,w_d,w_d));
+        pix_em->composite(pix,rect.get_x(),rect.get_y(),rect.get_width(),rect.get_height(),0.,0.,1.,1.,Gdk::INTERP_NEAREST,255);
+      }
+      return pix;
+    }
+  }
+  return FsvWindow::node_type_mini_icons[NODE_DESC(node)->type];
+}
 
 #include <GL/gl.h>
 

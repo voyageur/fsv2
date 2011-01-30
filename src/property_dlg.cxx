@@ -1,8 +1,8 @@
 #include "property_dlg.h"
 #include "fsvwindow.h"
 
-/* Creates the clist widget used in the "Contents" page of the Properties
- * dialog for a directory */
+#include <iostream>
+
 struct PropColumns : public Gtk::TreeModelColumnRecord{
   Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > icon;
   Gtk::TreeModelColumn<Glib::ustring> name;
@@ -60,8 +60,38 @@ PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),no
   if(NODE_DESC(node)->type==NODE_DIRECTORY){
     ico.set(Gtk::Stock::DIRECTORY,Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
   } else if(NODE_DESC(node)->type==NODE_REGFILE){
-    ico.set(Gtk::Stock::FILE,Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
-  } else {
+    Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(node_absname(node));
+    ico.set(file->query_info ()->get_icon (),Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
+    //ico.set(Gtk::Stock::FILE,Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
+  } /*else if(NODE_DESC(node)->type==NODE_SYMLINK){
+    Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(node_absname(node));
+    ico.set(file->query_info ()->get_icon (),Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
+    Gtk::IconInfo ico_pb = Gtk::IconTheme::get_default()->lookup_icon(
+                      file->query_info ()->get_icon (),
+                      Gtk::IconSize(Gtk::ICON_SIZE_DIALOG),Gtk::ICON_LOOKUP_USE_BUILTIN);
+    Glib::RefPtr<Gdk::Pixbuf> pb;
+    Glib::RefPtr<Gdk::Pixbuf> pix_em;
+    Gtk::IconInfo ico_em = Gtk::IconTheme::get_default()->lookup_icon(
+                      "emblem-symbolic-link",
+                      1/4.,Gtk::ICON_LOOKUP_USE_BUILTIN);
+    if(ico_pb){
+      pb = ico_pb.load_icon();
+      pix_em = ico_em.load_icon();
+    std::cerr<<"lic"<<std::endl;
+    if(pb){
+      int width = pb->get_width();
+    std::cerr<<"gw"<<std::endl;
+      if(pix_em){
+        int wem = pix_em->get_width();
+        std::cerr<<"wd"<<width<<"wem"<<wem<<std::endl;
+        pix_em->composite(pb,0,0,wem,wem,0.,0.,1.,1.,Gdk::INTERP_NEAREST,100);
+        ico.set(pb);
+      }
+    }
+    }
+    //ico.set(Gtk::Stock::FILE,Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
+  } */else {
+    //ico.set(FsvWindow::get_file_icon(node,Gtk::IconSize(Gtk::ICON_SIZE_DIALOG)));
     ico.set(Gdk::Pixbuf::create_from_xpm_data(node_type_xpms[NODE_DESC(node)->type]));
   }
   int pos=0; 
