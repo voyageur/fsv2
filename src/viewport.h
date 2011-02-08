@@ -21,23 +21,11 @@
  */
 
 
-#ifdef FSV_VIEWPORT_H
-	#error
-#endif
+#ifndef FSV_VIEWPORT_H
 #define FSV_VIEWPORT_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
+#include <gtk/gtk.h>
 void viewport_pass_node_table( GNode **new_node_table );
-#ifdef __GTK_H__
 int viewport_cb( GtkWidget *gl_area_w, GdkEvent *event );
-#endif
 
-#ifdef __cplusplus
-};
-#endif
-
+#endif //FSV_VIEWPORT_H
 /* end viewport.h */

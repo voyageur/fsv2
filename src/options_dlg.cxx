@@ -2,6 +2,36 @@
 #include <iostream>
 #include <sstream>
 
+OptionsDialog::WildTree::WildTree():colcolor(_("Color"),colrend)
+                                   ,colpattern(_("Patterns"),records.name){
+  model = Gtk::TreeStore::create(records);
+  set_model(model);
+  append_column(colcolor);
+  colcolor.add_attribute(colrend.property_text(),records.color);
+  colcolor.add_attribute(colrend.property_visible(),records.visible);
+  append_column(colpattern);
+}
+
+void OptionsDialog::WildTree::fill_tree(const ColorConfig& cfg){
+  for(std::vector<WPatternGroup>::const_iterator wpgit = 
+    cfg.by_wpattern.wpgroup_list.begin();
+    wpgit < cfg.by_wpattern.wpgroup_list.end(); ++wpgit){
+	  Gtk::TreeIter treegr = model->append();
+	  Gtk::TreeModel::Row rowgr = *(treegr);
+    std::stringstream str;
+    str<<(int)wpgit->color.r*255<<" "<<(int)wpgit->color.g*255<<" "<<(int)wpgit->color.b*255;
+    rowgr[records.color] = str.str();
+    rowgr[records.name] = "";
+    for(std::vector<std::string>::const_iterator it = wpgit->wp_list.begin();
+        it < wpgit->wp_list.end();++it){
+	      Gtk::TreeIter treewc = model->append(treegr->children());
+	      Gtk::TreeModel::Row rowwc = *(treewc);
+        rowwc[records.name] = *it;
+        rowgr[records.visible] = false;
+		}
+  }
+}
+
 OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_type(4,4),
   tbl_timestamp(5,4),
   lbl_oldest(_("Oldest:")),lbl_newest(_("Newest:")),
@@ -83,7 +113,14 @@ OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_typ
     btn_older.set_sensitive(false);
     btn_newer.set_sensitive(false);
   }
-  //ntb.append_page(tbl_wildcard,_("By wildcard"));
+  ntb.append_page(tbl_wildcard,_("By wildcard"));
+  tbl_wildcard.attach(scr_wild,0,1,0,7);
+  scr_wild.add(tree_wild);
+  std::cerr<<__FUNCTION__<<ccfg.by_wpattern.wpgroup_list.size()<<std::endl;
+  tree_wild.fill_tree(ccfg);
+  
+  tbl_wildcard.attach(bt_add,1,2,0,1);
+  tbl_wildcard.attach(bt_remove,1,2,1,2);
 
   add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);

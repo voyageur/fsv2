@@ -47,7 +47,7 @@ bool FsvDirTree::on_button_press_event(GdkEventButton* ev_button )
 	/* If About presentation is up, end it */
 	about( ABOUT_END );
 
-	if (globals.fsv_mode == FSV_SPLASH)	return false;
+	if (globalsc.fsv_mode == FSV_SPLASH)	return false;
 
 	bool ret = Gtk::TreeView::on_button_press_event(ev_button);
   Glib::RefPtr<Gtk::TreeSelection> sel = FsvDirTree::dir_tree->get_selection();
@@ -101,7 +101,7 @@ bool FsvDirTree::on_button_press_event(GdkEventButton* ev_button )
 }*/
 /* collapse of a directory tree entry */
 void FsvDirTree::on_row_collapsed	(const Gtk::TreeModel::iterator& iter,const Gtk::TreeModel::Path&	path){
-	if (globals.fsv_mode == FSV_SPLASH)
+	if (globalsc.fsv_mode == FSV_SPLASH)
 		return;
 	const Gtk::TreeModel::Row row = *iter;
 	GNode *dnode = (GNode *)row[records.dnode];
@@ -109,7 +109,7 @@ void FsvDirTree::on_row_collapsed	(const Gtk::TreeModel::iterator& iter,const Gt
 }
 /* expand of a directory tree entry */
 void FsvDirTree::on_row_expanded 	(const Gtk::TreeModel::iterator& iter,const Gtk::TreeModel::Path&	path){
-	if (globals.fsv_mode == FSV_SPLASH)
+	if (globalsc.fsv_mode == FSV_SPLASH)
 		return;
 	const Gtk::TreeModel::Row row = *iter;
 	GNode *dnode = (GNode *)row[records.dnode];

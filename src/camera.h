@@ -21,11 +21,10 @@
  */
 
 
-#ifdef FSV_CAMERA_H
-	#error
-#endif
+#ifndef FSV_CAMERA_H
 #define FSV_CAMERA_H
 
+#include "animation.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -87,18 +86,16 @@ union AnyCamera {
 /* The camera */
 extern Camera *camera;
 
+#include <gtk/gtk.h>
+
 
 boolean camera_moving( void );
 void camera_init( FsvMode mode, boolean initial_view );
-#ifdef __GTK_H__
 void camera_pass_scrollbar_widgets( GtkWidget *x_scrollbar_w, GtkWidget *y_scrollbar_w );
-#endif
 void camera_update_scrollbars( boolean hard_update );
 void camera_pan_finish( void );
 void camera_pan_break( void );
-#ifdef FSV_ANIMATION_H
 void camera_look_at_full( GNode *node, MorphType mtype, double pan_time_override );
-#endif
 void camera_look_at( GNode *node );
 void camera_treev_lpan_look_at( GNode *node, double pan_time_override );
 void camera_look_at_previous( void );
@@ -109,5 +106,5 @@ void camera_revolve( double dtheta, double dphi );
 #ifdef __cplusplus
 };
 #endif
-
+#endif //FSV_CAMERA_H
 /* end camera.h */

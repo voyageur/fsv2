@@ -23,9 +23,9 @@
 
 
 #include "common.h"
+#include <gtk/gtk.h>
 #include "camera.h"
 
-#include <gtk/gtk.h>
 
 #include "animation.h"
 #include "dirtree.h" /* dirtree_entry_expanded( ) */
@@ -323,7 +323,7 @@ camera_scrollbar_move_cb( GtkAdjustment *adj, const char *mesg )
 		return;
 	}
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		discv_scrollbar_move( value, axis );
 		break;
@@ -570,7 +570,7 @@ camera_update_scrollbars( boolean hard_update )
 	GtkAdjustment x_adj, y_adj;
 
 	/* Get current scrollbar states */
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_SPLASH:
 		null_get_scrollbar_states( &x_adj, &y_adj );
 		break;
@@ -604,14 +604,14 @@ camera_update_scrollbars( boolean hard_update )
 
 	/* Update the scrollbar widgets */
 	if (hard_update || !gui_adjustment_widget_busy( x_scrollbar_adj )) {
-		g_signal_handlers_block_by_func( GTK_OBJECT(x_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), x_axis_mesg );
+		g_signal_handlers_block_by_func( GTK_OBJECT(x_scrollbar_adj), (void*)G_CALLBACK(camera_scrollbar_move_cb), x_axis_mesg );
 		g_signal_emit_by_name( GTK_OBJECT(x_scrollbar_adj), "changed" );
-		g_signal_handlers_unblock_by_func( GTK_OBJECT(x_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), x_axis_mesg );
+		g_signal_handlers_unblock_by_func( GTK_OBJECT(x_scrollbar_adj), (void*)G_CALLBACK(camera_scrollbar_move_cb), x_axis_mesg );
 	}
 	if (hard_update || !gui_adjustment_widget_busy( y_scrollbar_adj )) {
-		g_signal_handlers_block_by_func( GTK_OBJECT(y_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), y_axis_mesg );
+		g_signal_handlers_block_by_func( GTK_OBJECT(y_scrollbar_adj), (void*)G_CALLBACK(camera_scrollbar_move_cb), y_axis_mesg );
 		g_signal_emit_by_name( GTK_OBJECT(y_scrollbar_adj), "changed" );
-		g_signal_handlers_unblock_by_func( GTK_OBJECT(y_scrollbar_adj), G_CALLBACK(camera_scrollbar_move_cb), y_axis_mesg );
+		g_signal_handlers_unblock_by_func( GTK_OBJECT(y_scrollbar_adj), (void*)G_CALLBACK(camera_scrollbar_move_cb), y_axis_mesg );
 	}
 }
 
@@ -629,7 +629,7 @@ camera_pan_finish( void )
 	morph_finish( &camera->far_clip );
 	morph_finish( &camera->pan_part );
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		morph_finish( &DISCV_CAMERA(camera)->target.x );
 		morph_finish( &DISCV_CAMERA(camera)->target.y );
@@ -665,7 +665,7 @@ camera_pan_break( void )
 	morph_break( &camera->far_clip );
 	morph_break( &camera->pan_part );
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		morph_break( &DISCV_CAMERA(camera)->target.x );
 		morph_break( &DISCV_CAMERA(camera)->target.y );
@@ -981,7 +981,7 @@ treev_look_at( GNode *node, MorphType mtype, double pan_time_override )
 static void
 pan_step_cb( Morph *unused )
 {
-	globals.need_redraw = TRUE;
+	globalsc.need_redraw = TRUE;
 	camera_update_scrollbars( FALSE );
 }
 
@@ -1011,10 +1011,10 @@ pan_end_cb( Morph *morph )
 {
 	GNode *node;
 
-	globals.need_redraw = TRUE;
+	globalsc.need_redraw = TRUE;
 
 	node = (GNode *)morph->data;
-	schedule_event( post_pan_end, node, 1 );
+	schedule_event( (void(*)(void*))post_pan_end, node, 1 );
 
 	camera_currently_moving = FALSE;
 }
@@ -1053,7 +1053,7 @@ camera_look_at_full( GNode *node, MorphType mtype, double pan_time_override )
 	/* Halt any ongoing camera pan */
 	camera_pan_break( );
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		pan_time = discv_look_at( node, mtype, pan_time_override );
 		break;
@@ -1124,10 +1124,10 @@ lpan_stage2( void **data )
 static void
 lpan_stage1_end_cb( Morph *morph )
 {
-	globals.need_redraw = TRUE;
+	globalsc.need_redraw = TRUE;
 	camera_update_scrollbars( FALSE );
 
-	schedule_event( lpan_stage2, morph->data, 1 );
+	schedule_event( (void(*)(void*))lpan_stage2, morph->data, 1 );
 }
 
 
@@ -1186,7 +1186,7 @@ camera_treev_lpan_look_at( GNode *node, double pan_time_override )
 	morph( &TREEV_CAMERA(camera)->target.theta, MORPH_INV_QUADRATIC, TREEV_CAMERA(new_cam)->target.theta, pan_time );
 
 	/* Need to pass along both node and pan_time */
-	data = NEW_ARRAY(void *, 2);
+	data = (void**)xmalloc(2*sizeof(void*));
 	data[0] = node;
 	data[1] = &pan_time;
 	/* Master morph */
@@ -1241,7 +1241,7 @@ camera_birdseye_view( boolean going_up )
 	camera_pan_break( );
 
 	/* Determine length of pan */
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		pan_time = DISCV_CAMERA_MAX_PAN_TIME;
 		break;
@@ -1263,7 +1263,7 @@ camera_birdseye_view( boolean going_up )
 
 		/* Build bird's-eye view */
 		new_cam->phi = 90.0;
-		switch (globals.fsv_mode) {
+		switch (globalsc.fsv_mode) {
 			case FSV_DISCV:
 			new_cam->distance = 2.0 * field_distance( camera->fov, 2.0 * DISCV_GEOM_PARAMS(root_dnode)->radius );
 			break;
@@ -1304,7 +1304,7 @@ camera_birdseye_view( boolean going_up )
 		morph( &camera->near_clip, MORPH_SIGMOID, pre_cam->near_clip, pan_time );
 		morph( &camera->far_clip, MORPH_SIGMOID, pre_cam->far_clip, pan_time );
 
-		switch (globals.fsv_mode) {
+		switch (globalsc.fsv_mode) {
 			case FSV_DISCV:
 			morph( &DISCV_CAMERA(camera)->target.x, MORPH_SIGMOID, DISCV_CAMERA(pre_cam)->target.x, pan_time );
 			morph( &DISCV_CAMERA(camera)->target.y, MORPH_SIGMOID, DISCV_CAMERA(pre_cam)->target.y, pan_time );

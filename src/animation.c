@@ -33,6 +33,9 @@
  * length of time (in seconds) */
 #define FRAMERATE_AVERAGE_TIME 4.0
 
+#define NEW(type)		(type *)xmalloc( sizeof(type) )
+#define NEW_ARRAY(type,n)	(type *)xmalloc( (n) * sizeof(type) )
+#define RESIZE(block,n,type)	block = (type *)xrealloc( block, (n) * sizeof(type) )
 
 /* Messages for framerate_iteration( ) */
 enum {
@@ -62,7 +65,7 @@ schedule_event( void (*event_cb)(void* ), void *data, int nframes )
 {
 	ScheduledEvent *new_schevent;
 
-	new_schevent = NEW(ScheduledEvent);
+	new_schevent = (ScheduledEvent*)xmalloc(sizeof(ScheduledEvent));
 	new_schevent->nframes = nframes;
 	new_schevent->event_cb = event_cb;
 	new_schevent->data = data;
@@ -418,7 +421,7 @@ animation_loop( void )
 	/* Update morphing variables */
 	state_changed = morph_iteration( );
 
-	if (globals.need_redraw) {
+	if (globalsc.need_redraw) {
 		/* Redraw viewport */
 		ogl_draw( );
 
@@ -429,7 +432,7 @@ animation_loop( void )
 		schevents_pending = scheduled_event_iteration( );
 
 		if (!schevents_pending)
-			globals.need_redraw = FALSE;
+			globalsc.need_redraw = FALSE;
 	}
 
 	if (!state_changed && !schevents_pending) {
@@ -452,7 +455,7 @@ redraw( void )
 		g_idle_add_full( G_PRIORITY_LOW, (GSourceFunc)animation_loop, NULL ,NULL);
 
 	animation_active = TRUE;
-	globals.need_redraw = TRUE;
+	globalsc.need_redraw = TRUE;
 }
 
 

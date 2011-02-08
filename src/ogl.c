@@ -146,7 +146,7 @@ setup_modelview_matrix( void )
 	glPopMatrix( );
 	glPushMatrix( );
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_SPLASH:
 		break;
 
@@ -199,9 +199,9 @@ ogl_draw( void )
 
 	/* First frame after a mode switch is not drawn
 	 * (with the exception of splash screen mode) */
-	if (globals.fsv_mode != prev_mode) {
-		prev_mode = globals.fsv_mode;
-                if (globals.fsv_mode != FSV_SPLASH)
+	if (globalsc.fsv_mode != prev_mode) {
+		prev_mode = globalsc.fsv_mode;
+                if (globalsc.fsv_mode != FSV_SPLASH)
 			return;
 	}
 

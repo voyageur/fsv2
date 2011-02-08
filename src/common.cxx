@@ -50,6 +50,7 @@
 
 /* The global variables live here */
 struct Globals globals;
+struct Globalsc globalsc;
 
 /* Node type icon XPM table */
 char **node_type_xpms[NUM_NODE_TYPES] = {
@@ -147,7 +148,7 @@ xstrdup( const char *string )
 
 
 /* Love child of realloc( ) and strdup( ) */
-char *
+/*char *
 xstrredup( char *old_string, const char *string )
 {
 	char *new_string = xrealloc( old_string, strlen( string ) + 1 );
@@ -157,7 +158,7 @@ xstrredup( char *old_string, const char *string )
 	strcpy( new_string, string );
 
         return new_string;
-}
+} */
 
 
 /* free( ) wrapper function */
@@ -182,7 +183,7 @@ strmove( char *to, const char *from )
 
 /* Hybrid of strcat( ) and realloc( ). This appends add_string to string,
  * resizing string's memory allocation as necessary */
-char *
+/*char *
 strrecat( char *string, const char *add_string )
 {
 	int len;
@@ -192,43 +193,43 @@ strrecat( char *string, const char *add_string )
 	strcat( string, add_string );
 
 	return string;
-}
+}*/
 
 
 /* Strips off any leading and trailing whitespace from a string, and trims
  * its memory allocation down to the bare minimum */
-char *
+/*static char *
 xstrstrip( char *string )
 {
         int i;
 	char *string2;
 
-	/* Remove leading whitespace */
+	// Remove leading whitespace 
 	i = strspn( string, " \t" );
 	if (i > 0)
 		strmove( string, &string[i] );
 
-	/* Remove trailing whitespace */
+	// Remove trailing whitespace
 	for (i = strlen( string ) - 1; i >= -1; --i) {
 		switch (string[MAX(0, i)]) {
 			case ' ':
 			case '\t':
-                        /* Whitespace */
+                        // Whitespace 
 			continue;
 
 			default:
-			/* Non-whitespace character */
+			// Non-whitespace character
 			break;
 		}
                 break;
 	}
 	string[i + 1] = '\0';
 
-	/* Minimize memory allocation */
+	// Minimize memory allocation
 	string2 = xrealloc( string, (strlen( string ) + 1) * sizeof(char) );
 
 	return string2;
-}
+}*/
 
 
 /* fork() wrapper function. Returns TRUE if in newly created subprocess */
@@ -246,7 +247,7 @@ xfork( void )
 
 
 /* getcwd( ) wrapper function */
-const char *
+/*const char *
 xgetcwd( void )
 {
         static char *cwd = NULL;
@@ -262,7 +263,7 @@ xgetcwd( void )
 	cwd = xstrstrip( cwd );
 
 	return cwd;
-}
+} */
 
 
 /* gettimeofday( ) wrapper function */
@@ -279,7 +280,7 @@ xgettime( void )
 
 /* This converts a 64-bit integer into a grouped number string
  * (e.g. 1000000 --> 1,000,000) */
-const char *
+/*const char *
 i64toa( int64 number )
 {
 	static char strbuf1[256];
@@ -300,13 +301,12 @@ i64toa( int64 number )
 	strbuf1[255] = '\0';
 
 	return &strbuf1[n];
-}
+}*/
 
 
 /* Converts a byte quantity into "human-readable" abbreviated format
  * (e.g. 7632 --> 7.5kB, 1264245 --> 1.2MB, 1735892654 --> 1.6TB) */
-const char *
-abbrev_size( int64 size )
+std::string abbrev_size( int64 size )
 {
 	static const char *suffixes[] = {
 		__("B"),  /* Bytes */
@@ -317,70 +317,43 @@ abbrev_size( int64 size )
 		__("PB"), /* Petabytes */
 		__("EB")  /* Exabytes (!) */
 	};
-	static char strbuf[64];
 	double s;
 	int m = 0;
-
+  std::stringstream str;
 	s = (double)size;
 	while (s >= 1024.0) {
 		++m;
 		s /= 1024.0;
 	}
-	if ((m > 0) && (s < 100.0))
+  str<<s<<" "<<_(suffixes[m]);
+/*	if ((m > 0) && (s < 100.0))
 		sprintf( strbuf, "%.1f %s", s, _(suffixes[m]) );
 	else
 		sprintf( strbuf, "%.0f %s", s, _(suffixes[m]) );
-
-	return strbuf;
+*/
+	return str.str();
 }
 
 
 /* Returns the absolute name of a node
  * (i.e. with all leading directory components) */
-const char *
+std::string
 node_absname( const GNode *node )
 {
-	static char *absname = NULL;
-	GNode *up_node;
-	int len, absname_len = 0;
-	int i;
-	const char *name;
-
-	/* Determine length of absolute name */
-	up_node = node;
-	while (up_node != NULL) {
-		name = NODE_DESC(up_node)->name;
-		len = strlen( name );
-		absname_len += len + 1;
-		up_node = up_node->parent;
-	}
-
-	if (absname != NULL)
-		xfree( absname );
-	absname = NEW_ARRAY(char, absname_len);
-
+	std::string absname;
+	const GNode *up_node=node;
 	/* Build up absolute name */
-	i = absname_len;
-	up_node = node;
 	while (up_node != NULL) {
-		name = NODE_DESC(up_node)->name;
-		len = strlen( name );
-		absname[--i] = '/';
-		i -= len;
-		strncpy( &absname[i], name, len );
+		std::string name = NODE_DESC(up_node)->name;
+		absname = std::string("/")+name+absname;
 		up_node = up_node->parent;
 	}
-	absname[absname_len - 1] = '\0';
+  if(absname.compare(0,2,"//")==0){
+    if(absname[2]=='/')return absname.substr(2);
+    else return absname.substr(1);
+  }
 
-	if (!strncmp( absname, "//", 2 )) {
-		/* Special cases when root directory is "/" */
-		if (absname[2] == '/')
-			return &absname[2]; /* avoid e.g. "///usr/blah" */
-                else
-			return &absname[1]; /* avoid "//" */
-	}
-
-	return absname;
+  return absname;
 }
 
 
@@ -400,7 +373,7 @@ node_named( const char *absname )
 	/* The root directory name should be an initial substring of the
 	 * desired node's absolute name. Otherwise, the desired node
 	 * doesn't exist */
-	root_name = node_absname( root_dnode );
+	root_name = node_absname( root_dnode ).c_str();
 	len = strlen( root_name );
 	if (!strncmp( root_name, absname, len )) {
 		if (len == 1) {
@@ -419,7 +392,7 @@ node_named( const char *absname )
 		case 0:
 		/* Absolute names of root directory and desired node
 		 * match perfectly, but are not equal to "/" */
-		g_assert( !strcmp( absname, node_absname( root_dnode ) ) );
+		//g_assert( !strcmp( absname, node_absname( root_dnode ) ) );
 		g_assert( strcmp( "/", absname ) );
 		xfree( absname_partial_copy );
 		return root_dnode;
@@ -427,7 +400,7 @@ node_named( const char *absname )
 		case 1:
 		/* Absolute names of root directory and desired node
 		 * match perfectly, both equal to "/" */
-		g_assert( !strcmp( absname, node_absname( root_dnode ) ) );
+		//g_assert( !strcmp( absname, node_absname( root_dnode ) ) );
 		g_assert( !strcmp( "/", absname ) );
 		xfree( absname_partial_copy );
 		return root_dnode;
@@ -465,65 +438,51 @@ node_named( const char *absname )
 #ifdef HAVE_FILE_COMMAND
 /* Runs the 'file' command on the given file, and returns the output
  * (a verbose description of the file type) */
-static char *
-get_file_type_desc( const char *filename )
+std::string get_file_type_desc( const std::string& filename )
 {
-	static char *cmd_output = NULL;
-	FILE *cmd;
-	double t0;
-	int len, c, i = 0;
-	char *cmd_line;
+	std::string cmd_line(FILE_COMMAND);
+  cmd_line += filename;
 
-	/* Allocate output buffer */
-	RESIZE(cmd_output, strlen( filename ) + 1024, char);
+  /* Open command stream */
+	FILE *cmd = popen( cmd_line.c_str(), "r" );
 
-	/* Construct command line */
-	len = strlen( FILE_COMMAND ) + strlen( filename ) - 1;
-	cmd_line = NEW_ARRAY(char, len);
-	sprintf( cmd_line, FILE_COMMAND, filename );
-
-	/* Open command stream */
-	cmd = popen( cmd_line, "r" );
-	xfree( cmd_line );
-	if (cmd == NULL) {
-		strcpy( cmd_output, _("Could not execute 'file' command") );
-		return cmd_output;
+  if (cmd == NULL) {
+		return std::string(_("Could not execute 'file' command"));
 	}
 
 	/* Read loop */
-	t0 = xgettime( );
+	//t0 = xgettime( );
+	std::string cmd_output;
 	while (!feof( cmd )) {
 		/* Read command's stdout */
-		c = fgetc( cmd );
+		int c = fgetc( cmd );
 		if (c != EOF)
-			cmd_output[i++] = c;
+			cmd_output+=(char)c;
 
-		/* Check for timeout condition */
+/*		// Check for timeout condition 
 		if ((xgettime( ) - t0) > 5.0) {
-			fclose( cmd ); /* Is this allowed? */
-			strcpy( cmd_output, _("('file' command timed out)") );
-			return cmd_output;
+			pclose( cmd );
+			return std::string(_("('file' command timed out)"));
 		}
-
+*/
 		/* Keep the GUI responsive */
 		gui_update( );
 	}
 	pclose( cmd );
-	cmd_output[i] = '\0';
 
-	len = strlen( filename );
+/*	len = strlen( filename );
 	if (!strncmp( filename, cmd_output, len )) {
-		/* Remove prepended "filename: " from output */
+		// Remove prepended "filename: " from output 
 		return &cmd_output[len + 2];
 	}
-
-	return cmd_output;
+*/
+	return cmd_output.substr(filename.size());
 }
 #endif /* HAVE_FILE_COMMAND */
 
 
 /* Returns the target of a symbolic link */
-static char *
+/*static char *
 read_symlink( const char *linkname )
 {
 	static char *target = NULL;
@@ -540,7 +499,7 @@ read_symlink( const char *linkname )
 	RESIZE(target, n + 1, char);
 
 	return target;
-}
+}*/
 
 
 /* Helper function for absname_merge( ). This takes an absolute name, and
@@ -587,7 +546,7 @@ remove_component( char *absname, int pos )
  *     absname_merge( "/home/fox", "./../skunk/./././weird" ) => "/home/skunk/weird"
  *     absname_merge( "/home/skunk", "../fox////./cool" ) => "/home/fox/cool"
  */
-static char *
+/*static char *
 absname_merge( const char *dirname, const char *rel_name )
 {
 	static char *absname = NULL;
@@ -598,22 +557,21 @@ absname_merge( const char *dirname, const char *rel_name )
 	RESIZE(absname, len, char);
 
 	if (strlen( rel_name ) == 0) {
-		/* Relative part is empty. This is weird. */
+		// Relative part is empty. This is weird. 
 		strcpy( absname, dirname );
 	}
 	else if (rel_name[0] == '/') {
-		/* Relative part is an absolute name in itself, thus the
-                 * directory name is completely irrelevant */
+		// Relative part is an absolute name in itself, thus the directory name is completely irrelevant 
 		strcpy( absname, rel_name );
 	}
 	else {
-		/* Concatenate the two names together */
+		// Concatenate the two names together 
 		strcpy( absname, dirname );
 		strcat( absname, "/" );
 		strcat( absname, rel_name );
 	}
 
-	/* Get rid of all ".." components, extra slashes, etc. */
+	// Get rid of all ".." components, extra slashes, etc. 
 	for (i = 0; ; ++i) {
 		switch (absname[i]) {
 			case '.':
@@ -622,42 +580,41 @@ absname_merge( const char *dirname, const char *rel_name )
 			break;
 
 			case '/':
-			/* End of component reached */
+			// End of component reached 
 			if (prev_char_is_slash) {
-                                /* Remove superfluous slash */
+                                // Remove superfluous slash 
 				strmove( &absname[i], &absname[i + 1] );
 				--i;
 				break;
 			}
 			else
 				prev_char_is_slash = TRUE;
-			/* !break */
+			// !break 
 
 			case '\0':
-			/* End of absolute name reached */
+			// End of absolute name reached 
 			switch (dot_count) {
 				case 1:
-				/* Remove superfluous "." component */
+				// Remove superfluous "." component 
 				i = remove_component( absname, i );
 				break;
 
 				case 2:
-				/* ".." component cancels out itself and
-				 * the previous component */
+				// ".." component cancels out itself and the previous component 
 				i = remove_component( absname, i );
 				i = remove_component( absname, i );
 				break;
 
 				case 0:
 				default:
-				/* Nothing to do at this point */
+				// Nothing to do at this point 
                                 break;
 			}
                         dot_count = 0;
 			break;
 
 			default:
-			/* Normal character */
+			// Normal character 
 			prev_char_is_slash = FALSE;
 			dot_count = 0;
 			break;
@@ -671,29 +628,29 @@ absname_merge( const char *dirname, const char *rel_name )
 
 	return absname;
 }
-
+*/
 
 /* Returns a NodeInfo struct for the given node */
-const struct NodeInfo *
+/*const struct NodeInfo *
 get_node_info( GNode *node )
 {
 	static struct NodeInfo ninfo = {
-		NULL,	/* name */
-		NULL,	/* prefix */
-		NULL,	/* size */
-		NULL,	/* size_abbr */
-		NULL,	/* size_alloc */
-		NULL,	/* size_alloc_abbr */
-		NULL,	/* user_name */
-		NULL,	/* group_name */
-		NULL,	/* atime */
-		NULL,	/* mtime */
-		NULL,	/* ctime */
-		NULL,	/* subtree_size */
-		NULL,	/* subtree_size_abbr */
-		NULL,	/* file_type_desc */
-		NULL,	/* target */
-		NULL	/* abstarget */
+		NULL,	// name 
+		NULL,	// prefix
+		NULL,	// size
+		NULL,	// size_abbr
+		NULL,	// size_alloc
+		NULL,	// size_alloc_abbr
+		NULL,	// user_name
+		NULL,	// group_name
+		NULL,	// atime
+		NULL,	// mtime
+		NULL,	// ctime
+		NULL,	// subtree_size
+		NULL,	// subtree_size_abbr
+		NULL,	// file_type_desc
+		NULL,	// target
+		NULL	// abstarget
 	};
 	struct passwd *pw;
 	struct group *gr;
@@ -704,13 +661,13 @@ get_node_info( GNode *node )
 
 	absname = node_absname( node );
 
-	/* Name */
+	// Name
 	if (strlen( NODE_DESC(node)->name ) > 0)
 		cstr = NODE_DESC(node)->name;
 	else
 		cstr = _("/. (root)");
 	ninfo.name = xstrredup( ninfo.name, cstr );
-	/* Prefix */
+	// Prefix
 	str = g_path_get_dirname( absname );
 	if (!strcmp( str, "/" )) {
 		g_free( str );
@@ -719,21 +676,21 @@ get_node_info( GNode *node )
 	ninfo.prefix = xstrredup( ninfo.prefix, str );
 	g_free( str );
 
-	/* Size */
+	// Size
 	ninfo.size = xstrredup( ninfo.size, i64toa( NODE_DESC(node)->size ) );
 	ninfo.size_abbr = xstrredup( ninfo.size_abbr, abbrev_size( NODE_DESC(node)->size ) );
-	/* Allocation size */
+	// Allocation size
 	ninfo.size_alloc = xstrredup( ninfo.size_alloc, i64toa( NODE_DESC(node)->size_alloc ) );
 	ninfo.size_alloc_abbr = xstrredup( ninfo.size_alloc_abbr, abbrev_size( NODE_DESC(node)->size_alloc ) );
 
-	/* User name */
+	// User name
 	pw = getpwuid( NODE_DESC(node)->user_id );
 	if (pw == NULL)
 		cstr = _("Unknown");
 	else
 		cstr = pw->pw_name;
 	ninfo.user_name = xstrredup( ninfo.user_name, cstr );
-	/* Group name */
+	// Group name
 	gr = getgrgid( NODE_DESC(node)->group_id );
 	if (gr == NULL)
 		cstr = _("Unknown");
@@ -741,7 +698,7 @@ get_node_info( GNode *node )
 		cstr = gr->gr_name;
 	ninfo.group_name = xstrredup( ninfo.group_name, cstr );
 
-	/* Timestamps - remember to strip ctime's trailing newlines */
+	// Timestamps - remember to strip ctime's trailing newlines
 	ninfo.atime = xstrredup( ninfo.atime, ctime( &NODE_DESC(node)->atime ) );
         ninfo.atime[strlen( ninfo.atime ) - 1] = '\0';
 	ninfo.mtime = xstrredup( ninfo.mtime, ctime( &NODE_DESC(node)->mtime ) );
@@ -749,7 +706,7 @@ get_node_info( GNode *node )
 	ninfo.ctime = xstrredup( ninfo.ctime, ctime( &NODE_DESC(node)->ctime ) );
 	ninfo.ctime[strlen( ninfo.ctime ) - 1] = '\0';
 
-	/* For directories: subtree size */
+	// For directories: subtree size
 	if (NODE_DESC(node)->type == NODE_DIRECTORY) {
 		ninfo.subtree_size = xstrredup( ninfo.subtree_size, i64toa( DIR_NODE_DESC(node)->subtree.size ) );
 		ninfo.subtree_size_abbr = xstrredup( ninfo.subtree_size_abbr, abbrev_size( DIR_NODE_DESC(node)->subtree.size ) );
@@ -759,13 +716,13 @@ get_node_info( GNode *node )
 		ninfo.subtree_size_abbr = xstrredup( ninfo.subtree_size_abbr, blank );
 	}
 
-	/* For regular files: file type description */
+	// For regular files: file type description
 	if (NODE_DESC(node)->type == NODE_REGFILE)
 		ninfo.file_type_desc = get_file_type_desc( absname );
 	else
 		ninfo.file_type_desc = blank;
 
-	/* For symbolic links: target name(s) */
+	// For symbolic links: target name(s)
 	if (NODE_DESC(node)->type == NODE_SYMLINK) {
 		ninfo.target = read_symlink( absname );
 		str = g_path_get_dirname( absname );
@@ -778,7 +735,7 @@ get_node_info( GNode *node )
 	}
 
 	return &ninfo;
-}
+}*/
 
 /* Generates a hexadecimal color triplet */
 const char *

@@ -1,3 +1,7 @@
+  - more Gio
+  - remove some macros
+  - more C++
+  - begin wpattern editing
 23.01.2011
   v1.0.99
   - fix FTGL rendering 

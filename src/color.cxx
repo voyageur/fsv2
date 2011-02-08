@@ -1,8 +1,6 @@
-/* color.c */
-
-/* Node coloration */
-
-/* fsv - 3D File System Visualizer
+/* color.cxx 
+ * Node coloration
+ * fsv - 3D File System Visualizer
  * Copyright (C)1999 Daniel Richard G. <skunk@mit.edu>
  * Copyright (C)2009-2011 Yury P. Fedorchenko <yuryfdr@users.sf.net>
  *
@@ -31,6 +29,7 @@
 #include "animation.h" /* redraw( ) */
 #include "geometry.h"
 #include "fsvwindow.h"
+#include <iostream>
 
 
 /* Some fnmatch headers don't define FNM_FILE_NAME */
@@ -124,73 +123,6 @@ static RGBcolor spectrum_underflow_color;
 static RGBcolor spectrum_colors[SPECTRUM_NUM_SHADES];
 static RGBcolor spectrum_overflow_color;
 
-
-/* Copies a ColorConfig structure from one location to another */
-static void
-color_config_copy( struct ColorConfig *to, struct ColorConfig *from )
-{
-	struct WPatternGroup *wpgroup, *new_wpgroup;
-	GList *wpgroup_llink, *wp_llink;
-	char *wpattern;
-
-	/* Copy ColorByNodeType configuration */
-	to->by_nodetype = from->by_nodetype; /* struct assign */
-
-	/* Copy ColorByTime configuration */
-	to->by_timestamp = from->by_timestamp; /* struct assign */
-
-	/* Copy ColorByWPattern configuration */
-	to->by_wpattern = from->by_wpattern; /* struct assign */
-	to->by_wpattern.wpgroup_list = NULL;
-	wpgroup_llink = from->by_wpattern.wpgroup_list;
-	while (wpgroup_llink != NULL) {
-		wpgroup = (struct WPatternGroup *)wpgroup_llink->data;
-		new_wpgroup = NEW(struct WPatternGroup);
-		*new_wpgroup = *wpgroup; /* struct assign */
-		G_LIST_APPEND(to->by_wpattern.wpgroup_list, new_wpgroup);
-
-		new_wpgroup->wp_list = NULL;
-		wp_llink = wpgroup->wp_list;
-		while (wp_llink != NULL) {
-			wpattern = (char *)wp_llink->data;
-			G_LIST_APPEND(new_wpgroup->wp_list, xstrdup( wpattern ));
-			wp_llink = wp_llink->next;
-		}
-
-		wpgroup_llink = wpgroup_llink->next;
-	}
-}
-
-
-/* Destructor for a ColorConfig structure. This frees everything except
- * the main structure itself (so that this can be used to flush out a
- * statically allocated struct) */
-void
-color_config_destroy( struct ColorConfig *ccfg )
-{
-	struct WPatternGroup *wpgroup;
-	GList *wpgroup_llink, *wp_llink;
-	char *wpattern;
-
-	wpgroup_llink = ccfg->by_wpattern.wpgroup_list;
-	while (wpgroup_llink != NULL) {
-		wpgroup = (struct WPatternGroup *)wpgroup_llink->data;
-
-		wp_llink = wpgroup->wp_list;
-		while (wp_llink != NULL) {
-			wpattern = (char *)wp_llink->data;
-			xfree( wpattern );
-			wp_llink = wp_llink->next;
-		}
-		g_list_free( wpgroup->wp_list );
-
-		xfree( wpgroup );
-		wpgroup_llink = wpgroup_llink->next;
-	}
-	g_list_free( ccfg->by_wpattern.wpgroup_list );
-}
-
-
 ColorMode
 color_get_mode( void )
 {
@@ -204,7 +136,9 @@ color_get_mode( void )
 void
 color_get_config( struct ColorConfig *ccfg )
 {
-	color_config_copy( ccfg, &color_config );
+  std::cerr<<"color_config.by_wpattern.wpgroup_list:"<<color_config.by_wpattern.wpgroup_list.size()<<std::endl;
+	*ccfg = color_config;
+  std::cerr<<"ccfg.by_wpattern.wpgroup_list:"<<ccfg->by_wpattern.wpgroup_list.size()<<std::endl;
 }
 
 
@@ -269,33 +203,22 @@ time_color( GNode *node )
 static const RGBcolor *
 wpattern_color( GNode *node )
 {
-	struct WPatternGroup *wpgroup;
-	GList *wpgroup_llink, *wp_llink;
-	const char *name, *wpattern;
-
 	/* Directory override */
 	if (NODE_IS_DIR(node))
 		return node_type_color( node );
 
-	name = NODE_DESC(node)->name;
+	const char* name = NODE_DESC(node)->name;
 
 	/* Search for a match in the wildcard pattern groups */
-	wpgroup_llink = color_config.by_wpattern.wpgroup_list;
-	while (wpgroup_llink != NULL) {
-		wpgroup = (struct WPatternGroup *)wpgroup_llink->data;
-
-		/* Check against patterns in this group */
-		wp_llink = wpgroup->wp_list;
-		while (wp_llink != NULL) {
-			wpattern = (char *)wp_llink->data;
-			if (!fnmatch( wpattern, name, FNM_FILE_NAME | FNM_PERIOD ))
-				return &wpgroup->color; /* A match! */
-			wp_llink = wp_llink->next;
+  for(std::vector<WPatternGroup>::iterator wpgit = 
+      color_config.by_wpattern.wpgroup_list.begin();
+      wpgit < color_config.by_wpattern.wpgroup_list.end(); ++wpgit){
+    for(std::vector<std::string>::iterator it = wpgit->wp_list.begin();
+        it < wpgit->wp_list.end();++it){
+			if (!fnmatch( (*it).c_str(), name, FNM_FILE_NAME | FNM_PERIOD ))
+				return &wpgit->color; /* A match! */
 		}
-
-		wpgroup_llink = wpgroup_llink->next;
-	}
-
+  }
 	/* No match */
 	return &color_config.by_wpattern.default_color;
 }
@@ -305,6 +228,7 @@ wpattern_color( GNode *node )
 void
 color_assign_recursive( GNode *dnode )
 {
+  if(NULL == dnode)return;
 	GNode *node;
 	const RGBcolor *color;
 
@@ -345,7 +269,7 @@ color_set_mode( ColorMode mode )
 {
 	color_mode = mode;
 	color_assign_recursive( globals.fstree );
-	redraw( );
+  redraw( );
 }
 
 
@@ -422,12 +346,11 @@ generate_spectrum_colors( void )
 void
 color_set_config( struct ColorConfig *new_ccfg, ColorMode mode )
 {
-	color_config_destroy( &color_config );
-	color_config_copy( &color_config, new_ccfg );
+	color_config = *new_ccfg;
 
 	generate_spectrum_colors( );
 
-	if (globals.fsv_mode == FSV_SPLASH) {
+	if (globalsc.fsv_mode == FSV_SPLASH) {
 		g_assert( mode != COLOR_NONE );
 		color_mode = mode;
 	}
@@ -435,20 +358,17 @@ color_set_config( struct ColorConfig *new_ccfg, ColorMode mode )
 		color_set_mode( mode );
 	else
 		color_set_mode( color_mode );
+  window_set_color_mode (color_mode);
 }
 
 
 void
 color_reset( void )
 {
-	struct WPatternGroup *wpgroup;
-	int i, x;
-	char *str;
-
 	color_mode = (ColorMode)default_color_mode;
 
 	// ColorByNodeType configuration 
-	for (i = 1; i < NUM_NODE_TYPES; i++) {
+	for (int i = 1; i < NUM_NODE_TYPES; i++) {
 		color_config.by_nodetype.colors[i] = hex2rgb(default_nodetype_colors[i]); 
 	}
 	// ColorByTime configuration 
@@ -458,9 +378,18 @@ color_reset( void )
 	color_config.by_timestamp.old_time = color_config.by_timestamp.new_time - (time_t)default_timestamp_period;
 	color_config.by_timestamp.old_color = hex2rgb( default_timestamp_old_color ); // struct assign 
 	color_config.by_timestamp.new_color = hex2rgb( default_timestamp_new_color ); // struct assign 
-	// ColorByWPattern configuration 
 	// Wildcard pattern groups 
-	color_config.by_wpattern.wpgroup_list = NULL;
+	std::vector<WPatternGroup>().swap(color_config.by_wpattern.wpgroup_list);
+  WPatternGroup grp;
+/*static const char *default_wpattern_groups[] = {
+	"#FF3333", "*.arj", "*.gz", "*.lzh", "*.tar", "*.tgz", "*.z", "*.zip", "*.Z", NULL,
+	"#FF33FF", "*.gif", "*.jpg", "*.png", "*.ppm", "*.tga", "*.tif", "*.xpm", NULL,
+	"#FFFFFF", "*.au", "*.mov", "*.mp3", "*.mpg", "*.wav", NULL,
+	NULL
+};*/
+  grp.color = hex2rgb("#FF3333");
+  grp.wp_list.push_back("*.arj");grp.wp_list.push_back("*.gz");grp.wp_list.push_back("*.lzh");grp.wp_list.push_back("*.bz2");
+  color_config.by_wpattern.wpgroup_list.push_back(grp);
 	// Default color 
 	color_config.by_wpattern.default_color = hex2rgb( default_wpattern_default_color ); // struct assign 
 }

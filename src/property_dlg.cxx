@@ -2,6 +2,9 @@
 #include "fsvwindow.h"
 
 #include <iostream>
+#include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
 
 struct PropColumns : public Gtk::TreeModelColumnRecord{
   Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > icon;
@@ -56,12 +59,13 @@ PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),no
   nbk.append_page(tbl_gen,_("General"));
   tbl_gen.set_spacings(5);
   tbl_gen.set_border_width(10);
-  const struct NodeInfo* node_info = get_node_info( node );
+  //const struct NodeInfo* node_info = get_node_info( node );
+  Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(node_absname(node));
+  Glib::RefPtr<Gio::FileInfo> file_info = file->query_info();
   if(NODE_DESC(node)->type==NODE_DIRECTORY){
     ico.set(Gtk::Stock::DIRECTORY,Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
   } else if(NODE_DESC(node)->type==NODE_REGFILE){
-    Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(node_absname(node));
-    ico.set(file->query_info ()->get_icon (),Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
+    ico.set(file_info->get_icon (),Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
     //ico.set(Gtk::Stock::FILE,Gtk::IconSize(Gtk::ICON_SIZE_DIALOG) );
   } /*else if(NODE_DESC(node)->type==NODE_SYMLINK){
     Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(node_absname(node));
@@ -96,7 +100,7 @@ PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),no
   }
   int pos=0; 
   tbl_gen.attach(ico,0,1,pos,pos+1);
-  Gtk::Label* lbl = Gtk::manage(new Gtk::Label(node_info->name,0.,0.5));
+  Gtk::Label* lbl = Gtk::manage(new Gtk::Label(file->get_basename(),0.,0.5));
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   tbl_gen.attach(lbl_type,0,1,pos,pos+1);
@@ -104,54 +108,64 @@ PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),no
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   tbl_gen.attach(lbl_loc,0,1,pos,pos+1);
-  lbl = Gtk::manage(new Gtk::Label(node_info->prefix,0.,0.5));
+  std::string prefix;
+  if(file->has_parent()){
+    prefix = file->get_parent()->get_path();
+  }
+  lbl = Gtk::manage(new Gtk::Label(prefix,0.,0.5));
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
 	if (NODE_IS_DIR(node)){
     lbl_size.set_label(_("Total size:"));
     tbl_gen.attach(lbl_size,0,1,pos,pos+1);
-    Glib::ustring lbsz(node_info->subtree_size);
-    lbsz+=" bytes";
+    std::stringstream lbsz;
+    lbsz<<DIR_NODE_DESC(node)->subtree.size<<" bytes";
     if (DIR_NODE_DESC(node)->subtree.size >= 1024) {
-			lbsz+=Glib::ustring(" (")+node_info->subtree_size_abbr+")";
+			lbsz<<" ("<<DIR_NODE_DESC(node)->subtree.size<<")";
 		}
-    lbl = Gtk::manage(new Gtk::Label(lbsz,0.,0.5));
+    lbl = Gtk::manage(new Gtk::Label(lbsz.str(),0.,0.5));
     tbl_gen.attach(*lbl,1,2,pos,pos+1);
 	} else {
     lbl_size.set_label(_("Size:"));
     tbl_gen.attach(lbl_size,0,1,pos,pos+1);
-    lbl = Gtk::manage(new Gtk::Label(Glib::ustring(node_info->size)+" bytes ("+
-                                     node_info->size_abbr+")",0.,0.5));
+    {std::stringstream str;
+    str<<NODE_DESC(node)->size<<" bytes ("<<abbrev_size(NODE_DESC(node)->size);
+    lbl = Gtk::manage(new Gtk::Label(str.str(),0.,0.5));}
     tbl_gen.attach(*lbl,1,2,pos,pos+1);
     ++pos;
     tbl_gen.attach(lbl_alloc,0,1,pos,pos+1);
-    lbl = Gtk::manage(new Gtk::Label(node_info->size_alloc,0.,0.5));
+    std::stringstream str;
+    {str<<NODE_DESC(node)->size_alloc;
+    lbl = Gtk::manage(new Gtk::Label(str.str(),0.,0.5));}
     tbl_gen.attach(*lbl,1,2,pos,pos+1);
 	}
 	++pos;
   tbl_gen.attach(lbl_owner,0,1,pos,pos+1);
   std::stringstream lbow;
-  lbow<<node_info->user_name<<" (uid "<<NODE_DESC(node)->user_id<<")";
+  struct passwd* pw = getpwuid(NODE_DESC(node)->user_id);
+  lbow<<((pw)?(pw->pw_name):_("Unknown"));
+  lbow<<" (uid "<<NODE_DESC(node)->user_id<<")";
   lbl = Gtk::manage(new Gtk::Label(lbow.str(),0.,0.5));
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   tbl_gen.attach(lbl_group,0,1,pos,pos+1);
   std::stringstream lbgr;
-  lbgr<<node_info->group_name<<" (gid "<<NODE_DESC(node)->group_id<<")";
+  struct group* gr = getgrgid( NODE_DESC(node)->group_id );
+  lbgr<<((gr)?(gr->gr_name):("Unknown"))<<" (gid "<<NODE_DESC(node)->group_id<<")";
   lbl = Gtk::manage(new Gtk::Label(lbgr.str(),0.,0.5));
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   
   tbl_gen.attach(lbl_modif,0,1,pos,pos+1);
-  lbl = Gtk::manage(new Gtk::Label(node_info->mtime,0.,0.5));
+  lbl = Gtk::manage(new Gtk::Label(file_info->modification_time().as_iso8601(),0.,0.5));
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   tbl_gen.attach(lbl_attrib,0,1,pos,pos+1);
-  lbl = Gtk::manage(new Gtk::Label(node_info->ctime,0.,0.5));
+  lbl = Gtk::manage(new Gtk::Label(Glib::TimeVal(NODE_DESC(node)->ctime,0).as_iso8601(),0.,0.5));
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   tbl_gen.attach(lbl_access,0,1,pos,pos+1);
-  lbl = Gtk::manage(new Gtk::Label(node_info->atime,0.,0.5));
+  lbl = Gtk::manage(new Gtk::Label(Glib::TimeVal(NODE_DESC(node)->atime,0).as_iso8601(),0.,0.5));
   tbl_gen.attach(*lbl,1,2,pos,pos+1);
   ++pos;
   add_button(Gtk::Stock::CLOSE, Gtk::RESPONSE_CANCEL);
@@ -172,17 +186,20 @@ PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),no
       nbk.append_page(tbl_additional,_("File type"));
       tbl_additional.set_spacings(5);
       tbl_additional.set_border_width(10);
-#ifdef HAVE_FILE_COMMAND
 		  Gtk::Label *lb = Gtk::manage(new Gtk::Label(_("This file is recognized as:")));
 	    tbl_additional.attach(*lb,0,1,0,1);
       Gtk::ScrolledWindow *scr = Gtk::manage(new Gtk::ScrolledWindow());
       Gtk::TextView * ent = Gtk::manage(new Gtk::TextView());
-      ent->get_buffer()->set_text(node_info->file_type_desc);
+      //ent->get_buffer()->set_text(node_info->file_type_desc);
+      ent->get_buffer()->set_text(file_info->get_content_type()
+#ifdef HAVE_FILE_COMMAND
+                                  +'\n'+get_file_type_desc(node_absname(node)) 
+#endif //HAVE_FILE_COMMAND
+                                  );
       ent->set_size_request(200,-1);
       ent->set_wrap_mode(Gtk::WRAP_WORD);
       scr->add(*ent);
 	    tbl_additional.attach(*scr,0,1,1,2);
-#endif //HAVE_FILE_COMMAND
     }
     break;
     case NODE_SYMLINK:{
@@ -191,10 +208,12 @@ PropertyDialog::PropertyDialog(GNode *nd ): Gtk::Dialog(_("Properties"),true),no
       tbl_additional.set_border_width(10);
 		  Gtk::Label *lb = Gtk::manage(new Gtk::Label(_("This symlink points to:")));
 	    tbl_additional.attach(*lb,0,1,0,1);
-      lb = Gtk::manage(new Gtk::Label(node_info->target));
+      lb = Gtk::manage(new Gtk::Label(file_info->get_symlink_target() ) );
 	    tbl_additional.attach(*lb,0,1,1,2);
     }
     break;
+    default:
+      break;
   }
   show_all_children();
 }

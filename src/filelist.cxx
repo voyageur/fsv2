@@ -187,7 +187,7 @@ bool FsvFileList::on_button_press_event(GdkEventButton* ev_button){
   bool ret = Gtk::TreeView::on_button_press_event(ev_button);
 	// If About presentation is up, end it 
 	about( ABOUT_END );
-	if (globals.fsv_mode == FSV_SPLASH)	return false;
+	if (globalsc.fsv_mode == FSV_SPLASH)	return false;
 
   
   Glib::RefPtr<Gtk::TreeSelection> sel = get_selection();

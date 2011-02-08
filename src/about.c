@@ -194,7 +194,7 @@ draw_text( void )
 static void
 about_progress_cb( Morph *unused )
 {
-	globals.need_redraw = TRUE;
+	globalsc.need_redraw = TRUE;
 }
 
 

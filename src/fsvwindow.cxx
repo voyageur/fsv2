@@ -69,7 +69,7 @@ gui_adjustment_widget_busy( GtkAdjustment *adj )
 
 	tp = (double*)g_object_get_data( G_OBJECT(adj), "t_prev" );
 	if (tp == NULL) {
-		tp = NEW(double);
+		tp = (double*)xmalloc(sizeof(double));
 		*tp = t_now;
 		g_object_set_data_full( G_OBJECT(adj), "t_prev", tp, _xfree );
 		return FALSE;
@@ -88,11 +88,29 @@ gui_adjustment_widget_busy( GtkAdjustment *adj )
 // old C functions
 void window_set_access( boolean enabled ){
 }
-void window_set_color_mode( ColorMode mode ){}
+void window_set_color_mode( ColorMode mode ){
+  //g_print("%s\n",__FUNCTION__);
+  Glib::RefPtr<Gtk::RadioAction> ra;
+  if(mode==COLOR_BY_NODETYPE){
+  ra = Glib::RefPtr<Gtk::RadioAction>::cast_dynamic(FsvWindow::current->ag_unsetsitive->get_action("ColType"));
+  if(ra) ra->set_active(mode==COLOR_BY_NODETYPE);
+  }
+  if(mode==COLOR_BY_TIMESTAMP){
+  ra = Glib::RefPtr<Gtk::RadioAction>::cast_dynamic(FsvWindow::current->ag_unsetsitive->get_action("ColTime"));
+  if(ra) ra->set_active(mode==COLOR_BY_TIMESTAMP);
+  }
+  if(mode==COLOR_BY_WPATTERN){
+  ra = Glib::RefPtr<Gtk::RadioAction>::cast_dynamic(FsvWindow::current->ag_unsetsitive->get_action("ColWild"));
+  if(ra) ra->set_active(mode==COLOR_BY_WPATTERN);
+  }
+}
 void window_birdseye_view_off( void ){
   FsvWindow::current->birdeye->set_active(false);
 }
 void window_statusbar( StatusBarID sb_id, const char *message ){
+  window_statusbar( sb_id, std::string(message) );
+}
+void window_statusbar( StatusBarID sb_id, const std::string& message ){
   if(sb_id == SB_RIGHT){
   FsvWindow::current->rsbar.pop(sb_id);
   FsvWindow::current->rsbar.push(message,sb_id);
@@ -159,7 +177,7 @@ void FsvWindow::on_about(){
   about( ABOUT_BEGIN );
 }
 void FsvWindow::on_fsv_mode(FsvMode mode){
-	if (globals.fsv_mode != mode)
+	if (globalsc.fsv_mode != mode)
 		fsv_set_mode( mode );
 }
 void FsvWindow::on_birdseye_view(){
@@ -198,11 +216,7 @@ void FsvWindow::on_properties(){
 void FsvWindow::on_open(){
   file = Gio::File::create_for_path(node_absname(popa_node));
   Glib::RefPtr< Gio::AppInfo > app = file->query_default_handler();
-  std::vector< Glib::RefPtr< Gio::AppInfo > > vat = Gio::AppInfo::get_all_for_type(file->query_info()->get_content_type());
-  /*if(gtk_show_uri(NULL,path.c_str(),GDK_CURRENT_TIME,&error) != TRUE){
-    std::cerr<<path<<std::endl;
-  }*/
-  // Glib::RefPtr< AppLaunchContext>	Gio::AppLaunchContext::create();
+  //std::vector< Glib::RefPtr< Gio::AppInfo > > vat = Gio::AppInfo::get_all_for_type(file->query_info()->get_content_type());
   Gio::AppInfo::launch_default_for_uri(file->get_uri());
 }
 
@@ -277,6 +291,7 @@ FsvWindow::FsvWindow() : Gtk::Window(){
                   sigc::bind(sigc::mem_fun(*this,&FsvWindow::on_fsv_mode),FSV_DISCV) );
   
   Gtk::RadioAction::Group group_color;
+  
   ag_unsetsitive->add(Gtk::RadioAction::create(group_color,"ColType",_("By n_odetype")),
                   sigc::bind(sigc::mem_fun(*this,&FsvWindow::on_color_type),COLOR_BY_NODETYPE) );
   ag_unsetsitive->add(Gtk::RadioAction::create(group_color,"ColTime",_("By t_imestamp")),

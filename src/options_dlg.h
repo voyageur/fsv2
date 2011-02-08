@@ -2,7 +2,30 @@
 #include "common.h"
 #include "color.h"
 
+#include "uilib/ColorCellRenderer.h"
+
 class OptionsDialog : public Gtk::Dialog {
+  class WildTree : public Gtk::TreeView{
+  public:
+    struct WildColumns : public Gtk::TreeModelColumnRecord{
+      Gtk::TreeModelColumn<Glib::ustring> name;
+      Gtk::TreeModelColumn<Glib::ustring> color;
+      Gtk::TreeModelColumn<bool> visible;
+      WildColumns(){
+        add(name);
+        add(color);
+      }
+    } records;
+  protected:
+    ColorCellRenderer colrend;
+    Gtk::TreeViewColumn colcolor,colpattern;
+    //virtual bool on_button_press_event(GdkEventButton* event); 
+  public:
+    Glib::RefPtr<Gtk::TreeStore> model;
+    WildTree();
+    void fill_tree(const ColorConfig&);
+  };
+
   struct ColorConfig ccfg;
   Gtk::Notebook ntb;
   Gtk::Table tbl_file_type,tbl_timestamp,tbl_wildcard;
@@ -19,6 +42,10 @@ class OptionsDialog : public Gtk::Dialog {
   Gtk::ColorButton btn_older,btn_newer;
   Gtk::Label lbl_colorby,lbl_older,lbl_newer;
   Gtk::ComboBoxText cbx_spectrum_type;
+  //
+  Gtk::Button bt_add,bt_remove;
+  Gtk::ScrolledWindow scr_wild;
+  WildTree tree_wild;
   void on_timestamp_type_changed();
   void on_spectrum_type_changed();
   void on_timestamp_color(int i);

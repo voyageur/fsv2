@@ -27,15 +27,12 @@
 #define FSV_COLOR_H
 
 #ifdef __cplusplus
-extern "C" {
-#endif
-
 /* The various coloring modes */
 typedef enum {
 	COLOR_BY_NODETYPE,
 	COLOR_BY_TIMESTAMP,
 	COLOR_BY_WPATTERN,
-        COLOR_NONE
+  COLOR_NONE
 } ColorMode;
 
 /* Every file has three timestamps */
@@ -49,16 +46,17 @@ typedef enum {
 /* Various kinds of spectrums */
 typedef enum {
 	SPECTRUM_RAINBOW,
-        SPECTRUM_HEAT,
+  SPECTRUM_HEAT,
 	SPECTRUM_GRADIENT,
 	SPECTRUM_NONE
 } SpectrumType;
 
-
+#include <vector>
+#include <string>
 /* Used indirectly in struct ColorConfig (see below) */
 struct WPatternGroup {
 	RGBcolor color;
-	GList *wp_list; /* elements: char * */
+	std::vector<std::string> wp_list; /* elements: char * */
 };
 
 struct ColorConfig {
@@ -80,22 +78,24 @@ struct ColorConfig {
 
 	/* Wildcard patterns */
 	struct ColorByWPattern {
-		GList *wpgroup_list; /* elements: struct WPatternGroup */
+		std::vector<WPatternGroup> wpgroup_list; /* elements: struct WPatternGroup */
 		RGBcolor default_color;
 	} by_wpattern;
 };
 
-
+  
 void color_config_destroy( struct ColorConfig *ccfg );
-ColorMode color_get_mode( void );
 void color_get_config( struct ColorConfig *ccfg );
-void color_assign_recursive( GNode *dnode );
-void color_set_mode( ColorMode mode );
-RGBcolor color_spectrum_color( SpectrumType type, double x, void *data );
 void color_set_config( struct ColorConfig *new_ccfg, ColorMode mode );
+RGBcolor color_spectrum_color( SpectrumType type, double x, void *data );
+
+ColorMode color_get_mode( void );
+void color_set_mode( ColorMode mode );
 void color_write_config( void );
 void color_init( void );
-
+extern "C" {
+#endif
+void color_assign_recursive( GNode *dnode );
 #ifdef __cplusplus
 };
 #endif

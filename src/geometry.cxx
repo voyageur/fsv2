@@ -32,7 +32,7 @@
 #include "color.h"
 #include "dirtree.h" /* dirtree_entry_expanded( ) */
 #include "ogl.h"
-#include "tmaptext.h"
+#include "fsvwindow.h"
 
 /* 3D geometry for splash screen */
 #include "fsv3d.h"
@@ -201,7 +201,7 @@ discv_init_recursive( GNode *dnode, double stem_theta )
 	theta1 = stem_theta + 180.0;
 	nl_llink = node_list;
 	while (nl_llink != NULL) {
-		node = nl_llink->data;
+		node = (GNode *)nl_llink->data;
 		gparams = DISCV_GEOM_PARAMS(node);
 		arc_width = k * gparams->theta;
 		dist = gparams->pos.x;
@@ -2904,7 +2904,7 @@ geometry_draw( boolean high_detail )
 		return;
 	}
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_SPLASH:
 		splash_draw( );
 		break;
@@ -2930,7 +2930,7 @@ geometry_draw( boolean high_detail )
 void
 geometry_camera_pan_finished( void )
 {
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		/* discv_camera_pan_finished( ); */
 		break;
@@ -2957,7 +2957,7 @@ geometry_colexp_initiated( GNode *dnode )
 	/* A newly expanding directory in TreeV mode will probably
 	 * need (re)shaping (it may be appearing for the first time,
 	 * or its inner radius may have changed) */
-	if (DIR_COLLAPSED(dnode) && (globals.fsv_mode == FSV_TREEV))
+	if (DIR_COLLAPSED(dnode) && (globalsc.fsv_mode == FSV_TREEV))
 		treev_reshape_platform( dnode, geometry_treev_platform_r0( dnode ) );
 }
 
@@ -2976,7 +2976,7 @@ geometry_colexp_in_progress( GNode *dnode )
         else
 		queue_uncached_draw( );
 
-	if (globals.fsv_mode == FSV_TREEV) {
+	if (globalsc.fsv_mode == FSV_TREEV) {
 		/* Take care of shifting angles */
 		treev_queue_rearrange( dnode );
 	}
@@ -2991,7 +2991,7 @@ geometry_should_highlight( GNode *node, unsigned int face_id )
 	if (!NODE_IS_DIR(node) || (face_id != 1))
 		return TRUE;
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		return TRUE;
 
@@ -3014,7 +3014,7 @@ draw_node( GNode *node )
 {
 	glPushMatrix( );
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_DISCV:
 		/* TODO: code to draw single discv node goes HERE */
 		break;

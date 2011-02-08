@@ -106,7 +106,7 @@ colexp_progress_cb( Morph *morph )
 	geometry_colexp_in_progress( dnode );
 
 	/* Keep viewport refreshed */
-	globals.need_redraw = TRUE;
+	globalsc.need_redraw = TRUE;
 
 	if (scrollbars_colexp_adjust)
 		camera_update_scrollbars( ABS(*(morph->var) - morph->end_value) < EPSILON );
@@ -173,7 +173,7 @@ colexp( GNode *dnode, ColExpMesg mesg )
 		gui_update( );
 
 		/* Collapse/expand time for current visualization mode */
-		switch (globals.fsv_mode) {
+		switch (globalsc.fsv_mode) {
 			case FSV_DISCV:
 			colexp_time = DISCV_COLEXP_TIME;
 			break;
@@ -317,7 +317,7 @@ colexp( GNode *dnode, ColExpMesg mesg )
 		 * a collapsing/expanding directory, the scrollbars may
 		 * need updating to reflect a new scroll range */
 		scrollbars_colexp_adjust = FALSE;
-		if (curnode_is_ancestor && (globals.fsv_mode == FSV_TREEV))
+		if (curnode_is_ancestor && (globalsc.fsv_mode == FSV_TREEV))
 			scrollbars_colexp_adjust = TRUE;
 	}
 }

@@ -144,7 +144,7 @@ viewport_cb( GtkWidget *gl_area_w, GdkEvent *event )
 	}
 
 	/* If we're in splash screen mode, proceed no further */
-	if (globals.fsv_mode == FSV_SPLASH)
+	if (globalsc.fsv_mode == FSV_SPLASH)
 		return FALSE;
 
 	/* Mouse-related events */

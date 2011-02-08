@@ -68,7 +68,7 @@ stat_node( GNode *node )
 {
 	struct stat st;
 
-	if (lstat( node_absname( node ), &st ))
+	if (lstat( node_absname( node ).c_str(), &st ))
 		return -1;
 
 	/* Determine node type */
@@ -125,7 +125,7 @@ de_select( const struct dirent *de )
 
 
 static int
-process_dir( const char *dir, GNode *dnode )
+process_dir( const std::string& dir, GNode *dnode )
 {
 	union AnyNodeDesc any_node_desc, *andesc;
 	struct dirent **dir_entries;
@@ -134,12 +134,12 @@ process_dir( const char *dir, GNode *dnode )
 	char strbuf[1024];
 
 	/* Scan in directory entries */
-	num_entries = scandir( dir, &dir_entries, de_select, alphasort );
+	num_entries = scandir( dir.c_str(), &dir_entries, de_select, alphasort );
 	if (num_entries < 0)
 		return -1;
 
 	/* Update display */
-	snprintf( strbuf, sizeof(strbuf), _("Scanning: %s"), dir );
+	snprintf( strbuf, sizeof(strbuf), _("Scanning: %s"), dir.c_str() );
 	window_statusbar( SB_RIGHT, strbuf );
 
 	/* Process directory entries */
@@ -169,13 +169,13 @@ process_dir( const char *dir, GNode *dnode )
 			process_dir( node_absname( node ), node );
 
 			/* Move new descriptor into working memory */
-			andesc = g_mem_chunk_alloc( dir_ndesc_memchunk );
+			andesc = (AnyNodeDesc*)g_mem_chunk_alloc( dir_ndesc_memchunk );
 			memcpy( andesc, DIR_NODE_DESC(node), sizeof(DirNodeDesc) );
 			node->data = andesc;
 		}
 		else {
 			/* Move new descriptor into working memory */
-			andesc = g_mem_chunk_alloc( ndesc_memchunk );
+			andesc = (AnyNodeDesc*)g_mem_chunk_alloc( ndesc_memchunk );
 			memcpy( andesc, NODE_DESC(node), sizeof(NodeDesc) );
 			node->data = andesc;
 		}
@@ -296,7 +296,7 @@ setup_fstree_recursive( GNode *node, GNode **node_table )
 void
 scanfs( const char *dir )
 {
-	const char *root_dir;
+	char root_dir[1024];
         GNode **node_table;
 	guint handler_id;
 	char *name;
@@ -332,7 +332,7 @@ scanfs( const char *dir )
 
 	/* Get absolute path of desired root (top-level) directory */
 	chdir( dir );
-	root_dir = xgetcwd( );
+	/*root_dir =*/ getcwd(root_dir,1024 );
 
 	/* Set up fstree metanode */
 	globals.fstree = g_node_new( g_mem_chunk_alloc( dir_ndesc_memchunk ) );
@@ -351,7 +351,7 @@ scanfs( const char *dir )
 	/* Note: We can now use root_dnode to refer to the node just
 	 * created (it is an alias for globals.fstree->children) */
 	NODE_DESC(root_dnode)->id = node_id++;
-	name = g_basename( root_dir );
+	name = (char*)g_basename( root_dir );
 	NODE_DESC(root_dnode)->name = g_string_chunk_insert( name_strchunk, name );
 	DIR_NODE_DESC(root_dnode)->a_dlist = NULL_DLIST;
 	DIR_NODE_DESC(root_dnode)->b_dlist = NULL_DLIST;

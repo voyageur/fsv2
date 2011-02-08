@@ -42,24 +42,27 @@ fsv2_SOURCES = \
 	filelist.cxx \
 	property_dlg.cxx \
 	options_dlg.cxx \
+	color.cxx \
 	about.c \
 	animation.c \
-	camera.c \
-	colexp.c \
-	color.c \
-	common.c \
-	geometry.c \
+	camera.cxx \
+	colexp.cxx \
+	common.cxx \
+	geometry.cxx \
 	ogl.c \
-	scanfs.c \
-	tmaptext.c \
-	viewport.c
+	scanfs.cxx \
+	viewport.cxx
+#	tmaptext.c
+
+fsv2_DEPENDENCIES =
 
 fsv2_LDADD = \
+	../uilib/libfsvui.la \
 	$(DEBUG_LIBS) \
-	@GTKGL_LIBS@ \
-	@GL_LIBS@ \
-	@GTK_LIBS@ \
-	@FTGL_LIBS@
+	$(GTK_LIBS) \
+	$(GTKGL_LIBS) \
+	$(FTGL_LIBS) \
+	$(GNOMEUI_LIBS)
 
 EXTRA_DIST = \
 	xmaps/birdseye_view.xpm \
@@ -77,3 +80,9 @@ EXTRA_DIST = \
 	xmaps/socket.xpm \
 	xmaps/symlink.xpm \
 	xmaps/unknown.xpm
+
+AM_CPPFLAGS = \
+	$(GTK_CFLAGS) \
+	$(GTKGL_CFLAGS) \
+	$(FTGL_CFLAGS) \
+	$(GNOMEUI_CFLAGS)

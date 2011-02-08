@@ -21,9 +21,7 @@
 /* Animation control */
 
 
-#ifdef FSV_ANIMATION_H
-	#error
-#endif
+#ifndef FSV_ANIMATION_H
 #define FSV_ANIMATION_H
 
 #ifdef __cplusplus
@@ -77,4 +75,5 @@ void redraw( void );
 };
 #endif
 
+#endif //FSV_ANIMATION_H
 /* end animation.h */

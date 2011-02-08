@@ -97,7 +97,7 @@ initial_camera_pan( char *mesg )
 	}
 	else {
 		/* Same filesystem, different visualization mode */
-		if (globals.fsv_mode == FSV_TREEV) {
+		if (globalsc.fsv_mode == FSV_TREEV) {
 			/* Enter TreeV mode with an L-shaped pan */
 			camera_treev_lpan_look_at( globals.current_node, 1.0 );
 		}
@@ -113,7 +113,7 @@ fsv_set_mode( FsvMode mode )
 {
 	boolean first_init = FALSE;
 
-	switch (globals.fsv_mode) {
+	switch (globalsc.fsv_mode) {
 		case FSV_SPLASH:
 		/* Queue desired mode */
 		initial_fsv_mode = mode;
@@ -136,7 +136,7 @@ fsv_set_mode( FsvMode mode )
 	/* Set up initial camera state */
 	camera_init( mode, first_init );
 
-	globals.fsv_mode = mode;
+	globalsc.fsv_mode = mode;
 
 	/* Ensure that About presentation is not up */
 	about( ABOUT_END );
@@ -167,7 +167,7 @@ fsv_load( const char *dir )
 	//window_set_access( FALSE );
 
 	/* Bring up splash screen */
-	globals.fsv_mode = FSV_SPLASH;
+	globalsc.fsv_mode = FSV_SPLASH;
 	redraw( );
 
 	/* Reset scrollbars (disable scrolling) */
@@ -188,7 +188,7 @@ fsv_load( const char *dir )
 	gui_update( );
 
 	/* Initialize visualization */
-	globals.fsv_mode = FSV_NONE;
+	globalsc.fsv_mode = FSV_NONE;
 	fsv_set_mode( initial_fsv_mode );
 }
 
@@ -205,7 +205,7 @@ fsv_write_config( void )
 	gnome_config_pop_prefix( );
 
 	gnome_config_push_prefix( config_path_prefix( section_fsv ) );
-	gnome_config_set_token( key_fsv_mode, globals.fsv_mode, tokens_fsv_mode );
+	gnome_config_set_token( key_fsv_mode, globalsc.fsv_mode, tokens_fsv_mode );
 	gnome_config_pop_prefix( );
 #endif /* 0 */
 }
@@ -302,7 +302,7 @@ main( int argc, char **argv )
 
   win.set_visible(true);
 	color_init( );
-        globals.fsv_mode = FSV_SPLASH;
+  globalsc.fsv_mode = FSV_SPLASH;
 	fsv_load( root_dir );
 	xfree( root_dir );
 	app.run(win);

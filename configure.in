@@ -17,6 +17,7 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_RANLIB
+AC_PROG_LIBTOOL
 
 AC_ISC_POSIX
 
@@ -166,7 +167,7 @@ fi
 AC_PATH_PROG(FILE_CMD, file)
 if test -n "$FILE_CMD" ; then
 	AC_DEFINE([HAVE_FILE_COMMAND],1,[ Defined when file command exest ])
-	AC_DEFINE_UNQUOTED([FILE_COMMAND], ["$FILE_CMD %s"]," file command ")
+	AC_DEFINE_UNQUOTED([FILE_COMMAND], ["$FILE_CMD "]," file command ")
 fi
 
 #CFLAGS="$CFLAGS -DGDK_DISABLE_DEPRECATED=1 -DGDK_PIXBUF_DISABLE_DEPRECATED=1 -DG_DISABLE_DEPRECATED=1 "
@@ -182,6 +183,8 @@ AC_OUTPUT(fsv.spec
 	debugloc/Makefile
 	doc/Makefile
 	po/Makefile.in
-	src/Makefile)
+	src/Makefile
+        uilib/Makefile
+)
 
 #	lib/Makefile

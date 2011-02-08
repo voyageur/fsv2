@@ -100,8 +100,8 @@
 #define G_LIST_SORT(l,f)	l = g_list_sort( l, (GCompareFunc)f )
 #define NEW(type)		(type *)xmalloc( sizeof(type) )
 #define NEW_ARRAY(type,n)	(type *)xmalloc( (n) * sizeof(type) )
-#define RESIZE(block,n,type)	block = (type *)xrealloc( block, (n) * sizeof(type) )
-#define STRRECAT(str,addstr)	str = strrecat( str, addstr )
+//#define RESIZE(block,n,type)	block = (type *)xrealloc( block, (n) * sizeof(type) )
+//#define STRRECAT(str,addstr)	str = strrecat( str, addstr )
 
 /* For when a switch should never default */
 #define SWITCH_FAIL		default: g_assert_not_reached( ); exit( EXIT_FAILURE );
@@ -243,36 +243,34 @@ union AnyNodeDesc {
 	NodeDesc	node_desc;
 	DirNodeDesc	dir_node_desc;
 };
-
-/* Node information struct. Everything here is a string.
- * get_node_info( ) fills in all the fields */
+#ifdef __cplusplus
+#include <glibmm.h>
+/*
+// Node information struct. Everything here is a string.
+//  get_node_info( ) fills in all the fields
 struct NodeInfo {
-	char *name;		/* Name (without directory components) */
-	char *prefix;		/* Leading directory components */
-	char *size;		/* Size (in bytes) */
-	char *size_abbr;	/* Abbreviated size (e.g. "5kB") */
-	char *size_alloc;	/* Allocation size (bytes) */
-	char *size_alloc_abbr;	/* Abbreviated allocation size */
-	char *user_name;	/* Owner's user name */
-	char *group_name;	/* Owner's group name */
-	char *atime;		/* Last access time */
-	char *mtime;		/* Last modification time */
-	char *ctime;		/* Last attribute change time */
-	/* For directories */
-	char *subtree_size;	/* Total size of subtree (bytes) */
-	char *subtree_size_abbr; /* Abbreviated total size of subtree */
-	/* For regular files */
-	char *file_type_desc;	/* Verbose description of file type */
-	/* For symbolic links */
-	char *target;		/* Target of symlink */
-	char *abstarget;	/* Absolute name of target */
+	char *name;		// Name (without directory components)
+	char *prefix;		// Leading directory components
+	char *size;		// Size (in bytes) 
+	char *size_abbr;	// Abbreviated size (e.g. "5kB")
+	char *size_alloc;	// Allocation size (bytes)
+	char *size_alloc_abbr;	// Abbreviated allocation size 
+	char *user_name;	// Owner's user name
+	char *group_name;	// Owner's group name
+	char *atime;		// Last access time
+	char *mtime;		// Last modification time
+	char *ctime;		// Last attribute change time
+	// For directories 
+	char *subtree_size;	// Total size of subtree (bytes) 
+	char *subtree_size_abbr; // Abbreviated total size of subtree 
+	// For regular files 
+	char *file_type_desc;	// Verbose description of file type 
+	// For symbolic links
+	char *target;		// Target of symlink
+	char *abstarget;	// Absolute name of target
 };
-
-/* Global variables container */
+*/
 struct Globals {
-	/* Current program mode */
-	FsvMode fsv_mode;
-
 	/* The filesystem tree */
 	GNode *fstree;
 
@@ -282,11 +280,8 @@ struct Globals {
 	/* History of previously visited nodes
 	 * (elements are of type GNode) */
 	GList *history;
-
-	/* TRUE when viewport needs to be redrawn */
-	boolean need_redraw;
+  //Glib::NodeTree<AnyNodeDesc> AnyNodeTree;
 };
-
 
 /**** Global variables ****************/
 
@@ -298,28 +293,39 @@ extern const char *node_type_plural_names[NUM_NODE_TYPES];
 
 
 /**** Prototypes for common library functions ****************/
-#ifdef __cplusplus
+#include <string>
+std::string abbrev_size( int64 size );
+std::string get_file_type_desc( const std::string& filename );
+std::string node_absname( const GNode *node );
 extern "C" {
 #endif
+/* Global variables container */
+struct Globalsc {
+	/* Current program mode */
+	FsvMode fsv_mode;
 
+	/* TRUE when viewport needs to be redrawn */
+	boolean need_redraw;
+};
+
+extern struct Globalsc globalsc;
+  
 #ifndef DEBUG
 void *xmalloc( size_t size );
 void *xrealloc( void *block, size_t size );
 char *xstrdup( const char *string );
-char *xstrredup( char *old_string, const char *string );
+//char *xstrredup( char *old_string, const char *string );
 void xfree( void *block );
 
 #endif /* not DEBUG */
-char *strrecat( char *string, const char *add_string );
+//char *strrecat( char *string, const char *add_string );
 char *xstrstrip( char *string );
 boolean xfork( void);
-const char *xgetcwd( void);
+//const char *xgetcwd( void);
 double xgettime( void);
-const char *i64toa( int64 number );
-const char *abbrev_size( int64 size );
-const char *node_absname( const GNode *node );
+//const char *i64toa( int64 number );
 GNode *node_named( const char *absname );
-const struct NodeInfo *get_node_info( GNode *node );
+//const struct NodeInfo *get_node_info( GNode *node );
 const char *rgb2hex( RGBcolor *color );
 RGBcolor hex2rgb( const char *hex_color );
 RGBcolor rainbow_color( double x );

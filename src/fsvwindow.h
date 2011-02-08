@@ -156,22 +156,30 @@ public:
   static FsvWindow* current;
 };
 
-extern "C" {
-#else
-#include <gtk/gtk.h>
-#endif
+void window_set_color_mode( ColorMode mode );
 
+
+extern "C" {
 typedef enum {
 	SB_LEFT,
 	SB_RIGHT
 } StatusBarID;
+};
+void window_statusbar( StatusBarID sb_id, const std::string& message );
+extern "C" {
+#else
+#include <gtk/gtk.h>
+typedef enum {
+	SB_LEFT,
+	SB_RIGHT
+} StatusBarID;
+#endif
 
 void window_statusbar( StatusBarID sb_id, const char *message );
 void gui_update();
 void gui_cursor( GtkWidget *widget, int glyph );
 void window_birdseye_view_off( void );
 void window_set_access( boolean enabled );
-void window_set_color_mode( ColorMode mode );
 boolean gui_adjustment_widget_busy( GtkAdjustment *adj );
 void context_menu( GNode *node, GdkEventButton *ev_button );
 
