@@ -52,11 +52,8 @@ enum {
 };
 
 
-/* The camera */
-static union AnyCamera the_camera;
-
 /* More convenient pointer to the camera */
-Camera *camera = CAMERA(&the_camera);
+Camera *camera=NULL;
 
 /* Viewport scrollbar adjustments */
 static GtkAdjustment *x_scrollbar_adj;
@@ -1023,8 +1020,7 @@ pan_end_cb( Morph *morph )
 /* Points the camera at the given node, using the specified motion
  * morph type and (optionally, if value is nonnegative) the specified
  * pan duration */
-void
-camera_look_at_full( GNode *node, MorphType mtype, double pan_time_override )
+void camera_look_at_full( GNode *node, MorphType mtype, double pan_time_override )
 {
 	double pan_time = 0.0;
 	GNode *prev_node = NULL;

@@ -80,7 +80,7 @@
 #define NULL_DLIST		0
 
 /* Alias for the root directory node */
-#define root_dnode		globals.fstree->children
+//#define root_dnode		globals.fstree->children
 
 /* Mathematical macros */
 #define SQR(x)			((x)*(x))
@@ -194,11 +194,11 @@ struct _RTZvec {
 
 /* Base node descriptor. Describes a filesystem node
  * (file/symlink/whatever) */
-typedef struct _NodeDesc NodeDesc;
-struct _NodeDesc {
+#ifdef __cplusplus
+struct NodeDesc {
 	NodeType	type;		/* Type of node */
 	unsigned int	id;		/* Unique ID number */
-	const char	*name;		/* Base name (w/o directory) */
+	const char	*name;		// Base name (w/o directory)
 	int64		size;		/* Size (bytes) */
 	int64		size_alloc;	/* Size allocation on storage medium */
 	uid_t		user_id;	/* Owner UID */
@@ -213,9 +213,7 @@ struct _NodeDesc {
 };
 
 /* Directories have their own extended descriptor */
-typedef struct _DirNodeDesc DirNodeDesc;
-struct _DirNodeDesc {
-	NodeDesc	node_desc;
+struct DirNodeDesc : NodeDesc{
 	double		geomparams2[3];	/* More geometry parameters */
 	double		deployment;	/* 0 == collapsed, 1 == expanded */
 	/* Subtree information. The quantities here do not include the
@@ -226,7 +224,7 @@ struct _DirNodeDesc {
 	} subtree;
 	/* Following pointer should be of type GtkTreePath */
 	//Glib::RefPtr<Glib::ustring> ctnode;
-	char *ctnode;	/* Directory tree entry */
+	//char *ctnode;	// Directory tree entry not needed
 	unsigned int	a_dlist;	/* Display list A */
 	unsigned int	b_dlist;	/* Display list B */
 	unsigned int	c_dlist;	/* Display list C */
@@ -239,11 +237,8 @@ struct _DirNodeDesc {
 };
 
 /* Generalized node descriptor */
-union AnyNodeDesc {
-	NodeDesc	node_desc;
-	DirNodeDesc	dir_node_desc;
-};
-#ifdef __cplusplus
+typedef DirNodeDesc  AnyNodeDesc;
+
 #include <glibmm.h>
 /*
 // Node information struct. Everything here is a string.
@@ -269,23 +264,21 @@ struct NodeInfo {
 	char *target;		// Target of symlink
 	char *abstarget;	// Absolute name of target
 };
-*/
+
 struct Globals {
-	/* The filesystem tree */
+	// The filesystem tree 
 	GNode *fstree;
 
-	/* Current node of interest */
+	// Current node of interest 
 	GNode *current_node;
 
-	/* History of previously visited nodes
-	 * (elements are of type GNode) */
+	// History of previously visited nodes (elements are of type GNode)
 	GList *history;
-  //Glib::NodeTree<AnyNodeDesc> AnyNodeTree;
 };
-
+*/
 /**** Global variables ****************/
 
-extern struct Globals globals;
+//extern struct Globals globals;
 extern char **node_type_xpms[NUM_NODE_TYPES];
 extern char **node_type_mini_xpms[NUM_NODE_TYPES];
 extern const char *node_type_names[NUM_NODE_TYPES];

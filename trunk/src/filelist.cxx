@@ -94,7 +94,7 @@ void filelist_reset_access( void )
 /* Compare function for sorting nodes alphabetically */
 static int compare_node( GNode *a, GNode *b )
 {
-	return strcmp( NODE_DESC(a)->name, NODE_DESC(b)->name );
+	//return strcmp( NODE_DESC(a)->name, NODE_DESC(b)->name );
 }
 
 
