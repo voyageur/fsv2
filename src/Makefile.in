@@ -48,11 +48,11 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_fsv2_OBJECTS = fsv.$(OBJEXT) fsvwindow.$(OBJEXT) dirtree.$(OBJEXT) \
+am_fsv2_OBJECTS = about.$(OBJEXT) animation.$(OBJEXT) ogl.$(OBJEXT) \
+	fsv.$(OBJEXT) fsvwindow.$(OBJEXT) dirtree.$(OBJEXT) \
 	filelist.$(OBJEXT) property_dlg.$(OBJEXT) \
-	options_dlg.$(OBJEXT) color.$(OBJEXT) about.$(OBJEXT) \
-	animation.$(OBJEXT) camera.$(OBJEXT) colexp.$(OBJEXT) \
-	common.$(OBJEXT) geometry.$(OBJEXT) ogl.$(OBJEXT) \
+	options_dlg.$(OBJEXT) color.$(OBJEXT) camera.$(OBJEXT) \
+	colexp.$(OBJEXT) common.$(OBJEXT) geometry.$(OBJEXT) \
 	scanfs.$(OBJEXT) viewport.$(OBJEXT)
 fsv2_OBJECTS = $(am_fsv2_OBJECTS)
 @DEBUG_TRUE@am__DEPENDENCIES_1 = $(top_builddir)/debug/libdebug.a
@@ -264,6 +264,9 @@ noinst_HEADERS = \
 	options_dlg.h
 
 fsv2_SOURCES = \
+	about.c \
+	animation.cxx \
+	ogl.cxx \
 	fsv.cxx \
 	fsvwindow.cxx \
 	dirtree.cxx \
@@ -271,13 +274,10 @@ fsv2_SOURCES = \
 	property_dlg.cxx \
 	options_dlg.cxx \
 	color.cxx \
-	about.c \
-	animation.c \
 	camera.cxx \
 	colexp.cxx \
 	common.cxx \
 	geometry.cxx \
-	ogl.c \
 	scanfs.cxx \
 	viewport.cxx
 

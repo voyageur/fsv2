@@ -25,9 +25,7 @@
 #define FSV_CAMERA_H
 
 #include "animation.h"
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 /* Standard near-clip-to-camera and far-to-near-clip distance ratios */
 #define NEAR_TO_DISTANCE_RATIO	0.5
 #define FAR_TO_NEAR_RATIO	128.0
@@ -41,8 +39,7 @@ extern "C" {
 
 
 /* Base camera definition */
-typedef struct _Camera Camera;
-struct _Camera {
+struct Camera {
 	double	theta;		/* Heading */
 	double	phi;		/* Elevation */
 	double	distance;	/* Distance between camera and target */
@@ -54,34 +51,19 @@ struct _Camera {
 };
 
 /* DiscV mode camera */
-typedef struct _DiscVCamera DiscVCamera;
-struct _DiscVCamera {
-	Camera	camera;
+struct DiscVCamera : Camera{
 	XYvec	target;
 };
 
 /* MapV mode camera */
-typedef struct _MapVCamera MapVCamera;
-struct _MapVCamera {
-	Camera	camera;
+struct MapVCamera : Camera {
 	XYZvec	target;
 };
 
 /* TreeV mode camera */
-typedef struct _TreeVCamera TreeVCamera;
-struct _TreeVCamera {
-	Camera	camera;
+struct TreeVCamera : Camera {
 	RTZvec	target;
 };
-
-/* Generalized camera type */
-union AnyCamera {
-	Camera		camera;
-	DiscVCamera	discv_camera;
-	MapVCamera	mapv_camera;
-	TreeVCamera	treev_camera;
-};
-
 
 /* The camera */
 extern Camera *camera;
@@ -103,8 +85,5 @@ void camera_birdseye_view( boolean going_up );
 void camera_dolly( double dk );
 void camera_revolve( double dtheta, double dphi );
 
-#ifdef __cplusplus
-};
-#endif
 #endif //FSV_CAMERA_H
 /* end camera.h */

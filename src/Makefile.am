@@ -36,6 +36,9 @@ noinst_HEADERS = \
 	options_dlg.h
 
 fsv2_SOURCES = \
+	about.c \
+	animation.cxx \
+	ogl.cxx \
 	fsv.cxx \
 	fsvwindow.cxx \
 	dirtree.cxx \
@@ -43,13 +46,10 @@ fsv2_SOURCES = \
 	property_dlg.cxx \
 	options_dlg.cxx \
 	color.cxx \
-	about.c \
-	animation.c \
 	camera.cxx \
 	colexp.cxx \
 	common.cxx \
 	geometry.cxx \
-	ogl.c \
 	scanfs.cxx \
 	viewport.cxx
 #	tmaptext.c
