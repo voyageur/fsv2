@@ -2,40 +2,94 @@
 #include <iostream>
 #include <sstream>
 
-OptionsDialog::WildTree::WildTree():colcolor(_("Color"),colrend)
+OptionsDialog::WildTree::WildTree(OptionsDialog* dlg):colcolor(_("Color"),colrend)
                                    ,colpattern(_("Patterns"),records.name){
   model = Gtk::TreeStore::create(records);
   set_model(model);
   append_column(colcolor);
   colcolor.add_attribute(colrend.property_text(),records.color);
-  colcolor.add_attribute(colrend.property_visible(),records.visible);
+  colrend.signal_edited().connect(
+    sigc::mem_fun(*dlg,&OptionsDialog::on_color_edited));
+  Gtk::CellRendererText* rwp = dynamic_cast<Gtk::CellRendererText*>(colpattern.get_first_cell_renderer());
+  if(rwp){
+    rwp->property_editable() = true;
+    rwp->signal_edited().connect(
+      sigc::mem_fun(*dlg,&OptionsDialog::on_wp_edited));
+  }
+  //colcolor.add_attribute(colrend.property_visible(),records.visible);
   append_column(colpattern);
 }
 
 void OptionsDialog::WildTree::fill_tree(const ColorConfig& cfg){
+  model->clear();
   for(std::vector<WPatternGroup>::const_iterator wpgit = 
     cfg.by_wpattern.wpgroup_list.begin();
     wpgit < cfg.by_wpattern.wpgroup_list.end(); ++wpgit){
 	  Gtk::TreeIter treegr = model->append();
 	  Gtk::TreeModel::Row rowgr = *(treegr);
     std::stringstream str;
-    str<<(int)wpgit->color.r*255<<" "<<(int)wpgit->color.g*255<<" "<<(int)wpgit->color.b*255;
+    str<<(int)(wpgit->color.r*255.)<<" "<<(int)(wpgit->color.g*255.)<<" "<<(int)(wpgit->color.b*255.);
     rowgr[records.color] = str.str();
-    rowgr[records.name] = "";
+    str.str("");
     for(std::vector<std::string>::const_iterator it = wpgit->wp_list.begin();
         it < wpgit->wp_list.end();++it){
-	      Gtk::TreeIter treewc = model->append(treegr->children());
+	      /*Gtk::TreeIter treewc = model->append(treegr->children());
 	      Gtk::TreeModel::Row rowwc = *(treewc);
-        rowwc[records.name] = *it;
-        rowgr[records.visible] = false;
+        rowwc[records.name] = *it;*/
+        if(it!=wpgit->wp_list.begin())str<<";";
+        str<<*it;
+//        rowgr[records.visible] = false;
 		}
+    rowgr[records.name] = str.str();
+  }
+}
+void OptionsDialog::on_color_edited(const Glib::ustring& path,const Glib::ustring& newval){
+  Gtk::TreeIter it = tree_wild.model->get_iter(path);
+  std::stringstream str(newval);
+  RGBcolor color;
+  str>>color.r;
+  str>>color.g;
+  str>>color.b;
+  color.r/=255.;
+  color.g/=255.;
+  color.b/=255.;
+  ccfg.by_wpattern.wpgroup_list[Gtk::TreePath(it).front()].color = color;
+  (*it)[tree_wild.records.color] = newval;
+}
+void OptionsDialog::on_wp_edited(const Glib::ustring& path,const Glib::ustring& newval){
+  Gtk::TreeIter it = tree_wild.model->get_iter(path);
+  std::stringstream str(newval);
+  std::vector<std::string> patterns;
+  while(!str.eof() && ! str.fail()){
+    std::string tstr;
+    std::getline(str,tstr,';');
+    std::stringstream ts(tstr);ts>>tstr;
+    if(!tstr.empty())patterns.push_back(tstr);
+  }
+  ccfg.by_wpattern.wpgroup_list[Gtk::TreePath(it).front()].wp_list = patterns;
+  (*it)[tree_wild.records.name] = newval;
+}
+
+void OptionsDialog::on_bt_add(){
+  ccfg.by_wpattern.wpgroup_list.resize(ccfg.by_wpattern.wpgroup_list.size()+1);
+  tree_wild.fill_tree(ccfg);
+}
+void OptionsDialog::on_bt_remove(){
+  Glib::RefPtr<Gtk::TreeSelection> sel=tree_wild.get_selection();
+  Glib::RefPtr<Gtk::TreeModel> md = Glib::RefPtr<Gtk::TreeModel>::cast_static(tree_wild.model);
+  Gtk::TreeIter it = sel->get_selected(md);
+  if(it){
+    Gtk::TreePath path(it);
+    ccfg.by_wpattern.wpgroup_list.erase(ccfg.by_wpattern.wpgroup_list.begin()+path.front());
+    tree_wild.fill_tree(ccfg);
   }
 }
 
 OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_type(4,4),
-  tbl_timestamp(5,4),
+  tbl_timestamp(5,4),tbl_wildcard(2,7),
   lbl_oldest(_("Oldest:")),lbl_newest(_("Newest:")),
-  lbl_colorby(_("Color by:")),lbl_older(_("Older")),lbl_newer(_("Newer")){
+  lbl_colorby(_("Color by:")),lbl_older(_("Older")),lbl_newer(_("Newer")),
+  bt_add(_("Add")),bt_remove(_("Remove")),tree_wild(this){
   get_vbox()->add(ntb);
   ntb.append_page(tbl_file_type,_("By nodetype"));
   tbl_file_type.set_spacings(5);
@@ -114,14 +168,16 @@ OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_typ
     btn_newer.set_sensitive(false);
   }
   ntb.append_page(tbl_wildcard,_("By wildcard"));
-  tbl_wildcard.attach(scr_wild,0,1,0,7);
+  tbl_wildcard.attach(scr_wild,0,2,0,1);
   scr_wild.add(tree_wild);
-  std::cerr<<__FUNCTION__<<ccfg.by_wpattern.wpgroup_list.size()<<std::endl;
   tree_wild.fill_tree(ccfg);
   
-  tbl_wildcard.attach(bt_add,1,2,0,1);
-  tbl_wildcard.attach(bt_remove,1,2,1,2);
+  tbl_wildcard.attach(bt_add,0,1,1,2,Gtk::EXPAND|Gtk::FILL,Gtk::SHRINK);
+  tbl_wildcard.attach(bt_remove,1,2,1,2,Gtk::EXPAND|Gtk::FILL,Gtk::SHRINK);
 
+  bt_add.signal_clicked().connect(sigc::mem_fun(*this,&OptionsDialog::on_bt_add));
+  bt_remove.signal_clicked().connect(sigc::mem_fun(*this,&OptionsDialog::on_bt_remove));
+    
   add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
   add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
   //add_button(Gtk::Stock::APPLY,Gtk::RESPONSE_NONE);

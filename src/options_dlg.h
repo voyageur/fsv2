@@ -10,7 +10,7 @@ class OptionsDialog : public Gtk::Dialog {
     struct WildColumns : public Gtk::TreeModelColumnRecord{
       Gtk::TreeModelColumn<Glib::ustring> name;
       Gtk::TreeModelColumn<Glib::ustring> color;
-      Gtk::TreeModelColumn<bool> visible;
+      //Gtk::TreeModelColumn<bool> visible;
       WildColumns(){
         add(name);
         add(color);
@@ -22,7 +22,7 @@ class OptionsDialog : public Gtk::Dialog {
     //virtual bool on_button_press_event(GdkEventButton* event); 
   public:
     Glib::RefPtr<Gtk::TreeStore> model;
-    WildTree();
+    WildTree(OptionsDialog*);
     void fill_tree(const ColorConfig&);
   };
 
@@ -54,6 +54,12 @@ protected:
   void set_new_time(time_t);
   void on_old_editing_done();
   void on_new_editing_done();
+  //wp
+  void on_color_edited(const Glib::ustring& path,const Glib::ustring& newval);
+  void on_wp_edited(const Glib::ustring& path,const Glib::ustring& newval);
+  void on_bt_add();
+  void on_bt_remove();
+  
   void on_apply();
   void on_response(int response_id);
 public:
