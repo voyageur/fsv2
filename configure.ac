@@ -80,11 +80,11 @@ fi
 AC_SUBST(localedir)
 
 # Documentation directory
-AC_ARG_WITH(doc-dir, [  --with-doc-dir=DIR      install documentation files in DIR [DATADIR/fsv]])
+AC_ARG_WITH(doc-dir, [  --with-doc-dir=DIR      install documentation files in DIR [DATADIR/doc/fsv2]])
 if test -n "$with_doc_dir" ; then
 	docdir=$with_doc_dir
 else
-	docdir=${datadir}/fsv
+	docdir=${datadir}/doc/fsv2
 fi
 AC_SUBST(docdir)
 

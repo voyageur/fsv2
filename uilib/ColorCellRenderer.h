@@ -2,7 +2,6 @@
 #define COLORCELLRENDERER2_H_
 
 #include <gdkmm.h>
-#include <gtkmm/cellrenderer.h>
 
 #include "ColorCellEditable.h"
 

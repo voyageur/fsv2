@@ -68,7 +68,7 @@
 /**** Constants, macros, types ****************/
 
 /* Configuration file (in user's home directory) */
-#define CONFIG_FILE		"~/.fsvrc"
+#define CONFIG_FILE		"~/.config/fsv2rc"
 
 /* Mathematical constants et. al. */
 #define LN_2			0.69314718055994530942
@@ -80,7 +80,7 @@
 #define NULL_DLIST		0
 
 /* Alias for the root directory node */
-//#define root_dnode		globals.fstree->children
+#define root_dnode		globals.fstree->children
 
 /* Mathematical macros */
 #define SQR(x)			((x)*(x))
@@ -100,8 +100,6 @@
 #define G_LIST_SORT(l,f)	l = g_list_sort( l, (GCompareFunc)f )
 #define NEW(type)		(type *)xmalloc( sizeof(type) )
 #define NEW_ARRAY(type,n)	(type *)xmalloc( (n) * sizeof(type) )
-//#define RESIZE(block,n,type)	block = (type *)xrealloc( block, (n) * sizeof(type) )
-//#define STRRECAT(str,addstr)	str = strrecat( str, addstr )
 
 /* For when a switch should never default */
 #define SWITCH_FAIL		default: g_assert_not_reached( ); exit( EXIT_FAILURE );
@@ -194,11 +192,11 @@ struct _RTZvec {
 
 /* Base node descriptor. Describes a filesystem node
  * (file/symlink/whatever) */
-#ifdef __cplusplus
-struct NodeDesc {
+typedef struct _NodeDesc NodeDesc;
+struct _NodeDesc {
 	NodeType	type;		/* Type of node */
 	unsigned int	id;		/* Unique ID number */
-	const char	*name;		// Base name (w/o directory)
+	const char	*name;		/* Base name (w/o directory) */
 	int64		size;		/* Size (bytes) */
 	int64		size_alloc;	/* Size allocation on storage medium */
 	uid_t		user_id;	/* Owner UID */
@@ -213,7 +211,9 @@ struct NodeDesc {
 };
 
 /* Directories have their own extended descriptor */
-struct DirNodeDesc : NodeDesc{
+typedef struct _DirNodeDesc DirNodeDesc;
+struct _DirNodeDesc {
+	NodeDesc	node_desc;
 	double		geomparams2[3];	/* More geometry parameters */
 	double		deployment;	/* 0 == collapsed, 1 == expanded */
 	/* Subtree information. The quantities here do not include the
@@ -224,7 +224,7 @@ struct DirNodeDesc : NodeDesc{
 	} subtree;
 	/* Following pointer should be of type GtkTreePath */
 	//Glib::RefPtr<Glib::ustring> ctnode;
-	//char *ctnode;	// Directory tree entry not needed
+	char *ctnode;	/* Directory tree entry */
 	unsigned int	a_dlist;	/* Display list A */
 	unsigned int	b_dlist;	/* Display list B */
 	unsigned int	c_dlist;	/* Display list C */
@@ -237,8 +237,11 @@ struct DirNodeDesc : NodeDesc{
 };
 
 /* Generalized node descriptor */
-typedef DirNodeDesc  AnyNodeDesc;
-
+union AnyNodeDesc {
+	NodeDesc	node_desc;
+	DirNodeDesc	dir_node_desc;
+};
+#ifdef __cplusplus
 #include <glibmm.h>
 /*
 // Node information struct. Everything here is a string.
@@ -264,21 +267,23 @@ struct NodeInfo {
 	char *target;		// Target of symlink
 	char *abstarget;	// Absolute name of target
 };
-
+*/
 struct Globals {
-	// The filesystem tree 
+	/* The filesystem tree */
 	GNode *fstree;
 
-	// Current node of interest 
+	/* Current node of interest */
 	GNode *current_node;
 
-	// History of previously visited nodes (elements are of type GNode)
+	/* History of previously visited nodes
+	 * (elements are of type GNode) */
 	GList *history;
+  //Glib::NodeTree<AnyNodeDesc> AnyNodeTree;
 };
-*/
+
 /**** Global variables ****************/
 
-//extern struct Globals globals;
+extern struct Globals globals;
 extern char **node_type_xpms[NUM_NODE_TYPES];
 extern char **node_type_mini_xpms[NUM_NODE_TYPES];
 extern const char *node_type_names[NUM_NODE_TYPES];

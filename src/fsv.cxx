@@ -84,11 +84,12 @@ static const char* usage_summary = _("\n"
     "fsv2 - 3D File System Visualizer v.%s");
 
 /* Helper function for fsv_set_mode( ) */
-static void initial_camera_pan( char *mesg )
+static void
+initial_camera_pan( char *mesg )
 {
 	/* To prevent root_dnode from appearing twice in a row at
 	 * the bottom of the node history stack */
-	//G_LIST_PREPEND(globals.history, NULL);
+	G_LIST_PREPEND(globals.history, NULL);
 
 	if (!strcmp( mesg, "new_fs" )) {
 		/* First look at new filesystem */
@@ -175,12 +176,12 @@ fsv_load( const char *dir )
 	gui_update( );
 
 	/* Scan filesystem */
-	FsvDirTree::dir_tree->scanfs( dir );
+	scanfs( dir );
 
 	/* Clear/reset node history */
-//	g_list_free( globals.history );
-//	globals.history = NULL;
-//	globals.current_node = root_dnode;
+	g_list_free( globals.history );
+	globals.history = NULL;
+	globals.current_node = root_dnode;
 
 	/* Initialize file list */
 	filelist_init( );
@@ -217,8 +218,8 @@ main( int argc, char **argv )
 	char *root_dir;
 
 	/* Initialize global variables */
-	//globals.fstree = NULL;
-	//globals.history = NULL;
+	globals.fstree = NULL;
+	globals.history = NULL;
 	/* Set sane camera state so setup_modelview_matrix( ) in ogl.c
 	 * doesn't choke. (It does get called in splash screen mode) */
 	camera->fov = 45.0;

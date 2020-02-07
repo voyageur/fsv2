@@ -144,7 +144,7 @@ dirtree_clear( void )
 void
 dirtree_entry_new( GNode *dnode )
 {
-/*	char *parent_ctnode = NULL;
+	char *parent_ctnode = NULL;
 	const char *name;
 	boolean expanded;
 
@@ -176,14 +176,24 @@ dirtree_entry_new( GNode *dnode )
 		if(expanded)FsvDirTree::dir_tree->expand_row(Gtk::TreePath(iter),false);
 	}
 	if(parent_ctnode && FsvDirTree::dir_tree->row_expanded(Gtk::TreePath(parent_ctnode))) {
+		/* Pre-update (allow ctree to register new row) */
+		//gtk_clist_thaw( GTK_CLIST(dir_ctree_w) );
 		gui_update( );
+		//gtk_clist_freeze( GTK_CLIST(dir_ctree_w) );
+		/* Select last row */
+		//gtk_ctree_select( GTK_CTREE(dir_ctree_w), DIR_NODE_DESC(dnode)->ctnode );
     Glib::RefPtr<Gtk::TreeSelection> sel = FsvDirTree::dir_tree->get_selection();
     Gtk::TreePath path = Gtk::TreePath(DIR_NODE_DESC(dnode)->ctnode);
     sel->select(path);
+		/* Scroll directory tree down to last row */
+		//gui_clist_moveto_row( dir_ctree_w, -1, 0.0 );
 		FsvDirTree::dir_tree->expand_row(path,false);
 		FsvDirTree::dir_tree->scroll_to_row(path);
+		/* Post-update (allow ctree to perform select/scroll) */
+		//gtk_clist_thaw( GTK_CLIST(dir_ctree_w) );
 		gui_update( );
-	}*/
+		//gtk_clist_freeze( GTK_CLIST(dir_ctree_w) );
+	}
 }
 
 /* This updates the directory tree to show (and select) a particular
@@ -192,14 +202,16 @@ dirtree_entry_new( GNode *dnode )
 void
 dirtree_entry_show( GNode *dnode )
 {
-/*	g_assert( NODE_IS_DIR(dnode) );
+	g_assert( NODE_IS_DIR(dnode) );
 
-	// Repopulate file list if directory is different
+	/* Repopulate file list if directory is different */
 	if (dnode != dirtree_current_dnode) {
 		filelist_populate( dnode );
+/* TODO: try removing this update from here */
+		//gui_update( );
 	}
 
-	// Scroll directory tree to proper entry
+	/* Scroll directory tree to proper entry */
 	Gtk::TreeModel::Path path = Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode);
   Glib::RefPtr<Gtk::TreeSelection> sel = FsvDirTree::dir_tree->get_selection();
 	if(FsvDirTree::dir_tree->model->get_iter(path)){
@@ -208,21 +220,26 @@ dirtree_entry_show( GNode *dnode )
 	}else{
 	  sel->unselect_all();
 	}
-	dirtree_current_dnode = dnode;*/
+	dirtree_current_dnode = dnode;
 }
 
 /* Returns TRUE if the entry for the given directory is expanded */
 boolean
 dirtree_entry_expanded( GNode *dnode )
 {
-/*	g_assert( NODE_IS_DIR(dnode) );
+	g_assert( NODE_IS_DIR(dnode) );
+	//return GTK_CTREE_ROW(DIR_NODE_DESC(dnode)->ctnode)->expanded;
 	Gtk::TreeRow row =*FsvDirTree::dir_tree->model->get_iter(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode));
+	/*g_print("%e - %d - %d\n",DIR_NODE_DESC(dnode)->deployment,
+	DIR_NODE_DESC(dnode)->geom_expanded,
+	FsvDirTree::dir_tree->row_expanded(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode)));*/
 	if(DIR_NODE_DESC(dnode)->geom_expanded){
 	  row[FsvDirTree::dir_tree->records.icon]=FsvDirTree::dir_tree->folder_opened;
 	}else{
 	  row[FsvDirTree::dir_tree->records.icon]=FsvDirTree::dir_tree->folder_closed;
-	}*/
+	}
 	return DIR_NODE_DESC(dnode)->geom_expanded;
+  //return FsvDirTree::dir_tree->row_expanded(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode));
 }
 
 /* Recursively collapses the directory tree entry of the given directory */
@@ -230,7 +247,7 @@ void
 dirtree_entry_collapse_recursive( GNode *dnode )
 {
 	g_assert( NODE_IS_DIR(dnode) );
-  //FsvDirTree::dir_tree->collapse_row(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode));
+  FsvDirTree::dir_tree->collapse_row(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode));
 }
 
 
@@ -252,7 +269,7 @@ dirtree_entry_expand( GNode *dnode )
 		up_node = up_node->parent;
 	}
 	unblock_colexp_handlers( );*/
-  //FsvDirTree::dir_tree->expand_to_path(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode));
+  FsvDirTree::dir_tree->expand_to_path(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode));
 }
 
 
@@ -276,7 +293,7 @@ dirtree_entry_expand_recursive( GNode *dnode )
 	/*block_colexp_handlers( );
 	gtk_ctree_expand_recursive( GTK_CTREE(dir_ctree_w), DIR_NODE_DESC(dnode)->ctnode );
 	unblock_colexp_handlers( );*/
-  //FsvDirTree::dir_tree->expand_row(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode),true);
+  FsvDirTree::dir_tree->expand_row(Gtk::TreeModel::Path(DIR_NODE_DESC(dnode)->ctnode),true);
 
 }
 

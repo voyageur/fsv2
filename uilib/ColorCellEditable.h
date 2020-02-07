@@ -1,14 +1,7 @@
 #ifndef COLORCELLEDITAble_H_
 #define COLORCELLEDITAble_H_
 
-#include <gtkmm/celleditable.h>
-#include <gtkmm/eventbox.h>
-#include <gtkmm/box.h>
-#include <gdkmm/color.h>
-#include <gtkmm/entry.h>
-#include <gtkmm/button.h>
-
-#include <gtkmm/drawingarea.h>
+#include <gtkmm.h>
 #include <cairomm/context.h>
 
 class ColorArea : public Gtk::DrawingArea

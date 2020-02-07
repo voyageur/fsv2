@@ -23,7 +23,7 @@
 
 #ifndef FSV_VIEWPORT_H
 #define FSV_VIEWPORT_H
-#include <gtk/gtk.h>
+
 void viewport_pass_node_table( GNode **new_node_table );
 int viewport_cb( GtkWidget *gl_area_w, GdkEvent *event );
 

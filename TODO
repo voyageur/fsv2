@@ -1,7 +1,4 @@
-to 1.1.0
-  - rewrite rest of GTK+ code to gtkmm.
-  - remove last glib deprecated functions.
-
+12.03.2011
 future:
   - code cleanup.
   - rewrite rest of GTK+ code to gtkmm.
@@ -9,8 +6,7 @@ future:
   - remove all non FTGL text rendering (maybe add pango renderer) to GL widget.
   - maybe move to gtkglext from gtkglarea.
   - rewrite filesystem scan code. 
-  - add xml Configuration file support.
-  - add browser functionality
+  - add more browser functionality
   
 1999 Jan 27
 

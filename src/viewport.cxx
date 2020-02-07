@@ -23,9 +23,9 @@
 
 
 #include "common.h"
+#include "fsvwindow.h"
 #include "viewport.h"
 
-#include <gtk/gtk.h>
 #include <GL/gl.h> /* GLuint */
 
 #include "about.h"
@@ -33,7 +33,6 @@
 #include "filelist.h" /* filelist_show_entry( ) */
 #include "geometry.h"
 #include "ogl.h"
-#include "fsvwindow.h"
 
 
 /* Sensitivity factor used for manual camera control */

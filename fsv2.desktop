@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=fsv2
+Comment=
+TryExec=fsv2
+Exec=fsv2
+Icon=fsv2
+Terminal=false
+Type=Application
+Categories=System;Utility;
+

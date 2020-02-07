@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-//void scanfs( const char *dir );
+void scanfs( const char *dir );
 
 #ifdef __cplusplus
 };

@@ -15,7 +15,9 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
+#ifndef __fsv_window_h__
+#define __fsv_window_h__
 #include "common.h"
 #include <color.h>
 
@@ -35,12 +37,10 @@ public:
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > icon;
     Gtk::TreeModelColumn<Glib::ustring> name;
     Gtk::TreeModelColumn<GNode*> dnode;
-    Gtk::TreeModelColumn<AnyNodeDesc> node_desc;
     FsvDirColumns(){
       add(icon);
       add(name);
       add(dnode);
-      add(node_desc);
     }
   } records;
 protected:
@@ -54,10 +54,6 @@ public:
   Glib::RefPtr<Gdk::Pixbuf> folder_opened;
   FsvDirTree();
   static FsvDirTree* dir_tree;
-  void scanfs(const std::string& dir);
-private:
-  int process_dir(const std::string& dir,Gtk::TreeIter&);
-  int64 node_id;
 };
 
 class FsvFileList : public Gtk::TreeView{
@@ -160,12 +156,6 @@ public:
   FsvWindow();
   ~FsvWindow();
   static FsvWindow* current;
-  Gtk::TreeIter root_dnode(){
-    return tr_dirs.model->children().begin();
-  }
-  Gtk::TreeIter current_node(){
-    return tr_dirs.get_selection()->get_selected();
-  }
 };
 
 void window_set_color_mode( ColorMode mode );
@@ -205,4 +195,6 @@ void text_draw_curved( const char *text, const RTZvec *text_pos, const RTvec *te
 #ifdef __cplusplus
 };
 #endif
+
+#endif // __fsv_window_h__
 

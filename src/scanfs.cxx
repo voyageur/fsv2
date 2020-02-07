@@ -23,6 +23,7 @@
 
 
 #include "common.h"
+#include "fsvwindow.h"
 #include "scanfs.h"
 
 #include <dirent.h>
@@ -34,7 +35,6 @@
 #include "filelist.h"
 #include "geometry.h" /* geometry_free( ) */
 #include "viewport.h" /* viewport_pass_node_table( ) */
-#include "fsvwindow.h"
 
 
 #ifndef HAVE_SCANDIR
@@ -124,9 +124,10 @@ de_select( const struct dirent *de )
 }
 
 
-int FsvDirTree::process_dir(const std::string& dir,Gtk::TreeIter& dnode)
+static int
+process_dir( const std::string& dir, GNode *dnode )
 {
-	AnyNodeDesc any_node_desc, *andesc;
+	union AnyNodeDesc any_node_desc, *andesc;
 	struct dirent **dir_entries;
 	GNode *node;
 	int num_entries, i;
@@ -292,41 +293,63 @@ setup_fstree_recursive( GNode *node, GNode **node_table )
 
 
 /* Top-level call to recursively scan a filesystem */
-void FsvDirTree::scanfs(const std::string& dir)
+void
+scanfs( const char *dir )
 {
 	char root_dir[1024];
-  GNode **node_table;
+        GNode **node_table;
 	guint handler_id;
 	char *name;
 
+	if (globals.fstree != NULL) {
+		/* Free existing geometry and filesystem tree */
+		geometry_free_recursive( globals.fstree );
+		g_node_destroy( globals.fstree );
+		/* General memory cleanup */
+		g_blow_chunks( );
+	}
+
+	/* Set up memory chunks to hold descriptor structs */
+	if (ndesc_memchunk == NULL)
+		ndesc_memchunk = g_mem_chunk_create( NodeDesc, 64, G_ALLOC_ONLY );
+	else
+		g_mem_chunk_reset( ndesc_memchunk );
+	if (dir_ndesc_memchunk == NULL)
+		dir_ndesc_memchunk = g_mem_chunk_create( DirNodeDesc, 16, G_ALLOC_ONLY );
+	else
+		g_mem_chunk_reset( dir_ndesc_memchunk );
+
+	/* ...and string chunks to hold name strings */
+	if (name_strchunk != NULL)
+		g_string_chunk_free( name_strchunk );
+	name_strchunk = g_string_chunk_new( 8192 );
+
 	/* Clear out directory tree */
-  model->clear();
+	dirtree_clear( );
+
 	/* Reset node numbering */
 	node_id = 0;
 
 	/* Get absolute path of desired root (top-level) directory */
-	chdir( dir.c_str() );
-	getcwd(root_dir,1024 );
+	chdir( dir );
+	/*root_dir =*/ getcwd(root_dir,1024 );
 
 	/* Set up fstree metanode */
-	/*globals.fstree = g_node_new( g_mem_chunk_alloc( dir_ndesc_memchunk ) );
+	globals.fstree = g_node_new( g_mem_chunk_alloc( dir_ndesc_memchunk ) );
 	NODE_DESC(globals.fstree)->type = NODE_METANODE;
 	NODE_DESC(globals.fstree)->id = node_id++;
 	name = g_dirname( root_dir );
 	NODE_DESC(globals.fstree)->name = g_string_chunk_insert( name_strchunk, name );
 	g_free( name );
-	DIR_NODE_DESC(globals.fstree)->ctnode = NULL; // 
+	DIR_NODE_DESC(globals.fstree)->ctnode = NULL; /* needed in dirtree_entry_new( ) */
 	DIR_NODE_DESC(globals.fstree)->a_dlist = NULL_DLIST;
 	DIR_NODE_DESC(globals.fstree)->b_dlist = NULL_DLIST;
 	DIR_NODE_DESC(globals.fstree)->c_dlist = NULL_DLIST;
-  */
+
 	/* Set up root directory node */
-	//g_node_append_data( globals.fstree, g_mem_chunk_alloc( dir_ndesc_memchunk ) );
+	g_node_append_data( globals.fstree, g_mem_chunk_alloc( dir_ndesc_memchunk ) );
 	/* Note: We can now use root_dnode to refer to the node just
 	 * created (it is an alias for globals.fstree->children) */
-  Gtk::TreeIter it = model->append();
-  Gtk::TreeRow
-  
 	NODE_DESC(root_dnode)->id = node_id++;
 	name = (char*)g_basename( root_dir );
 	NODE_DESC(root_dnode)->name = g_string_chunk_insert( name_strchunk, name );

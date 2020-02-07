@@ -103,13 +103,13 @@ OptionsDialog::OptionsDialog() : Gtk::Dialog(_("Color Setup"),true),tbl_file_typ
   color_get_config(&ccfg);
 
   for(int i=0;i<8;++i){
-    btn[i].set_title(node_type_names[i+1]);
+    btn[i].set_title(_(node_type_names[i+1]));
     Gdk::Color rgb;
     rgb.set_rgb_p(ccfg.by_nodetype.colors[i+1].r,ccfg.by_nodetype.colors[i+1].g,ccfg.by_nodetype.colors[i+1].b);
     btn[i].set_color(rgb);
     btn[i].signal_color_set().connect(
                       sigc::bind(sigc::mem_fun(*this,&OptionsDialog::on_file_type_color),i) );
-    lbls[i].set_text(node_type_names[i+1]);
+    lbls[i].set_text(_(node_type_names[i+1]));
     bxs[i].pack_end(lbls[i]);
   }
   ntb.append_page(tbl_timestamp,_("By timestamp"));

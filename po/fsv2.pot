@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: fsv2 1.0.100\n"
+"Project-Id-Version: fsv2 1.1.0\n"
 "Report-Msgid-Bugs-To: yuryfdr@users.sf.net\n"
-"POT-Creation-Date: 2011-02-08 23:03+0300\n"
+"POT-Creation-Date: 2011-03-09 20:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -133,63 +133,71 @@ msgstr ""
 msgid "Patterns"
 msgstr ""
 
-#: src/options_dlg.cxx:35
+#: src/options_dlg.cxx:88
 msgid "Color Setup"
 msgstr ""
 
-#: src/options_dlg.cxx:37
+#: src/options_dlg.cxx:90
 msgid "Oldest:"
 msgstr ""
 
-#: src/options_dlg.cxx:37
+#: src/options_dlg.cxx:90
 msgid "Newest:"
 msgstr ""
 
-#: src/options_dlg.cxx:38
+#: src/options_dlg.cxx:91
 msgid "Color by:"
 msgstr ""
 
-#: src/options_dlg.cxx:38
+#: src/options_dlg.cxx:91
 msgid "Older"
 msgstr ""
 
-#: src/options_dlg.cxx:38
+#: src/options_dlg.cxx:91
 msgid "Newer"
 msgstr ""
 
-#: src/options_dlg.cxx:40
-msgid "By nodetype"
-msgstr ""
-
-#: src/options_dlg.cxx:61
-msgid "By timestamp"
-msgstr ""
-
-#: src/options_dlg.cxx:91
-msgid "time of last access"
+#: src/options_dlg.cxx:92
+msgid "Add"
 msgstr ""
 
 #: src/options_dlg.cxx:92
+msgid "Remove"
+msgstr ""
+
+#: src/options_dlg.cxx:94
+msgid "By nodetype"
+msgstr ""
+
+#: src/options_dlg.cxx:115
+msgid "By timestamp"
+msgstr ""
+
+#: src/options_dlg.cxx:145
+msgid "time of last access"
+msgstr ""
+
+#: src/options_dlg.cxx:146
 msgid "time of last modification"
 msgstr ""
 
-#: src/options_dlg.cxx:93
+#: src/options_dlg.cxx:147
 msgid "time of last attribute change"
 msgstr ""
 
-#: src/options_dlg.cxx:102
+#: src/options_dlg.cxx:156
 msgid "Rainbow"
 msgstr ""
 
-#: src/options_dlg.cxx:103
+#: src/options_dlg.cxx:157
 msgid "Heat"
 msgstr ""
 
-#: src/options_dlg.cxx:104
+#: src/options_dlg.cxx:158
 msgid "Gradient"
 msgstr ""
 
-#: src/options_dlg.cxx:116
+#: src/options_dlg.cxx:170
 msgid "By wildcard"
 msgstr ""
 

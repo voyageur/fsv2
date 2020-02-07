@@ -23,6 +23,7 @@
 
 
 #include "common.h"
+#include "fsvwindow.h"
 #include "colexp.h"
 
 #include "animation.h"
@@ -30,7 +31,6 @@
 #include "dirtree.h"
 #include "filelist.h"
 #include "geometry.h"
-#include "fsvwindow.h"
 
 
 /* Duration of a single collapse/expansion (in seconds) */

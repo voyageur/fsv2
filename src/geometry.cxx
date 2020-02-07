@@ -22,6 +22,7 @@
 
 
 #include "common.h"
+#include "fsvwindow.h"
 #include "geometry.h"
 
 #include <GL/gl.h>
@@ -32,7 +33,6 @@
 #include "color.h"
 #include "dirtree.h" /* dirtree_entry_expanded( ) */
 #include "ogl.h"
-#include "fsvwindow.h"
 
 /* 3D geometry for splash screen */
 #include "fsv3d.h"
@@ -2877,7 +2877,7 @@ splash_draw( void )
 	text_dims.y = 0.0234;
 	text_draw_straight( "Copyright (C)1999 Daniel Richard G. <skunk@mit.edu>", &text_pos, &text_dims );
 	text_pos.y = bottom_y + 0.05;
-	text_draw_straight( "Copyright (C)2009 Yury P. Fedorchenko", &text_pos, &text_dims );
+	text_draw_straight( _("Copyright ©2009-2011 by Yury P. Fedorchenko"), &text_pos, &text_dims );
 
 	text_post( );
 

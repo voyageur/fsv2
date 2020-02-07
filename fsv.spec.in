@@ -7,11 +7,11 @@ Version: @VERSION@
 Release: @RELEASE@
 Group: X11/Utilities
 Copyright: LGPL
-URL: http://fox.mit.edu/skunk/soft/fsv/
+URL: http://fedorchenko.net/fsv2.php
 Summary: fsv2 - 3D File System Visualizer
 
-Requires: gtk+ >= 2.6.0
-Source: http://fox.mit.edu/skunk/soft/src/fsv-@VERSION@.tar.gz
+Requires: gtkmm >= 2.16.0 gtkglarea >= 2.0 ftgl > 2.1.2
+Source: http://fedorchenko.net/src/fsv2-@VERSION@.tar.bz2
 BuildRoot: /tmp/fsv-@VERSION@-root
 
 %description

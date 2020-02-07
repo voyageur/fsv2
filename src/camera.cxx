@@ -23,7 +23,8 @@
 
 
 #include "common.h"
-#include <gtk/gtk.h>
+#include "fsvwindow.h"
+
 #include "camera.h"
 
 
@@ -31,8 +32,6 @@
 #include "dirtree.h" /* dirtree_entry_expanded( ) */
 #include "filelist.h"
 #include "geometry.h"
-#include "fsvwindow.h"
-
 
 /* Lower/upper bounds on pan times (in seconds) */
 #define DISCV_CAMERA_MIN_PAN_TIME	0.5
@@ -52,8 +51,11 @@ enum {
 };
 
 
+/* The camera */
+static union AnyCamera the_camera;
+
 /* More convenient pointer to the camera */
-Camera *camera=NULL;
+Camera *camera = CAMERA(&the_camera);
 
 /* Viewport scrollbar adjustments */
 static GtkAdjustment *x_scrollbar_adj;
@@ -1020,7 +1022,8 @@ pan_end_cb( Morph *morph )
 /* Points the camera at the given node, using the specified motion
  * morph type and (optionally, if value is nonnegative) the specified
  * pan duration */
-void camera_look_at_full( GNode *node, MorphType mtype, double pan_time_override )
+void
+camera_look_at_full( GNode *node, MorphType mtype, double pan_time_override )
 {
 	double pan_time = 0.0;
 	GNode *prev_node = NULL;

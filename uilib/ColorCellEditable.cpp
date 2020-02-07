@@ -1,7 +1,6 @@
 #include "ColorCellEditable.h"
 
 #include <gtkmm.h>
-#include <gtk/gtkentry.h> /* see XXX below */
 
 #include <sstream>
 

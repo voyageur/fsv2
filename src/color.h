@@ -84,7 +84,6 @@ struct ColorConfig {
 };
 
   
-void color_config_destroy( struct ColorConfig *ccfg );
 void color_get_config( struct ColorConfig *ccfg );
 void color_set_config( struct ColorConfig *new_ccfg, ColorMode mode );
 RGBcolor color_spectrum_color( SpectrumType type, double x, void *data );
