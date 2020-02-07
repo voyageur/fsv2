@@ -6,14 +6,6 @@ DEBUG_CFLAGS =
 DEBUG_LIBS =
 endif
 
-INCLUDES = \
-	-DDOCDIR=\"$(docdir)\" \
-	$(DEBUG_CFLAGS) \
-	@GTK_CFLAGS@ \
-	@GTKGL_CFLAGS@ \
-	@GL_CFLAGS@ \
-	-DLOCALE_DIR=\"@localedir@\"
-
 bin_PROGRAMS = fsv2
 noinst_HEADERS = \
 	about.h \
@@ -85,4 +77,10 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	$(GTKGL_CFLAGS) \
 	$(FTGL_CFLAGS) \
-	$(GNOMEUI_CFLAGS)
+	$(GNOMEUI_CFLAGS) \
+	-DDOCDIR=\"$(docdir)\" \
+	$(DEBUG_CFLAGS) \
+	@GTK_CFLAGS@ \
+	@GTKGL_CFLAGS@ \
+	@GL_CFLAGS@ \
+	-DLOCALE_DIR=\"@localedir@\"
