@@ -71,3 +71,4 @@ stamp-h[1-9]
 config.h
 config.h.in
 fsv.spec
+src/fsv2

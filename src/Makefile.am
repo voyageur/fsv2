@@ -44,7 +44,6 @@ fsv2_SOURCES = \
 	ogl.c \
 	scanfs.cxx \
 	viewport.cxx
-#	tmaptext.c
 
 fsv2_DEPENDENCIES =
 
@@ -54,7 +53,7 @@ fsv2_LDADD = \
 	$(GTK_LIBS) \
 	$(GTKGL_LIBS) \
 	$(FTGL_LIBS) \
-	$(GNOMEUI_LIBS)
+	$(GL_LIBS)
 
 EXTRA_DIST = \
 	xmaps/birdseye_view.xpm \
@@ -77,7 +76,6 @@ AM_CPPFLAGS = \
 	$(GTK_CFLAGS) \
 	$(GTKGL_CFLAGS) \
 	$(FTGL_CFLAGS) \
-	$(GNOMEUI_CFLAGS) \
 	-DDOCDIR=\"$(docdir)\" \
 	$(DEBUG_CFLAGS) \
 	@GTK_CFLAGS@ \

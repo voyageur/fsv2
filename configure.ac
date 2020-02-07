@@ -92,10 +92,8 @@ AC_SUBST(docdir)
 
 PKG_CHECK_MODULES(GTK, gtkmm-2.4)
 
-#### OpenGL/Mesa3D libraries ####
-AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=PFX    Prefix where GL/MesaGL is installed (optional)])
-AC_ARG_WITH(lib-GL,     [  --with-lib-GL           use '-lGL' (default)])
-AC_ARG_WITH(lib-MesaGL, [  --with-lib-MesaGL       use '-lMesaGL'])
+#### OpenGL libraries ####
+AC_ARG_WITH(GL-prefix,  [  --with-GL-prefix=PFX    Prefix where OpenGL is installed (optional)])
 
 if test -n "$with_GL_prefix" ; then
 	GL_CFLAGS=-I$with_GL_prefix/include
@@ -105,40 +103,19 @@ else
 	GL_LDOPTS=""
 fi
 
-AC_CHECK_LIB(MesaGL, glBegin, have_MesaGL=yes, , $GTK_LIBS $GL_LDOPTS)
 AC_CHECK_LIB(GL,     glBegin, have_GL=yes,     , $GTK_LIBS $GL_LDOPTS)
 
-if test "$with_lib_GL" = "yes" ; then
-	# Want to use '-lGL'
-	if test "$have_GL" = "yes" ; then
-		GL_LIBS="$GL_LDOPTS -lGL -lGLU"
-	else
-		AC_MSG_ERROR([Missing GL library])
-	fi
-elif test "$with_lib_MesaGL" = "yes" ; then
-	# Want to use '-lMesaGL'
-	if test "$have_MesaGL" = "yes" ; then
-		GL_LIBS="$GL_LDOPTS -lMesaGL -lMesaGLU"
-	else
-		AC_MSG_ERROR([Missing Mesa3D library])
-	fi
+if test "$have_GL" = "yes" ; then
+	GL_LIBS="$GL_LDOPTS -lGL -lGLU"
 else
-	# Use whatever is available, preferably '-lGL'
-	if test "$have_GL" = "yes" ; then
-		GL_LIBS="$GL_LDOPTS -lGL -lGLU"
-	elif test "$have_MesaGL" = "yes" ; then
-		GL_LIBS="$GL_LDOPTS -lMesaGL -lMesaGLU"
-	else
-		AC_MSG_ERROR([You need GL or MesaGL libraries])
-	fi
+	AC_MSG_ERROR([Missing GL library])
 fi
 AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
-#### end of OpenGL/Mesa3D configuration ####
+#### end of OpenGL configuration ####
 
 #### GtkGLArea library ####
 PKG_CHECK_MODULES(GTKGL, gtkgl-2.0)
-#PKG_CHECK_MODULES(GNOMEUI, libgnomeui-2.0)
 
 AC_ARG_ENABLE(glc, [  --enable-glc          turn on text render thru GLC])
 if test "$enable_glc" == "yes" ; then
@@ -170,10 +147,10 @@ if test -n "$FILE_CMD" ; then
 	AC_DEFINE_UNQUOTED([FILE_COMMAND], ["$FILE_CMD "]," file command ")
 fi
 
-#CFLAGS="-g -Wall $CFLAGS -DGDK_DISABLE_DEPRECATED=1 -DGTK_DISABLE_DEPRECATED=1 -DGDK_PIXBUF_DISABLE_DEPRECATED=1 -DG_DISABLE_DEPRECATED=1 "
-#CXXFLAGS="-g -Wall $CFLAGS -DGDK_DISABLE_DEPRECATED=1 -DGTK_DISABLE_DEPRECATED=1 -DGDK_PIXBUF_DISABLE_DEPRECATED=1 -DG_DISABLE_DEPRECATED=1 "
-CFLAGS="-g -Wall $CFLAGS"
-CXXFLAGS="-g -Wall $CXXFLAGS"
+#CFLAGS="-Wall $CFLAGS -DGDK_DISABLE_DEPRECATED=1 -DGTK_DISABLE_DEPRECATED=1 -DGDK_PIXBUF_DISABLE_DEPRECATED=1 -DG_DISABLE_DEPRECATED=1"
+#CXXFLAGS="-Wall $CXXFLAGS -DGDK_DISABLE_DEPRECATED=1 -DGTK_DISABLE_DEPRECATED=1 -DGDK_PIXBUF_DISABLE_DEPRECATED=1 -DG_DISABLE_DEPRECATED=1"
+CFLAGS="-Wall $CFLAGS -DGDK_DISABLE_DEPRECATED=1 -DGTK_DISABLE_DEPRECATED=1 -DGDK_PIXBUF_DISABLE_DEPRECATED=1"
+CXXFLAGS="-Wall $CXXFLAGS -DGDK_DISABLE_DEPRECATED=1 -DGTK_DISABLE_DEPRECATED=1 -DGDK_PIXBUF_DISABLE_DEPRECATED=1"
 
 # That's a wrap!
 AC_OUTPUT(fsv.spec
